@@ -1,7 +1,7 @@
 # Recallo-Client
 
 This is the frontend client for Recallo, a real-time audio and video-based communication and streaming platform featuring a rich set of premium functionalities.
-
+added new color layout
 ## Authentication Architecture
 
 Recallo uses a robust Next.js frontend to Go backend authentication flow designed for high security and a seamless user experience. The system integrates standard Email/Password authentication along with GitHub OAuth.
