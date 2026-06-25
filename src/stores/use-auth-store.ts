@@ -11,31 +11,31 @@ import { devtools } from 'zustand/middleware';
 import type { AuthUser, AuthState } from '@/types/auth';
 
 interface AuthActions {
-  /** Call after a successful login / register / token refresh. */
-  setAuth: (user: AuthUser | null, accessToken: string) => void;
-  setLoading: (loading: boolean) => void;
-  /** Mark that the initial /me hydration attempt has finished (success or fail). */
-  setHydrated: (hydrated: boolean) => void;
-  /** Clear all auth state (logout). */
-  clearAuth: () => void;
+    /** Call after a successful login / register / token refresh. */
+    setAuth: (user: AuthUser | null, accessToken: string) => void;
+    setLoading: (loading: boolean) => void;
+    /** Mark that the initial /me hydration attempt has finished (success or fail). */
+    setHydrated: (hydrated: boolean) => void;
+    /** Clear all auth state (logout). */
+    clearAuth: () => void;
 }
 
 const initialState: AuthState = {
-  user: null,
-  accessToken: null,
-  isLoading: false,
-  isHydrated: false,
+    user: null,
+    accessToken: null,
+    isLoading: false,
+    isHydrated: false,
 };
 
 export const useAuthStore = create<AuthState & AuthActions>()(
-  devtools(
-    set => ({
-      ...initialState,
-      setAuth: (user, accessToken) => set({ user, accessToken }),
-      setLoading: isLoading => set({ isLoading }),
-      setHydrated: isHydrated => set({ isHydrated }),
-      clearAuth: () => set(initialState),
-    }),
-    { name: 'AuthStore' },
-  ),
+    devtools(
+        set => ({
+            ...initialState,
+            setAuth: (user, accessToken) => set({ user, accessToken, isHydrated: true }),
+            setLoading: isLoading => set({ isLoading }),
+            setHydrated: isHydrated => set({ isHydrated }),
+            clearAuth: () => set(initialState),
+        }),
+        { name: 'AuthStore' },
+    ),
 );

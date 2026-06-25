@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useCurrentUser } from '@/hooks/use-current-user';
+import { ROUTES } from '@/lib/routes';
 
 export function MarketingCTA() {
   const { user, isHydrated } = useCurrentUser();
@@ -15,7 +16,7 @@ export function MarketingCTA() {
     return (
       <div className="flex items-center gap-3">
         <Link
-          href="/dashboard"
+          href={ROUTES.HOME}
           className="flex items-center gap-2 px-3 py-1.5 rounded-[10px] transition-all duration-200 hover:bg-[#DDEBD5]"
         >
           <span className="text-sm font-medium" style={{ color: '#2C3E2D' }}>

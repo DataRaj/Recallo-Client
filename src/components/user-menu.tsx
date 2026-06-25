@@ -64,7 +64,6 @@ export function UserMenu() {
     .toUpperCase();
 
   const menuItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
     { label: 'Profile', icon: User, href: '/settings/profile' },
     { label: 'Settings', icon: Settings, href: '/settings' },
     { label: 'Appearance', icon: Palette, href: '/settings#appearance' },

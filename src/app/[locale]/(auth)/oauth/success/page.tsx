@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/stores/use-auth-store';
+import { ROUTES } from '@/lib/routes';
 import { Loader2 } from 'lucide-react';
 
 /**
@@ -63,10 +64,10 @@ function OAuthSuccessContent() {
         setAuth(null, accessToken);
         setHydrated(false); // let useCurrentUser re-hydrate on dashboard mount
         toast.success('Signed in with GitHub!');
-        router.replace('/dashboard');
+        router.replace(ROUTES.HOME);
       } catch {
         toast.error('Failed to complete authentication. Please try again.');
-        router.replace('/login');
+        router.replace(ROUTES.LOGIN);
       }
     })();
   // eslint-disable-next-line react-hooks/exhaustive-deps

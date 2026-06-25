@@ -1,10 +1,11 @@
 /**
  * GET /api/auth/me
  *
- * Fetches the current user by exchanging the httpOnly refresh_token
- * with the Go backend's /api/v1/auth/me endpoint.
+ * Returns the current authenticated user by exchanging the httpOnly
+ * refresh_token with the Go backend's refresh endpoint.
  *
- * Note: The Go backend's HandleGetCurrentUser expects the refresh_token in the JSON body.
+ * This does NOT rotate the refresh token — it just validates it and
+ * returns the user object. The client uses this for hydration only.
  */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
@@ -21,7 +22,8 @@ export async function GET() {
 
   let goRes: Response;
   try {
-    goRes = await fetch(`${GO_API_URL}/api/v1/auth/me`, {
+    // Use the refresh endpoint — it validates the token and returns user + new tokens
+    goRes = await fetch(`${GO_API_URL}/api/v1/auth/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,10 +36,25 @@ export async function GET() {
     return NextResponse.json({ error: 'Backend unreachable' }, { status: 503 });
   }
 
-  const data = await goRes.json();
-  if (!goRes.ok) {
+  const data = await goRes.json() as {
+    success: boolean;
+    data?: { access_token: string; refresh_token: string; user: unknown };
+  };
+
+  if (!goRes.ok || !data.success || !data.data) {
+    cookieStore.delete('refresh_token');
     return NextResponse.json({ error: 'Unauthenticated' }, { status: 401 });
   }
 
-  return NextResponse.json(data);
+  // Rotate the httpOnly cookie with the new refresh token
+  const res = NextResponse.json({ success: true, data: { user: data.data.user } });
+  res.cookies.set('refresh_token', data.data.refresh_token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 30,
+  });
+
+  return res;
 }
