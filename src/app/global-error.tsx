@@ -5,7 +5,7 @@ import NextError from "next/error";
 // import { useEffect } from 'react';
 import { routing } from "@/libs/i18n-routing";
 
-export default function GlobalError(props: {
+export default function GlobalError(_props: {
   error: Error & { digest?: string };
 }) {
   //   useEffect(() => {

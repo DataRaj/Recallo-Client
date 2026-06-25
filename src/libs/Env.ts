@@ -8,7 +8,7 @@ export const Env = createEnv({
   client: {
     NEXT_PUBLIC_APP_URL: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
-    NEXT_PUBLIC_POSTHOG_POST: z.string().optional(),
+    NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
     /** Base URL of the Go backend, e.g. http://localhost:8080 */
     NEXT_PUBLIC_API_URL: z.string().url().optional(),
   },
@@ -20,7 +20,7 @@ export const Env = createEnv({
     ARCJET_KEY: process.env.ARCJET_KEY,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
-    NEXT_PUBLIC_POSTHOG_POST: process.env.NEXT_PUBLIC_POSTHOG_POST,
+    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NODE_ENV: process.env.NODE_ENV,
   },
