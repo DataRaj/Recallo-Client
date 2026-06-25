@@ -12,6 +12,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/use-auth-store';
+import { ROUTES } from '@/lib/routes';
 import type { LoginInput, RegisterInput } from '@/schemas/auth.schema';
 import type { GoAuthResponse } from '@/types/auth';
 
@@ -44,7 +45,7 @@ export function useAuth() {
         await persistRefreshToken(data.data.refresh_token);
         setAuth(data.data.user, data.data.access_token);
         toast.success(`Welcome back, ${data.data.user.name}!`);
-        router.push('/dashboard');
+        router.push(ROUTES.HOME);
       }
       catch (err: unknown) {
         const message
@@ -76,7 +77,7 @@ export function useAuth() {
         await persistRefreshToken(data.data.refresh_token);
         setAuth(data.data.user, data.data.access_token);
         toast.success(`Welcome to Recallo, ${data.data.user.name}!`);
-        router.push('/dashboard');
+        router.push(ROUTES.HOME);
       }
       catch (err: unknown) {
         const message
@@ -99,7 +100,7 @@ export function useAuth() {
     }
     finally {
       clearAuth();
-      router.push('/login');
+      router.replace(ROUTES.LOGIN);
     }
   }, [clearAuth, router]);
 

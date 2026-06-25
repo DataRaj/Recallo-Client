@@ -1,0 +1,67 @@
+/**
+ * Base modal component with overlay and backdrop
+ */
+'use client';
+
+import { ReactNode } from 'react';
+import { X } from 'lucide-react';
+
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const sizeMap = {
+  sm: 'max-w-md',
+  md: 'max-w-lg',
+  lg: 'max-w-2xl',
+};
+
+export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-40 bg-black/50 transition-opacity"
+        onClick={onClose}
+        style={{ background: 'rgba(0, 0, 0, 0.5)' }}
+      />
+
+      {/* Modal */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div
+          className={`w-full ${sizeMap[size]} rounded-[16px] shadow-lg flex flex-col max-h-[90vh]`}
+          style={{ background: '#273338' }}
+          onClick={e => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div
+            className="flex items-center justify-between px-6 py-4 border-b"
+            style={{ borderColor: 'rgba(255,255,255,0.06)' }}
+          >
+            <h2 className="text-lg font-semibold" style={{ color: '#FBF5DD' }}>
+              {title}
+            </h2>
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-[8px] transition-all duration-200 hover:bg-white/10"
+              style={{ color: 'rgba(251,245,221,0.4)' }}
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto p-6">
+            {children}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
