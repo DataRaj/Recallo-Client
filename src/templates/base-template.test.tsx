@@ -1,7 +1,8 @@
+/// <reference types="@vitest/browser" />
 import { NextIntlClientProvider } from 'next-intl';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page } from 'vitest/browser';
+import { page } from '@vitest/browser/context';
 import messages from '@/locales/en.json';
 import { BaseTemplate } from './base-template';
 
@@ -29,7 +30,7 @@ describe('Base template', () => {
       expect(menuItemList.elements()).toHaveLength(3);
     });
 
-    it('should have a link to support nextjs-boilerplate.com', () => {
+    it('should have a link to support nextjs-boilerplate.com', async () => {
       render(
         <NextIntlClientProvider locale="en" messages={messages}>
           <BaseTemplate leftNav={<li>1</li>}>{null}</BaseTemplate>
@@ -45,7 +46,7 @@ describe('Base template', () => {
        * The link doesn't need to appear on every pages, one link on one page is enough.
        * Thank you for your support it'll mean a lot for us.
        */
-      expect(copyrightLink).toHaveAttribute(
+      await expect.element(copyrightLink).toHaveAttribute(
         'href',
         'https://nextjs-boilerplate.com',
       );

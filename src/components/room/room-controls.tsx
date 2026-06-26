@@ -3,7 +3,7 @@
  */
 'use client';
 
-import { Mic, MicOff, Video, VideoOff, Share2, Record, MessageCircle, X } from 'lucide-react';
+import { Mic, MicOff, Video, VideoOff, Share2, Disc, MessageCircle, X } from 'lucide-react';
 
 interface RoomControlsProps {
   isMuted: boolean;
@@ -88,7 +88,7 @@ export function RoomControls({
           disabled={!canRecord}
           title="Start/Stop recording"
         >
-          <Record size={18} />
+          <Disc size={18} />
           <span className="text-sm font-medium">{isRecording ? 'Stop' : 'Record'}</span>
         </button>
       )}

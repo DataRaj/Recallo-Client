@@ -12,7 +12,7 @@ interface ParticipantListProps {
   onToggle?: () => void;
 }
 
-export function ParticipantList({ participants, hostId, isExpanded = true, onToggle }: ParticipantListProps) {
+export function ParticipantList({ participants, hostId: _hostId, isExpanded = true, onToggle }: ParticipantListProps) {
   return (
     <div
       className="rounded-[12px] overflow-hidden"

@@ -10,7 +10,6 @@ import {
   Palette,
   LogOut,
   ChevronDown,
-  LayoutDashboard,
 } from 'lucide-react';
 
 export function UserMenu() {

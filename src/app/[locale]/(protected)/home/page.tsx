@@ -4,7 +4,6 @@
  */
 'use client';
 
-import { useState } from 'react';
 import { Video, Mic, FileText, Plus, ArrowRight, Zap, MessageSquare } from 'lucide-react';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { useModal } from '@/components/providers/modal-provider';

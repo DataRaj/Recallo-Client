@@ -9,7 +9,7 @@ const INITIAL_MESSAGES = [
   { id: 3, text: "Awesome, let me know if you need any review.", sender: "Alex K.", isMe: false, time: "10:35 AM" }
 ];
 
-export default function ChatConversationPage({ params }: { params: { conversationId: string } }) {
+export default function ChatConversationPage() {
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
