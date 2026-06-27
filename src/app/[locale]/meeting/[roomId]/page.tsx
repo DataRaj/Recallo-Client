@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, use } from 'react';
 import {
     Mic,
     MicOff,
@@ -20,10 +20,23 @@ import {
     X,
     FileText,
     Zap,
-    MessageCircle
+    MessageCircle,
+    Loader2
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { ROUTES } from '@/lib/routes';
+import { getRoom, getRoomToken, extendRoomSession, endRoom } from '@/services/room-service';
+import { getOrCreateGuestId } from '@/utils/guest';
+import type { Room } from '@/types/room';
+
+type PageProps = {
+  params: Promise<{
+    roomId: string;
+    locale: string;
+  }>;
+};
 
 /* ─── Mock participants ─── */
 const PARTICIPANTS = [
@@ -191,7 +204,18 @@ function VideoTile({ p }: { p: (typeof PARTICIPANTS)[number] }) {
     );
 }
 
-export default function MeetingPage() {
+export default function MeetingPage({ params }: PageProps) {
+    const { roomId } = use(params);
+    const router = useRouter();
+
+    const [room, setRoom] = useState<Room | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [token, setToken] = useState<string | null>(null);
+    const [livekitHost, setLivekitHost] = useState<string | null>(null);
+    const [isHost, setIsHost] = useState(false);
+    const [displayName, setDisplayName] = useState('Guest');
+
     const [micOn, setMicOn] = useState(true);
     const [videoOn, setVideoOn] = useState(true);
     const [chatOpen, setChatOpen] = useState(false);
@@ -199,6 +223,125 @@ export default function MeetingPage() {
     const [handRaised, setHandRaised] = useState(false);
     const [chatInput, setChatInput] = useState('');
     const [messages, setMessages] = useState(CHAT_MSGS);
+    const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+
+    const [isExtending, setIsExtending] = useState(false);
+    const [isEnding, setIsEnding] = useState(false);
+
+    useEffect(() => {
+        if (token && livekitHost) {
+            console.log(`Connected as ${displayName} to LiveKit room:`, { livekitHost, token });
+        }
+    }, [token, livekitHost, displayName]);
+
+    useEffect(() => {
+        let active = true;
+        const fetchRoomDetails = async () => {
+            try {
+                const guestId = getOrCreateGuestId();
+                const r = await getRoom(roomId);
+                if (!active) return;
+                setRoom(r);
+
+                const currentIsHost = r.host_guest_id === guestId;
+                setIsHost(currentIsHost);
+
+                const savedName = localStorage.getItem('recallo_display_name') || (currentIsHost ? 'Host' : 'Guest');
+                setDisplayName(savedName);
+
+                // Fetch LiveKit Token
+                const tokenResp = await getRoomToken(roomId, guestId, savedName, currentIsHost);
+                if (!active) return;
+                setToken(tokenResp.token);
+                setLivekitHost(tokenResp.livekit_host);
+                
+                setIsLoading(false);
+            } catch (err: any) {
+                if (!active) return;
+                console.error(err);
+                setError(err.response?.data?.error || err.message || 'Failed to connect to room');
+                setIsLoading(false);
+            }
+        };
+
+        fetchRoomDetails();
+        return () => {
+            active = false;
+        };
+    }, [roomId]);
+
+    useEffect(() => {
+        if (!room) return;
+        
+        if (room.status === 'pending') {
+            setTimeRemaining((room.session_duration_mins || 30) * 60);
+            return;
+        }
+
+        if (room.status === 'ended') {
+            setTimeRemaining(0);
+            return;
+        }
+
+        const interval = setInterval(() => {
+            const startedTime = room.startedAt ? new Date(room.startedAt).getTime() : room.createdAt.getTime();
+            const durationMins = room.session_duration_mins ?? 30;
+            const endTime = startedTime + durationMins * 60 * 1000;
+            const remainingMs = endTime - Date.now();
+            
+            if (remainingMs <= 0) {
+                clearInterval(interval);
+                setTimeRemaining(0);
+                toast.error('Session expired!');
+                router.push(ROUTES.HOME);
+            } else {
+                setTimeRemaining(Math.floor(remainingMs / 1000));
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [room, router]);
+
+    const formatTime = (seconds: number | null): string => {
+        if (seconds === null) return '--:--';
+        if (seconds <= 0) return '00:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const handleExtend = async () => {
+        if (!room || isExtending) return;
+        setIsExtending(true);
+        try {
+            const guestId = getOrCreateGuestId();
+            const result = await extendRoomSession(room.id, guestId);
+            toast.success(result.message || 'Session extended by 15 minutes');
+            // Refresh room data
+            const updatedRoom = await getRoom(room.id);
+            setRoom(updatedRoom);
+        } catch (err: any) {
+            toast.error(err.response?.data?.error || err.message || 'Failed to extend session');
+        } finally {
+            setIsExtending(false);
+        }
+    };
+
+    const handleEnd = async () => {
+        if (!room || isEnding) return;
+        if (!confirm('Are you sure you want to end this meeting for everyone?')) return;
+        setIsEnding(true);
+        try {
+            const guestId = getOrCreateGuestId();
+            await endRoom(room.id, guestId);
+            toast.success('Room ended');
+            router.push(ROUTES.HOME);
+        } catch (err: any) {
+            toast.error(err.response?.data?.error || err.message || 'Failed to end room');
+        } finally {
+            setIsEnding(false);
+        }
+    };
 
     const sendChat = () => {
         if (!chatInput.trim()) return;
@@ -222,6 +365,32 @@ export default function MeetingPage() {
 
         setChatInput('');
     };
+
+    if (isLoading) {
+        return (
+            <div className="flex h-screen w-screen flex-col items-center justify-center bg-[#141E1F] text-[#FBF5DD] gap-4">
+                <Loader2 className="h-8 w-8 animate-spin text-[#9CC5A1]" />
+                <p className="text-sm font-medium">Connecting to room...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex h-screen w-screen flex-col items-center justify-center bg-[#141E1F] text-[#FBF5DD] gap-6 px-4 text-center">
+                <div className="rounded-full bg-[#BA5A5A]/10 p-4 text-[#BA5A5A]">
+                    <X size={32} />
+                </div>
+                <div className="space-y-2">
+                    <h2 className="text-xl font-bold">Failed to Join Room</h2>
+                    <p className="text-sm text-white/60 max-w-md">{error}</p>
+                </div>
+                <Link href={ROUTES.HOME} className="px-5 py-2.5 rounded-xl bg-[#9CC5A1] text-[#141E1F] font-semibold hover:bg-opacity-95 transition-all">
+                    Return to Dashboard
+                </Link>
+            </div>
+        );
+    }
 
     return (
         <div
@@ -255,19 +424,19 @@ export default function MeetingPage() {
                             className="truncate text-[12px] font-medium sm:text-[13px]"
                             style={{ color: '#FBF5DD' }}
                         >
-                            Morning Standup
+                            {room?.title || 'Morning Standup'}
                         </p>
 
                         <div className="flex items-center gap-1.5">
                             <span
                                 className="h-1.5 w-1.5 shrink-0 rounded-full"
-                                style={{ background: '#9CC5A1' }}
+                                style={{ background: timeRemaining !== null && timeRemaining < 300 ? '#BA5A5A' : '#9CC5A1' }}
                             />
                             <span
                                 className="text-[10px]"
-                                style={{ color: 'rgba(251,245,221,0.4)' }}
+                                style={{ color: timeRemaining !== null && timeRemaining < 300 ? '#BA5A5A' : 'rgba(251,245,221,0.4)' }}
                             >
-                                00:12:34
+                                {formatTime(timeRemaining)}
                             </span>
                         </div>
                     </div>
@@ -371,6 +540,16 @@ export default function MeetingPage() {
                                 />
 
                                 <ControlBtn icon={MonitorUp} label="Share" />
+                                
+                                {isHost && !room?.extend_used && (
+                                    <ControlBtn 
+                                        icon={Zap} 
+                                        label={isExtending ? 'Extending...' : 'Extend'} 
+                                        onClick={handleExtend}
+                                        active={!isExtending}
+                                    />
+                                )}
+                                
                                 <ControlBtn icon={Disc3} label="Record" />
                                 <ControlBtn icon={FileText} label="Transcript" />
                                 <ControlBtn icon={Zap} label="Summary" />
@@ -418,9 +597,13 @@ export default function MeetingPage() {
                                     style={{ background: 'rgba(255,255,255,0.08)' }}
                                 />
 
-                                <Link href={ROUTES.HOME}>
-                                    <ControlBtn icon={PhoneOff} label="Leave" danger />
-                                </Link>
+                                {isHost ? (
+                                    <ControlBtn icon={PhoneOff} label="End Room" danger onClick={handleEnd} />
+                                ) : (
+                                    <Link href={ROUTES.HOME}>
+                                        <ControlBtn icon={PhoneOff} label="Leave" danger />
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     </section>

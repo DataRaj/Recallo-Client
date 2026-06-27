@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ROUTES } from '@/lib/routes';
 import type { Room, CreateRoomInput, JoinRoomInput } from '@/types/room';
+import { getOrCreateGuestId } from '@/utils/guest';
+import { createRoom as apiCreateRoom, getRoom as apiGetRoom, endRoom as apiEndRoom } from '@/services/room-service';
 
 interface UseRoomResult {
   room: Room | null;
@@ -16,6 +18,7 @@ interface UseRoomResult {
   createRoom: (input: CreateRoomInput) => Promise<Room>;
   joinRoom: (input: JoinRoomInput) => Promise<Room>;
   leaveRoom: (roomId: string) => Promise<void>;
+  endRoom: (roomId: string) => Promise<void>;
 }
 
 export function useRoom(): UseRoomResult {
@@ -28,21 +31,12 @@ export function useRoom(): UseRoomResult {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/rooms/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(input),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create room');
-      }
-
-      const data = await response.json() as { data: Room };
-      setRoom(data.data);
+      const guestId = getOrCreateGuestId();
+      const newRoom = await apiCreateRoom(input.title, guestId);
+      setRoom(newRoom);
       toast.success('Room created successfully');
-      router.push(ROUTES.MEETING_DETAIL(data.data.id));
-      return data.data;
+      router.push(ROUTES.MEETING_DETAIL(newRoom.id));
+      return newRoom;
     }
     catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to create room';
@@ -59,24 +53,20 @@ export function useRoom(): UseRoomResult {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/rooms/join', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(input),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to join room');
+      const existingRoom = await apiGetRoom(input.roomId);
+      setRoom(existingRoom);
+      
+      // Store displayName in localStorage to use in the meeting page when fetching token
+      if (input.displayName) {
+        localStorage.setItem('recallo_display_name', input.displayName);
       }
-
-      const data = await response.json() as { data: Room };
-      setRoom(data.data);
-      toast.success('Joined room successfully');
-      router.push(ROUTES.MEETING_DETAIL(data.data.id));
-      return data.data;
+      
+      toast.success('Room found, connecting...');
+      router.push(ROUTES.MEETING_DETAIL(existingRoom.id));
+      return existingRoom;
     }
     catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to join room';
+      const message = err instanceof Error ? err.message : 'Failed to find room';
       setError(message);
       toast.error(message);
       throw err;
@@ -86,24 +76,36 @@ export function useRoom(): UseRoomResult {
     }
   }, [router]);
 
-  const leaveRoom = useCallback(async (roomId: string): Promise<void> => {
+  const leaveRoom = useCallback(async (_roomId: string): Promise<void> => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/api/rooms/${roomId}/leave`, {
-        method: 'POST',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to leave room');
-      }
-
       setRoom(null);
       toast.success('Left room');
       router.push(ROUTES.HOME);
     }
     catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to leave room';
+      setError(message);
+      toast.error(message);
+    }
+    finally {
+      setIsLoading(false);
+    }
+  }, [router]);
+
+  const endRoom = useCallback(async (roomId: string): Promise<void> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const guestId = getOrCreateGuestId();
+      await apiEndRoom(roomId, guestId);
+      setRoom(null);
+      toast.success('Room ended successfully');
+      router.push(ROUTES.HOME);
+    }
+    catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to end room';
       setError(message);
       toast.error(message);
     }
@@ -119,5 +121,6 @@ export function useRoom(): UseRoomResult {
     createRoom,
     joinRoom,
     leaveRoom,
+    endRoom,
   };
 }

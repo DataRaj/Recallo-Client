@@ -36,6 +36,12 @@ export interface Room {
   isRecording: boolean;
   recordingUrl?: string;
   settings: RoomSettings;
+  // Go backend fields
+  livekit_room_name: string;
+  host_guest_id: string;
+  extend_used: boolean;
+  tier: 'guest' | 'standard' | 'pro';
+  session_duration_mins?: number;
 }
 
 export interface RoomSettings {

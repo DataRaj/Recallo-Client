@@ -1,94 +1,68 @@
 /**
- * Chat service for API communication
+ * Chat service for API communication with Recallo Go Backend
  */
 
+import { apiClient } from '@/libs/api-client';
 import type { Conversation, ChatMessage } from '@/types/chat';
 
+interface APIResponse<T> {
+  status: number;
+  success: boolean;
+  message: string;
+  data: T;
+}
+
 export async function getConversations(): Promise<Conversation[]> {
-  const response = await fetch('/api/chat/conversations', {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch conversations');
-  }
-
-  const data = await response.json() as { data: Conversation[] };
-  return data.data;
+  const response = await apiClient.get<APIResponse<Conversation[]>>('/api/v1/conversations');
+  return response.data.data;
 }
 
 export async function getConversation(conversationId: string): Promise<Conversation> {
-  const response = await fetch(`/api/chat/${conversationId}`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch conversation');
-  }
-
-  const data = await response.json() as { data: Conversation };
-  return data.data;
+  const response = await apiClient.get<APIResponse<Conversation>>(`/api/v1/conversation/private/${conversationId}`);
+  return response.data.data;
 }
 
-export async function getMessages(conversationId: string, limit = 50, offset = 0): Promise<ChatMessage[]> {
-  const response = await fetch(
-    `/api/chat/${conversationId}/messages?limit=${limit}&offset=${offset}`,
+export async function getMessages(
+  conversationId: string,
+  page = 1,
+  limit = 20
+): Promise<ChatMessage[]> {
+  const response = await apiClient.get<APIResponse<{ messages: ChatMessage[] }>>(
+    `/api/v1/conversation/private/${conversationId}/messages`,
     {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    },
+      params: {
+        page,
+        limit,
+      },
+    }
   );
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch messages');
-  }
-
-  const data = await response.json() as { data: ChatMessage[] };
-  return data.data;
+  return response.data.data.messages;
 }
 
+export async function createConversation(receiverId: number): Promise<Conversation> {
+  const response = await apiClient.post<APIResponse<Conversation>>(
+    '/api/v1/conversation/private/create',
+    {
+      receiver_id: receiverId,
+    }
+  );
+  return response.data.data;
+}
+
+/**
+ * Note: Sending messages in the Recallo backend is designed to go over WebSockets (ws://).
+ * This REST function log a warning / mock response or acts as a local fallback.
+ */
 export async function sendMessage(conversationId: string, content: string): Promise<ChatMessage> {
-  const response = await fetch(`/api/chat/${conversationId}/messages`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content }),
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to send message');
-  }
-
-  const data = await response.json() as { data: ChatMessage };
-  return data.data;
-}
-
-export async function createConversation(participantIds: number[], name?: string): Promise<Conversation> {
-  const response = await fetch('/api/chat/conversations', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ participantIds, name }),
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to create conversation');
-  }
-
-  const data = await response.json() as { data: Conversation };
-  return data.data;
-}
-
-export async function searchMessages(conversationId: string, query: string): Promise<ChatMessage[]> {
-  const response = await fetch(`/api/chat/${conversationId}/search?q=${encodeURIComponent(query)}`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to search messages');
-  }
-
-  const data = await response.json() as { data: ChatMessage[] };
-  return data.data;
+  console.warn('Recallo Backend uses WebSockets to transmit chat messages. This REST call is mocked.');
+  
+  const mockMessage: ChatMessage = {
+    id: String(Date.now()),
+    conversationId,
+    senderId: 0, // System/Mock
+    content,
+    createdAt: new Date(),
+  };
+  
+  return Promise.resolve(mockMessage);
 }
