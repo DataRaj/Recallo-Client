@@ -1,6 +1,3 @@
-/**
- * useRoom — Hook for room operations (create, join, list, etc.)
- */
 'use client';
 
 import { useCallback, useState } from 'react';
@@ -8,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ROUTES } from '@/lib/routes';
 import type { Room, CreateRoomInput, JoinRoomInput } from '@/types/room';
-import { getOrCreateGuestId } from '@/utils/guest';
+import { getMeetingIdentity } from '@/utils/identity';
 import { createRoom as apiCreateRoom, getRoom as apiGetRoom, endRoom as apiEndRoom } from '@/services/room-service';
 
 interface UseRoomResult {
@@ -31,11 +28,15 @@ export function useRoom(): UseRoomResult {
     setIsLoading(true);
     setError(null);
     try {
-      const guestId = getOrCreateGuestId();
+      const guestId = getMeetingIdentity();
       const newRoom = await apiCreateRoom(input.title, guestId);
       setRoom(newRoom);
       toast.success('Room created successfully');
-      router.push(ROUTES.MEETING_DETAIL(newRoom.id));
+      router.push(
+        input.type === 'webinar'
+          ? ROUTES.WEBINAR_DETAIL(newRoom.id)
+          : ROUTES.MEETING_DETAIL(newRoom.id),
+      );
       return newRoom;
     }
     catch (err) {
@@ -98,7 +99,7 @@ export function useRoom(): UseRoomResult {
     setIsLoading(true);
     setError(null);
     try {
-      const guestId = getOrCreateGuestId();
+      const guestId = getMeetingIdentity();
       await apiEndRoom(roomId, guestId);
       setRoom(null);
       toast.success('Room ended successfully');
