@@ -4,8 +4,9 @@
  * useWsStore — lightweight client-side WS state store.
  *
  * Stores:
- *  - connectionState   — current WS lifecycle phase
- *  - onlineUserIds     — Set of currently-online user ids (from presence events)
+ *  - connectionState        — current WS lifecycle phase
+ *  - onlineUserIds          — Set of currently-online user ids
+ *  - lastSeenByUser         — Map<userId, Date> — last offline timestamp
  *  - messagesByConversation — ChatMessage[] keyed by conversation private_id
  *  - typingByConversation   — typing user-id set per conversation
  *
@@ -23,10 +24,14 @@ interface WsState {
   connectionState: WsConnectionState;
   /** User ids that are currently online (from 'online'/'offline' events). */
   onlineUserIds: Set<number>;
+  /** Last time a user was seen online (recorded when they go offline). */
+  lastSeenByUser: Map<number, Date>;
   /** Live messages received via WS, keyed by conversation private_id. */
   messagesByConversation: Map<string, ChatMessage[]>;
   /** Typing user-id set, keyed by conversation private_id. */
   typingByConversation: Map<string, Set<number>>;
+  /** Known user names fetched from REST — id → name. */
+  userNames: Map<number, string>;
 }
 
 interface WsActions {
@@ -39,14 +44,18 @@ interface WsActions {
   /** Merge WS live message into existing REST history — deduplicates by id. */
   mergeMessage: (privateId: string, message: ChatMessage) => void;
   setTyping: (privateId: string, userId: number, isTyping: boolean) => void;
+  /** Cache a user's display name so it's available for message rendering. */
+  setUserName: (userId: number, name: string) => void;
   reset: () => void;
 }
 
 const initial: WsState = {
   connectionState: 'idle',
   onlineUserIds: new Set(),
+  lastSeenByUser: new Map(),
   messagesByConversation: new Map(),
   typingByConversation: new Map(),
+  userNames: new Map(),
 };
 
 export const useWsStore = create<WsState & WsActions>()(
@@ -65,9 +74,11 @@ export const useWsStore = create<WsState & WsActions>()(
 
       setOffline: (userId) =>
         set((s) => {
-          const next = new Set(s.onlineUserIds);
-          next.delete(userId);
-          return { onlineUserIds: next };
+          const nextOnline = new Set(s.onlineUserIds);
+          nextOnline.delete(userId);
+          const nextSeen = new Map(s.lastSeenByUser);
+          nextSeen.set(userId, new Date());
+          return { onlineUserIds: nextOnline, lastSeenByUser: nextSeen };
         }),
 
       pushMessage: (privateId, message) =>
@@ -103,6 +114,13 @@ export const useWsStore = create<WsState & WsActions>()(
           else conv.delete(userId);
           map.set(privateId, conv);
           return { typingByConversation: map };
+        }),
+
+      setUserName: (userId, name) =>
+        set((s) => {
+          const next = new Map(s.userNames);
+          next.set(userId, name);
+          return { userNames: next };
         }),
 
       reset: () => set(initial),
