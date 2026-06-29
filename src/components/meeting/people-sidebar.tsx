@@ -71,7 +71,6 @@ function PeopleSidebarImpl() {
             const uid = parseUserId(p.identity);
             const canDm = !p.isLocal && uid !== null;
 
-            console.log(name, uid, canDm);
             return (
               <div
                 key={p.identity}
@@ -89,11 +88,9 @@ function PeopleSidebarImpl() {
                       {name}
                       {p.isLocal && ' (You)'}
                     </p>
-                    {uid !== null && (
-                      <p className="text-[10px]" style={{ color: 'rgba(251,245,221,0.35)' }}>
-                        ID: {uid}
-                      </p>
-                    )}
+                    <p className="text-[10px]" style={{ color: 'rgba(251,245,221,0.35)' }}>
+                      {p.isLocal ? 'You' : p.isSpeaking ? 'Speaking' : 'Participant'}
+                    </p>
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-1.5">

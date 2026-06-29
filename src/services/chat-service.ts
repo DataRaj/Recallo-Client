@@ -7,6 +7,7 @@
  */
 
 import { apiClient } from '@/libs/api-client';
+import { useWsStore } from '@/stores/use-ws-store';
 import type { Conversation, ChatMessage, MessageType } from '@/types/chat';
 
 interface APIResponse<T> {
@@ -20,14 +21,28 @@ interface APIResponse<T> {
 
 function normaliseConversation(raw: any): Conversation {
   const id = String(raw.id);
-  const user1 = Number(raw.user1 ?? raw.user1_id);
-  const user2 = Number(raw.user2 ?? raw.user2_id);
-  const participantIds = [user1, user2].filter((n) => !Number.isNaN(n) && n > 0);
-  
+
+  // The backend returns user1/user2 as flat integer ids.
+  // It MAY also return user1_name/user2_name when populated.
+  const user1Id = Number(raw.user1 ?? raw.user1_id);
+  const user2Id = Number(raw.user2 ?? raw.user2_id);
+  const participantIds = [user1Id, user2Id].filter((n) => !Number.isNaN(n) && n > 0);
+
+  const resolvedNames: Record<number, string> = {};
+  if (raw.user1_name) resolvedNames[user1Id] = String(raw.user1_name);
+  if (raw.user2_name) resolvedNames[user2Id] = String(raw.user2_name);
+  // Some backends put the names nested: { user1: { id, name } }
+  if (typeof raw.user1 === 'object' && raw.user1?.name) resolvedNames[Number(raw.user1.id)] = String(raw.user1.name);
+  if (typeof raw.user2 === 'object' && raw.user2?.name) resolvedNames[Number(raw.user2.id)] = String(raw.user2.name);
+
+  // Cache resolved names in the global WsStore so message bubbles can look them up.
+  const { setUserName } = useWsStore.getState();
+  Object.entries(resolvedNames).forEach(([uid, name]) => setUserName(Number(uid), name));
+
   const participants = participantIds.map((pid) => ({
     id: pid,
-    name: `User ${pid}`,
-    email: `user${pid}@example.com`,
+    name: resolvedNames[pid] ?? useWsStore.getState().userNames.get(pid) ?? `User ${pid}`,
+    email: `user${pid}@recallo.local`,
   }));
 
   return {
@@ -35,9 +50,10 @@ function normaliseConversation(raw: any): Conversation {
     type: 'direct',
     participantIds,
     participants,
-    unreadCount: 0,
+    unreadCount: Number(raw.unread_count ?? 0),
+    lastMessageAt: raw.last_message_at ? new Date(raw.last_message_at as string) : undefined,
     createdAt: new Date(raw.created_at ?? Date.now()),
-    updatedAt: new Date(raw.created_at ?? Date.now()),
+    updatedAt: new Date(raw.updated_at ?? raw.created_at ?? Date.now()),
   };
 }
 

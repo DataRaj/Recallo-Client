@@ -20,8 +20,7 @@ function formatTime(d: Date | string | undefined): string {
 
 function ConversationName(convo: Conversation, currentUserId: number): string {
   if (convo.name) return convo.name;
-console.log("convo:", convo);
-  const other = convo && convo?.participants.find((p) => p.id !== currentUserId);
+  const other = convo.participants.find((p) => p.id !== currentUserId);
   return other?.name ?? `Conversation ${convo.id}`;
 }
 
@@ -88,6 +87,13 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => { void load(); }, [load]);
+
+  // Refresh sidebar list when new messages arrive so last-message preview updates.
+  const messagesByConversation = useWsStore((s) => s.messagesByConversation);
+  useEffect(() => {
+    void load();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messagesByConversation.size]);
 
   const filtered = conversations.filter((c) => {
     const name = user ? ConversationName(c, user.id) : '';

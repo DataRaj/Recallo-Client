@@ -93,7 +93,7 @@ export interface WsErrorPayload {
 
 /** Send a text message. */
 export interface WsSendMessage {
-  private_id: string;
+  private_id: number;
   receiver_id: number;
   message_type: 'text' | 'gif' | 'file';
   content: string;
@@ -108,7 +108,7 @@ export interface WsSendMessage {
 
 /** Notify that you are (or stopped) typing. */
 export interface WsSendTyping {
-  private_id: string;
+  private_id: number;
   receiver_id: number;
   is_typing: boolean;
 }
