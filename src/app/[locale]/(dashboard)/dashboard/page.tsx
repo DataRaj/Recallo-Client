@@ -1,6 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useAuthStore } from '@/stores/use-auth-store';
+import { useRecentRooms } from '@/hooks/use-recent-rooms';
+import { ROUTES } from '@/lib/routes';
 import {
     Video,
     Users,
@@ -12,14 +15,6 @@ import {
     Calendar,
     TrendingUp,
 } from 'lucide-react';
-
-/* ─── Data ─── */
-const STATS = [
-    { label: 'Meetings This Month', value: '0', icon: Video, color: '#BA5A5A' },
-    { label: 'Participants', value: '0', icon: Users, color: '#B0BA99' },
-    { label: 'Hours Connected', value: '0h', icon: Clock, color: '#8D7A7A' },
-    { label: 'Recordings', value: '0', icon: FileText, color: '#9CC5A1' },
-];
 
 const QUICK_ACTIONS = [
     {
@@ -42,8 +37,6 @@ const QUICK_ACTIONS = [
     },
 ];
 
-const RECENT: { label: string; time: string; participants: number }[] = [];
-
 /* ─── Helpers ─── */
 function getGreeting() {
     const h = new Date().getHours();
@@ -52,9 +45,33 @@ function getGreeting() {
     return 'Good evening';
 }
 
+function relativeTime(ms: number): string {
+    const mins = Math.round((Date.now() - ms) / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.round(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.round(hours / 24);
+    return days === 1 ? 'yesterday' : `${days}d ago`;
+}
+
 /* ─── Component ─── */
 export default function DashboardPage() {
     const user = useAuthStore(s => s.user);
+    const recentRooms = useRecentRooms();
+
+    const now = new Date();
+    const meetingsThisMonth = recentRooms.filter((r) => {
+        const d = new Date(r.at);
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    }).length;
+
+    const STATS = [
+        { label: 'Meetings This Month', value: String(meetingsThisMonth), icon: Video, color: '#BA5A5A' },
+        { label: 'Participants', value: '0', icon: Users, color: '#B0BA99' },
+        { label: 'Hours Connected', value: '0h', icon: Clock, color: '#8D7A7A' },
+        { label: 'Recordings', value: '0', icon: FileText, color: '#9CC5A1' },
+    ];
 
     return (
         <div className="px-20 py-10 flex flex-col gap-8 w-full">
@@ -160,7 +177,7 @@ export default function DashboardPage() {
                     </button>
                 </div>
 
-                {RECENT.length === 0
+                {recentRooms.length === 0
                     ? (
                         <div
                             className="rounded-[16px] py-16 flex flex-col items-center justify-center text-center"
@@ -192,10 +209,11 @@ export default function DashboardPage() {
                     )
                     : (
                         <div className="flex flex-col gap-2">
-                            {RECENT.map((item, i) => (
-                                <div
-                                    key={i}
-                                    className="flex items-center gap-4 p-4 rounded-[12px] transition-all duration-150 hover:bg-[#DDEBD5] cursor-default"
+                            {recentRooms.map(item => (
+                                <Link
+                                    key={item.id}
+                                    href={item.type === 'webinar' ? ROUTES.WEBINAR_DETAIL(item.id) : ROUTES.MEETING_DETAIL(item.id)}
+                                    className="flex items-center gap-4 p-4 rounded-[12px] transition-all duration-150 hover:bg-[#DDEBD5] group"
                                     style={{
                                         background: '#F3F8EF',
                                         border: '1px solid #D5E3CC',
@@ -205,18 +223,18 @@ export default function DashboardPage() {
                                         className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0"
                                         style={{ background: 'rgba(186,90,90,0.1)', color: '#BA5A5A' }}
                                     >
-                                        <Video size={16} />
+                                        {item.type === 'webinar' ? <Mic size={16} /> : <Video size={16} />}
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-sm font-medium truncate" style={{ color: '#2C3E2D' }}>
-                                            {item.label}
+                                            {item.title || `Room ${item.id}`}
                                         </p>
                                         <p className="text-xs" style={{ color: '#8D7A7A' }}>
-                                            {item.time} · {item.participants} participants
+                                            {item.role === 'host' ? 'Hosted' : 'Joined'} · {relativeTime(item.at)}
                                         </p>
                                     </div>
-                                    <ArrowRight size={14} style={{ color: '#B0BA99' }} />
-                                </div>
+                                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" style={{ color: '#B0BA99' }} />
+                                </Link>
                             ))}
                         </div>
                     )}

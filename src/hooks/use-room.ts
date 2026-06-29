@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { ROUTES } from '@/lib/routes';
 import type { Room, CreateRoomInput, JoinRoomInput } from '@/types/room';
 import { getMeetingIdentity } from '@/utils/identity';
+import { recordRecentRoom } from '@/utils/recent-rooms';
 import { createRoom as apiCreateRoom, getRoom as apiGetRoom, endRoom as apiEndRoom } from '@/services/room-service';
 
 interface UseRoomResult {
@@ -31,6 +32,12 @@ export function useRoom(): UseRoomResult {
       const guestId = getMeetingIdentity();
       const newRoom = await apiCreateRoom(input.title, guestId);
       setRoom(newRoom);
+      recordRecentRoom({
+        id: newRoom.id,
+        title: newRoom.title,
+        type: input.type === 'webinar' ? 'webinar' : 'meeting',
+        role: 'host',
+      });
       toast.success('Room created successfully');
       router.push(
         input.type === 'webinar'
@@ -56,7 +63,13 @@ export function useRoom(): UseRoomResult {
     try {
       const existingRoom = await apiGetRoom(input.roomId);
       setRoom(existingRoom);
-      
+      recordRecentRoom({
+        id: existingRoom.id,
+        title: existingRoom.title,
+        type: existingRoom.type === 'webinar' ? 'webinar' : 'meeting',
+        role: 'guest',
+      });
+
       // Store displayName in localStorage to use in the meeting page when fetching token
       if (input.displayName) {
         localStorage.setItem('recallo_display_name', input.displayName);

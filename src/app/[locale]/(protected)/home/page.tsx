@@ -6,16 +6,27 @@
 
 import { Video, Mic, FileText, Plus, ArrowRight, Zap, MessageSquare } from 'lucide-react';
 import { useCurrentUser } from '@/hooks/use-current-user';
+import { useRecentRooms } from '@/hooks/use-recent-rooms';
 import { useModal } from '@/components/providers/modal-provider';
 import { ProtectedRoute } from '@/components/protected-route';
 import { ROUTES } from '@/lib/routes';
+import type { RecentRoom } from '@/utils/recent-rooms';
 import Link from 'next/link';
 
-// Mock empty arrays for now, should be replaced with actual API data fetching
-const RECENT_MEETINGS: unknown[] = [];
-const UPCOMING_WEBINARS: unknown[] = [];
+// Transcripts/summaries have no list endpoint yet — kept empty until one exists.
 const RECENT_TRANSCRIPTS: unknown[] = [];
 const AI_SUMMARIES: unknown[] = [];
+
+function relativeTime(ms: number): string {
+  const diff = Date.now() - ms;
+  const mins = Math.round(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.round(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.round(hours / 24);
+  return days === 1 ? 'yesterday' : `${days}d ago`;
+}
 
 function DashboardSection({
   title,
@@ -117,9 +128,35 @@ function QuickActionCard({
   );
 }
 
+function RecentRoomRow({ room }: { room: RecentRoom }) {
+  const href = room.type === 'webinar'
+    ? ROUTES.WEBINAR_DETAIL(room.id)
+    : ROUTES.MEETING_DETAIL(room.id);
+  return (
+    <Link href={href} className="flex items-center justify-between gap-3 group">
+      <div className="min-w-0">
+        <p className="text-sm font-medium truncate" style={{ color: '#FBF5DD' }}>
+          {room.title || `Room ${room.id}`}
+        </p>
+        <p className="text-xs" style={{ color: 'rgba(251,245,221,0.4)' }}>
+          {room.role === 'host' ? 'Hosted' : 'Joined'} · {relativeTime(room.at)}
+        </p>
+      </div>
+      <ArrowRight
+        size={14}
+        className="shrink-0 opacity-50 transition-all group-hover:opacity-100 group-hover:translate-x-0.5"
+        style={{ color: '#9CC5A1' }}
+      />
+    </Link>
+  );
+}
+
 export default function HomePage() {
   const { user } = useCurrentUser();
   const { openModal } = useModal();
+  const recentRooms = useRecentRooms();
+  const recentMeetings = recentRooms.filter(r => r.type === 'meeting');
+  const upcomingWebinars = recentRooms.filter(r => r.type === 'webinar');
   const userName = user?.name.split(' ')[0] || 'User';
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
@@ -187,27 +224,23 @@ export default function HomePage() {
             {/* Recent Meetings */}
             <DashboardSection
               title="Recent Meetings"
-              items={RECENT_MEETINGS}
-              isEmpty={RECENT_MEETINGS.length === 0}
+              items={recentMeetings}
+              isEmpty={recentMeetings.length === 0}
               emptyMessage="No recent meetings. Start or join one with the Quick Actions above!"
               icon={Video}
               viewAllLink={ROUTES.MEETINGS}
-              renderItem={item => (
-                <p style={{ color: '#FBF5DD' }}>{JSON.stringify(item)}</p>
-              )}
+              renderItem={item => <RecentRoomRow room={item as RecentRoom} />}
             />
 
             {/* Upcoming Webinars */}
             <DashboardSection
-              title="Upcoming Webinars"
-              items={UPCOMING_WEBINARS}
-              isEmpty={UPCOMING_WEBINARS.length === 0}
-              emptyMessage="No upcoming webinars scheduled yet."
+              title="Recent Webinars"
+              items={upcomingWebinars}
+              isEmpty={upcomingWebinars.length === 0}
+              emptyMessage="No webinars yet. Start one with the Quick Actions above!"
               icon={Mic}
               viewAllLink={ROUTES.WEBINARS}
-              renderItem={item => (
-                <p style={{ color: '#FBF5DD' }}>{JSON.stringify(item)}</p>
-              )}
+              renderItem={item => <RecentRoomRow room={item as RecentRoom} />}
             />
           </div>
 

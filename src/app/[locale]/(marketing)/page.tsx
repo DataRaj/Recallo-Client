@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import { Video, Mic, Monitor, MessageSquare, Lock, Zap } from 'lucide-react';
+import { JoinRoomCTA } from '@/components/marketing/join-room-cta';
 
 type IIndexProps = {
     params: Promise<{ locale: string }>;
@@ -129,29 +130,14 @@ export default async function Index(props: IIndexProps) {
                                 <Video size={15} />
                                 Create a Room
                             </Link>
-                            <Link
-                                href="/join"
-                                className="flex items-center gap-2 px-6 py-3 rounded-[12px] text-sm font-medium transition-all duration-200 hover:bg-[#DDEBD5] active:scale-[0.97]"
+                            <JoinRoomCTA
+                                className="flex items-center gap-2 px-6 py-3 rounded-[12px] text-sm font-medium transition-all duration-200 hover:bg-[#DDEBD5] active:scale-[0.97] cursor-pointer"
                                 style={{
                                     color: '#2C3E2D',
                                     background: '#F3F8EF',
                                     border: '1px solid #D5E3CC',
                                 }}
-                            >
-                                <svg
-                                    width="15"
-                                    height="15"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M15 3h6v6M10 14L21 3M9 21H3v-6M3 21l8-8" />
-                                </svg>
-                                Join a Room
-                            </Link>
+                            />
                         </div>
 
                         {/* Social proof */}

@@ -27,12 +27,16 @@ export default antfu(
     // Ignored paths
     ignores: [
       'migrations/**/*',
+      '**/*.md',
+      'eslint.config.mjs',
+      '*.config.ts',
+      '*.config.js',
     ],
   },
   // --- Accessibility Rules ---
   jsxA11y.flatConfigs.recommended,
   // --- Tailwind CSS Rules ---
-  ...tailwind.configs['flat/recommended'],
+  tailwind.configs.recommended,
   {
     settings: {
       tailwindcss: {

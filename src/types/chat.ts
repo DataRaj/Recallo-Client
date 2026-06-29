@@ -1,5 +1,6 @@
 /**
- * Chat types for internal messaging system
+ * Chat types for internal messaging system.
+ * These model the REST history shape; the live WS shape is in types/realtime.ts.
  */
 
 export interface ChatUser {
@@ -11,16 +12,7 @@ export interface ChatUser {
   lastSeen?: Date;
 }
 
-export interface ChatMessage {
-  id: string;
-  conversationId: string;
-  senderId: number;
-  content: string;
-  createdAt: Date;
-  updatedAt?: Date;
-  readAt?: Date;
-  attachment?: ChatAttachment;
-}
+export type MessageType = 'text' | 'gif' | 'file';
 
 export interface ChatAttachment {
   id: string;
@@ -28,6 +20,21 @@ export interface ChatAttachment {
   filesize: number;
   mimeType: string;
   url: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  conversationId: string;
+  senderId: number;
+  content: string;
+  messageType: MessageType;
+  createdAt: Date;
+  updatedAt?: Date;
+  readAt?: Date;
+  /** Present when messageType === 'file'. */
+  attachment?: ChatAttachment;
+  /** Tenor GIF URL when messageType === 'gif'. */
+  gifUrl?: string;
 }
 
 export interface Conversation {
