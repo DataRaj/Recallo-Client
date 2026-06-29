@@ -83,6 +83,7 @@ export function useChatSocket() {
     setOffline,
     mergeMessage,
     setTyping,
+    flushPending,
   } = useWsStore.getState();
 
   const flushQueue = useCallback(() => {
@@ -137,6 +138,10 @@ export function useChatSocket() {
         const currentUserId = currentUser?.id ?? -1;
 
         switch (event.event_type) {
+          case 'current_user':
+            // Seed the current user's own presence so comparisons work immediately.
+            setOnline((event.payload as WsPresencePayload).user_id);
+            break;
           case 'online':
             setOnline((event.payload as WsPresencePayload).user_id);
             break;
@@ -146,10 +151,15 @@ export function useChatSocket() {
           case 'message': {
             const { message } = event.payload as WsMessagePayload;
             const msg = normaliseMessage(message, currentUserId);
+            // Remove any pending-* optimistic messages for this conversation
+            // before merging the confirmed server echo (avoids duplicates).
+            flushPending(message.private_id);
             mergeMessage(message.private_id, msg);
-            // Send delivered receipt automatically
-            const ack: WsSendDelivered = { message_id: message.id };
-            sendRaw(ack);
+            // Auto-send delivered receipt only for incoming (not our own echo).
+            if (message.from_id !== currentUserId) {
+              const ack: WsSendDelivered = { message_id: message.id };
+              sendRaw(ack);
+            }
             break;
           }
           case 'typing':
@@ -160,12 +170,13 @@ export function useChatSocket() {
             );
             break;
           case 'heartbeat':
-            // Echo back a pong (empty object) to keep the connection alive
-            ws.send('{}');
+            // The browser's native WebSocket automatically responds to the server's
+            // Ping control frame (Opcode 9) with a Pong (Opcode 10).
+            // We do NOT need to send an application-level JSON response here,
+            // otherwise the server rejects it as an invalid event format.
             break;
           case 'delivered':
           case 'read':
-          case 'current_user':
           case 'error':
           case 'shutdown':
           default:
@@ -189,18 +200,46 @@ export function useChatSocket() {
     };
   }, [flushQueue, mergeMessage, sendRaw, setConnectionState, setOffline, setOnline, setTyping]);
 
+  // ── Effect 1: subscribe to auth store ────────────────────────────────────
+  // The WsProvider mounts inside the protected layout before useCurrentUser
+  // has resolved the /api/auth/refresh call, so accessToken is null on the
+  // first render.  We subscribe to the store and call connect() the moment a
+  // real token lands — this covers both the initial hydration case and any
+  // future token-refresh events.
   useEffect(() => {
     mountedRef.current = true;
 
-    // Add a small delay before connecting to avoid StrictMode rapid mount/unmount
-    // creating and aborting a WebSocket, which causes console errors in Firefox.
-    const initialConnectTimer = setTimeout(() => {
-      if (mountedRef.current) connect();
-    }, 100);
+    // If auth is already hydrated (e.g. user just logged in this session),
+    // start immediately with a small StrictMode-safe delay.
+    const { accessToken } = useAuthStore.getState();
+    if (accessToken) {
+      const t = setTimeout(() => { if (mountedRef.current) connect(); }, 100);
+      // Store timer ref so cleanup can cancel it.
+      reconnectTimer.current = t;
+    }
+
+    // Subscribe for future token arrivals (covers the common page-reload path
+    // where the token arrives async via /api/auth/refresh).
+    const unsub = useAuthStore.subscribe((state, prev) => {
+      if (state.accessToken && !prev.accessToken && mountedRef.current) {
+        // Token just became available — establish the WS connection.
+        connect();
+      }
+      if (!state.accessToken && prev.accessToken) {
+        // User logged out — tear down the socket gracefully.
+        if (wsRef.current) {
+          wsRef.current.onclose = null;
+          wsRef.current.close();
+          wsRef.current = null;
+        }
+        if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+        useWsStore.getState().setConnectionState('closed');
+      }
+    });
 
     return () => {
       mountedRef.current = false;
-      clearTimeout(initialConnectTimer);
+      unsub();
       if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
       if (wsRef.current) {
         wsRef.current.onclose = null;
@@ -210,26 +249,26 @@ export function useChatSocket() {
       useWsStore.getState().setConnectionState('closed');
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Mount once; auth changes detected via store.getState() on each connect call.
+  }, []); // Intentionally empty — subscribe handles all auth state changes.
 
   // ── Public send helpers ──────────────────────────────────────────────────
 
   const sendMessage = useCallback((payload: WsSendMessage) => {
-    sendRaw(payload);
+    sendRaw({ event_type: 'message', payload });
   }, [sendRaw]);
 
   const sendTyping = useCallback((payload: WsSendTyping) => {
-    sendRaw(payload);
+    sendRaw({ event_type: 'typing', payload });
   }, [sendRaw]);
 
   const sendDelivered = useCallback((messageId: number) => {
     const payload: WsSendDelivered = { message_id: messageId };
-    sendRaw(payload);
+    sendRaw({ event_type: 'delivered', payload });
   }, [sendRaw]);
 
   const sendRead = useCallback((messageId: number) => {
     const payload: WsSendRead = { message_id: messageId };
-    sendRaw(payload);
+    sendRaw({ event_type: 'read', payload });
   }, [sendRaw]);
 
   return { sendMessage, sendTyping, sendDelivered, sendRead };

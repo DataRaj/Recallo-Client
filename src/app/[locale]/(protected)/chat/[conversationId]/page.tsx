@@ -307,7 +307,7 @@ export default function ChatConversationPage() {
 
   const handleTyping = useCallback((isTyping: boolean) => {
     if (!receiverId || !conversation) return;
-    sendTyping({ private_id: conversationId, receiver_id: receiverId, is_typing: isTyping });
+    sendTyping({ private_id: Number(conversationId), receiver_id: receiverId, is_typing: isTyping });
   }, [conversationId, receiverId, conversation, sendTyping]);
 
   // ── Build typing names ───────────────────────────────────────────────────
@@ -328,7 +328,7 @@ export default function ChatConversationPage() {
     (overrides: Partial<WsSendMessage>): WsSendMessage | null => {
       if (!receiverId || !conversation) return null;
       return {
-        private_id: conversationId,
+        private_id: Number(conversationId),
         receiver_id: receiverId,
         message_type: 'text',
         content: '',

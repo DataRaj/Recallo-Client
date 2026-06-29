@@ -46,6 +46,8 @@ interface WsActions {
   setTyping: (privateId: string, userId: number, isTyping: boolean) => void;
   /** Cache a user's display name so it's available for message rendering. */
   setUserName: (userId: number, name: string) => void;
+  /** Remove all optimistic (pending-*) messages for a conversation on server confirm. */
+  flushPending: (privateId: string) => void;
   reset: () => void;
 }
 
@@ -121,6 +123,15 @@ export const useWsStore = create<WsState & WsActions>()(
           const next = new Map(s.userNames);
           next.set(userId, name);
           return { userNames: next };
+        }),
+
+      flushPending: (privateId) =>
+        set((s) => {
+          const map = new Map(s.messagesByConversation);
+          const existing = map.get(privateId);
+          if (!existing) return {};
+          map.set(privateId, existing.filter((m) => !m.id.startsWith('pending-')));
+          return { messagesByConversation: map };
         }),
 
       reset: () => set(initial),
