@@ -11,6 +11,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { ProtectedRoute } from '@/components/protected-route';
 import { ModalProvider, GlobalModals, useModal } from '@/components/providers/modal-provider';
+import { WsProvider } from '@/components/providers/ws-provider';
 import { ROUTES } from '@/lib/routes';
 import Link from 'next/link';
 
@@ -196,9 +197,11 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
   return (
     <ProtectedRoute>
       <ModalProvider>
-        <ProtectedLayoutContent>
-          {children}
-        </ProtectedLayoutContent>
+        <WsProvider>
+          <ProtectedLayoutContent>
+            {children}
+          </ProtectedLayoutContent>
+        </WsProvider>
       </ModalProvider>
     </ProtectedRoute>
   );

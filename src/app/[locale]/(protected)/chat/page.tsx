@@ -4,12 +4,19 @@ import { MessageSquare } from 'lucide-react';
 
 export default function ChatIndexPage() {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center bg-[#273338] text-[#D9D3BC] h-full">
-      <div className="w-16 h-16 rounded-full bg-[#324147] flex items-center justify-center mb-4">
-        <MessageSquare size={32} className="text-[#9CC5A1]" />
+    <div className="flex flex-1 flex-col items-center justify-center gap-3 h-full">
+      <div
+        className="flex h-14 w-14 items-center justify-center rounded-2xl"
+        style={{ background: 'rgba(156,197,161,0.1)' }}
+      >
+        <MessageSquare size={28} style={{ color: '#9CC5A1' }} />
       </div>
-      <h2 className="text-xl font-medium text-[#FBF5DD] mb-2">Your Messages</h2>
-      <p className="text-sm">Select a conversation from the sidebar to start chatting.</p>
+      <p className="text-[14px] font-medium" style={{ color: '#FBF5DD' }}>
+        Select a conversation
+      </p>
+      <p className="text-[12px]" style={{ color: 'rgba(251,245,221,0.4)' }}>
+        Or start a new one with the + button
+      </p>
     </div>
   );
 }
