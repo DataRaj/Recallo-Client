@@ -22,6 +22,7 @@ import type {
   WsInboundEvent,
   WsPresencePayload,
   WsMessagePayload,
+  WsReceiptPayload,
   WsTypingPayload,
   WsSendMessage,
   WsSendTyping,
@@ -84,6 +85,8 @@ export function useChatSocket() {
     mergeMessage,
     setTyping,
     flushPending,
+    markDelivered,
+    markRead,
   } = useWsStore.getState();
 
   const flushQueue = useCallback(() => {
@@ -107,7 +110,6 @@ export function useChatSocket() {
 
   const connect = useCallback(() => {
     const { accessToken, user } = useAuthStore.getState();
-    console.log(`here is an accessToken `, accessToken)
     if (!accessToken || !user) {
       // Not authenticated — stay idle.
       setConnectionState('idle');
@@ -138,33 +140,39 @@ export function useChatSocket() {
         const currentUserId = currentUser?.id ?? -1;
 
         switch (event.event_type) {
-          case 'current_user':
-            // Seed the current user's own presence so comparisons work immediately.
-            setOnline((event.payload as WsPresencePayload).user_id);
+          case 'current_user': {
+            const users = event.payload as Array<{ id: number }>;
+            if (Array.isArray(users)) {
+              users.forEach((u) => {
+                if (u && u.id) setOnline(u.id);
+              });
+            }
             break;
+          }
           case 'online':
-            setOnline((event.payload as WsPresencePayload).user_id);
+            setOnline((event.payload as { id: number }).id);
             break;
           case 'offline':
-            setOffline((event.payload as WsPresencePayload).user_id);
+            setOffline((event.payload as { id: number }).id);
             break;
           case 'message': {
             const { message } = event.payload as WsMessagePayload;
             const msg = normaliseMessage(message, currentUserId);
-            // Remove any pending-* optimistic messages for this conversation
-            // before merging the confirmed server echo (avoids duplicates).
-            flushPending(message.private_id);
-            mergeMessage(message.private_id, msg);
+            
+            // Remove optimistic pending messages before merging confirmed server echo
+            flushPending(String(message.private_id));
+            mergeMessage(String(message.private_id), msg);
+            
             // Auto-send delivered receipt only for incoming (not our own echo).
             if (message.from_id !== currentUserId) {
-              const ack: WsSendDelivered = { message_id: message.id };
-              sendRaw(ack);
+              const ack: WsSendDelivered = { message_id: Number(message.id) };
+              sendRaw({ event_type: 'delivered', payload: ack });
             }
             break;
           }
           case 'typing':
             setTyping(
-              (event.payload as WsTypingPayload).private_id,
+              String((event.payload as WsTypingPayload).private_id),
               (event.payload as WsTypingPayload).user_id,
               (event.payload as WsTypingPayload).is_typing,
             );
@@ -176,7 +184,11 @@ export function useChatSocket() {
             // otherwise the server rejects it as an invalid event format.
             break;
           case 'delivered':
+            markDelivered(String((event.payload as WsReceiptPayload).message_id));
+            break;
           case 'read':
+            markRead(String((event.payload as WsReceiptPayload).message_id));
+            break;
           case 'error':
           case 'shutdown':
           default:
@@ -198,7 +210,7 @@ export function useChatSocket() {
       backoffIdx.current = Math.min(backoffIdx.current + 1, BACKOFF_STEPS.length - 1);
       reconnectTimer.current = setTimeout(connect, delay);
     };
-  }, [flushQueue, mergeMessage, sendRaw, setConnectionState, setOffline, setOnline, setTyping]);
+  }, [flushQueue, flushPending, mergeMessage, sendRaw, setConnectionState, setOffline, setOnline, setTyping, markDelivered, markRead]);
 
   // ── Effect 1: subscribe to auth store ────────────────────────────────────
   // The WsProvider mounts inside the protected layout before useCurrentUser

@@ -48,6 +48,8 @@ interface WsActions {
   setUserName: (userId: number, name: string) => void;
   /** Remove all optimistic (pending-*) messages for a conversation on server confirm. */
   flushPending: (privateId: string) => void;
+  markDelivered: (messageId: string) => void;
+  markRead: (messageId: string) => void;
   reset: () => void;
 }
 
@@ -132,6 +134,39 @@ export const useWsStore = create<WsState & WsActions>()(
           if (!existing) return {};
           map.set(privateId, existing.filter((m) => !m.id.startsWith('pending-')));
           return { messagesByConversation: map };
+        }),
+
+      markDelivered: (messageId) =>
+        set((s) => {
+          const map = new Map(s.messagesByConversation);
+          for (const [privId, msgs] of map.entries()) {
+            const idx = msgs.findIndex((m) => m.id === messageId);
+            const msg = msgs[idx];
+            if (idx !== -1 && msg) {
+              if (msg.updatedAt) return {};
+              const newMsgs = [...msgs];
+              newMsgs[idx] = { ...msg, updatedAt: new Date() };
+              map.set(privId, newMsgs);
+              return { messagesByConversation: map };
+            }
+          }
+          return {};
+        }),
+
+      markRead: (messageId) =>
+        set((s) => {
+          const map = new Map(s.messagesByConversation);
+          for (const [privId, msgs] of map.entries()) {
+            const idx = msgs.findIndex((m) => m.id === messageId);
+            const msg = msgs[idx];
+            if (idx !== -1 && msg) {
+              const newMsgs = [...msgs];
+              newMsgs[idx] = { ...msg, readAt: new Date() };
+              map.set(privId, newMsgs);
+              return { messagesByConversation: map };
+            }
+          }
+          return {};
         }),
 
       reset: () => set(initial),
