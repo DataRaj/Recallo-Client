@@ -20,7 +20,6 @@ import { useWsStore } from '@/stores/use-ws-store';
 import { Env } from '@/libs/Env';
 import type {
   WsInboundEvent,
-  WsPresencePayload,
   WsMessagePayload,
   WsReceiptPayload,
   WsTypingPayload,
