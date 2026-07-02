@@ -176,9 +176,20 @@ function MessageBubble({
           </span>
         )}
         {contentNode}
-        <span className="mt-0.5 mx-1 text-[10px]" style={{ color: 'rgba(251,245,221,0.3)' }}>
+        <span className="mt-0.5 mx-1 flex items-center gap-1 text-[10px]" style={{ color: 'rgba(251,245,221,0.3)' }}>
           {formatTime(message.createdAt)}
-          {isPending && ' · Sending…'}
+          {isPending && <span>· Sending…</span>}
+          {isMe && !isPending && (
+            <span className="flex ml-0.5">
+              {message.readAt ? (
+                <span className="text-[#9CC5A1]" title="Read">✓✓</span>
+              ) : message.updatedAt ? (
+                <span title="Delivered">✓✓</span>
+              ) : (
+                <span title="Sent">✓</span>
+              )}
+            </span>
+          )}
         </span>
       </div>
     </div>
@@ -401,11 +412,14 @@ export default function ChatConversationPage() {
     sendMessage(payload);
   }, [makeWsPayload, sendMessage, optimisticInsert]);
 
+  // ── Conversation header data ─────────────────────────────────────────────
+
+  const otherParticipant = conversation?.participants.find((p) => p.id !== user?.id);
+
   // ── Voice / Video calling ────────────────────────────────────────────────
-  // Creates a private meeting room and redirects both users via the WS channel.
 
   const handleCallPress = useCallback(async (type: 'voice' | 'video') => {
-    if (callingType) return; // already initiating
+    if (callingType) return;
     setCallingType(type);
     try {
       const guestId = getMeetingIdentity();
@@ -424,11 +438,9 @@ export default function ChatConversationPage() {
     } finally {
       setCallingType(null);
     }
-  }, [callingType, locale, router, receiverId]); // otherParticipant resolved below
-
-  // ── Conversation header data ─────────────────────────────────────────────
-
-  const otherParticipant = conversation?.participants.find((p) => p.id !== user?.id);
+  }, [callingType, locale, router, receiverId, otherParticipant]);
+  // @ts-ignore
+  console.log(`user presence status ${otherParticipant?.id}`)
   const convoName = conversation?.name ?? otherParticipant?.name ?? `Chat ${conversationId}`;
   const isOtherOnline = otherParticipant ? onlineUserIds.has(otherParticipant.id) : false;
   const otherLastSeen = otherParticipant ? lastSeenByUser.get(otherParticipant.id) : undefined;
