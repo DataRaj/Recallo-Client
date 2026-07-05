@@ -39,6 +39,12 @@ export interface LobbyConfig {
   displayName: string;
   micEnabled: boolean;
   camEnabled: boolean;
+  /** Selected microphone device ID (empty/undefined = system default). */
+  audioDeviceId?: string;
+  /** Selected camera device ID (empty/undefined = system default). */
+  videoDeviceId?: string;
+  /** Selected speaker/output device ID (empty/undefined = system default). */
+  audioOutputDeviceId?: string;
 }
 
 /** Everything the gate resolves before showing the lobby / connecting. */

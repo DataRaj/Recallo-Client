@@ -65,8 +65,15 @@ apiClient.interceptors.response.use(
     try {
       // Next.js internal proxy reads httpOnly cookie and forwards to Go backend.
       const { data } = await axios.post<{
-        data: { access_token: string; refresh_token: string; user: import('@/types/auth').AuthUser };
+        success?: boolean;
+        data?: { access_token: string; refresh_token: string; user: import('@/types/auth').AuthUser };
+        error?: string;
       }>('/api/auth/refresh');
+
+      // Validate the response before trusting it.
+      if (!data?.data?.access_token || !data.data.user) {
+        throw new Error(data?.error ?? 'Token refresh failed');
+      }
 
       const newToken = data.data.access_token;
       useAuthStore.getState().setAuth(data.data.user, newToken);

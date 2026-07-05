@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { toast } from 'sonner';
 import { ROUTES } from '@/lib/routes';
 import type { Room, CreateRoomInput, JoinRoomInput } from '@/types/room';
@@ -24,6 +25,7 @@ export function useRoom(): UseRoomResult {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const locale = useLocale();
 
   const createRoom = useCallback(async (input: CreateRoomInput): Promise<Room> => {
     setIsLoading(true);
@@ -32,6 +34,8 @@ export function useRoom(): UseRoomResult {
       const guestId = getMeetingIdentity();
       const newRoom = await apiCreateRoom(input.title, guestId);
       setRoom(newRoom);
+      // recordRecentRoom dispatches RECENT_ROOMS_EVENT, so the originating tab's
+      // recent list refreshes even though we don't navigate away from it.
       recordRecentRoom({
         id: newRoom.id,
         title: newRoom.title,
@@ -39,11 +43,13 @@ export function useRoom(): UseRoomResult {
         role: 'host',
       });
       toast.success('Room created successfully');
-      router.push(
-        input.type === 'webinar'
-          ? ROUTES.WEBINAR_DETAIL(newRoom.id)
-          : ROUTES.MEETING_DETAIL(newRoom.id),
-      );
+      // Open the meeting in a new tab so the dashboard tab stays put.
+      const path = input.type === 'webinar'
+        ? ROUTES.WEBINAR_DETAIL(newRoom.id)
+        : ROUTES.MEETING_DETAIL(newRoom.id);
+      if (typeof window !== 'undefined') {
+        window.open(`/${locale}${path}`, '_blank', 'noopener,noreferrer');
+      }
       return newRoom;
     }
     catch (err) {
@@ -55,7 +61,7 @@ export function useRoom(): UseRoomResult {
     finally {
       setIsLoading(false);
     }
-  }, [router]);
+  }, [locale]);
 
   const joinRoom = useCallback(async (input: JoinRoomInput): Promise<Room> => {
     setIsLoading(true);

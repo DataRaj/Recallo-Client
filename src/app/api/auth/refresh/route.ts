@@ -13,6 +13,17 @@ import { cookies } from 'next/headers';
 
 const GO_API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
 
+/** Safely parse a Response as JSON, returning null on any parse error. */
+async function safeJson(res: Response): Promise<unknown> {
+  const text = await res.text();
+  if (!text.trim()) return null;
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    return null;
+  }
+}
+
 export async function POST() {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get('refresh_token')?.value;
@@ -31,20 +42,24 @@ export async function POST() {
       },
       body: JSON.stringify({ refresh_token: refreshToken }),
     });
-  }
-  catch {
+  } catch {
     return NextResponse.json({ error: 'Backend unreachable' }, { status: 503 });
   }
 
-  const data = await goRes.json() as {
-    success: boolean;
+  const raw = await safeJson(goRes);
+
+  // Type-narrow the expected shape.
+  const data = raw as null | {
+    success?: boolean;
     data?: { access_token: string; refresh_token: string; user: unknown };
+    message?: string;
   };
 
-  if (!goRes.ok || !data.success || !data.data) {
+  if (!goRes.ok || !data?.success || !data.data?.access_token || !data.data?.refresh_token) {
     // Clear stale cookie on backend rejection.
     cookieStore.delete('refresh_token');
-    return NextResponse.json({ error: 'Token refresh failed' }, { status: 401 });
+    const message = data?.message ?? 'Token refresh failed';
+    return NextResponse.json({ error: message }, { status: 401 });
   }
 
   // Rotate cookie with the new refresh token.

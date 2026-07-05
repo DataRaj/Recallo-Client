@@ -1,3 +1,4 @@
+import path from 'node:path';
 import type { NextConfig } from 'next';
 import withBundleAnalyzer from '@next/bundle-analyzer';
 import createNextIntlPlugin from 'next-intl/plugin';
@@ -11,6 +12,9 @@ const baseConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   reactCompiler: true,
+  // Pin file-tracing root to this project directory so Next.js does not walk
+  // up to /home/dataraj and discover a second pnpm-lock.yaml there.
+  outputFileTracingRoot: path.resolve(import.meta.dirname),
   experimental: {
     turbopackFileSystemCacheForDev: true,
   },

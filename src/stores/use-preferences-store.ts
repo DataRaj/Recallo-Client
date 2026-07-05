@@ -27,8 +27,8 @@ export interface UserPreferences {
   muteMicOnJoin: boolean;
   /** Camera off by default on room join */
   cameraOffOnJoin: boolean;
-  /** Theme override: 'system' | 'dark' | 'light' */
-  theme: 'system' | 'dark' | 'light';
+  /** Theme override: 'system' | 'light' | 'dark' | 'oled' (OLED cinema dark) */
+  theme: 'system' | 'light' | 'dark' | 'oled';
 }
 
 interface PreferencesActions {

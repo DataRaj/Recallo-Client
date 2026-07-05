@@ -1,17 +1,16 @@
-
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Loader2, X } from 'lucide-react';
 import { ROUTES } from '@/lib/routes';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { useMeetingConnection } from '@/hooks/use-meeting-connection';
-import { useMeetingStore } from '@/stores/use-meeting-store';
+import { useActiveMeeting } from '@/components/providers/active-meeting-provider';
 import { PreJoinLobby } from '@/components/meeting/pre-join-lobby';
 import { LiveRoom } from '@/components/meeting/live-room';
-import type { LobbyConfig, MeetingConnection } from '@/types/meeting';
+import type { LobbyConfig } from '@/types/meeting';
 
 interface MeetingGateProps {
     roomId: string;
@@ -30,14 +29,17 @@ export function MeetingGate({ roomId, mode = 'meeting' }: MeetingGateProps) {
     const router = useRouter();
     const pathname = usePathname();
     const { user, isHydrated } = useCurrentUser();
-    const resetStore = useMeetingStore(s => s.reset);
 
     const { room, isLoading, error, isHost, guestId, defaultName, fetchToken, refetch }
         = useMeetingConnection(roomId);
 
-    const [phase, setPhase] = useState<'lobby' | 'live'>('lobby');
-    const [connection, setConnection] = useState<MeetingConnection | null>(null);
-    const [lobby, setLobby] = useState<LobbyConfig | null>(null);
+    const { status, session, connect, leave } = useActiveMeeting();
+
+    // This gate is showing the meeting we're actually connected to.
+    const isActiveHere = session?.roomId === roomId && status !== 'idle';
+    // Track whether we ever joined this room, so an ended/left session redirects home.
+    const joinedRef = useRef(false);
+    if (isActiveHere) joinedRef.current = true;
 
     // Auth guard: redirect unauthenticated users to login with a return path.
     useEffect(() => {
@@ -46,23 +48,36 @@ export function MeetingGate({ roomId, mode = 'meeting' }: MeetingGateProps) {
         }
     }, [isHydrated, user, router, pathname]);
 
-    // Clear chat/unread state when leaving the room.
-    useEffect(() => () => resetStore(), [resetStore]);
+    // If the session ended (host ended / left / disconnected) while we're on the
+    // meeting route, send the user back to the dashboard.
+    useEffect(() => {
+        if (joinedRef.current && !isActiveHere) {
+            router.push(ROUTES.HOME);
+        }
+    }, [isActiveHere, router]);
 
     const handleJoin = useCallback(
         async (config: LobbyConfig) => {
             const conn = await fetchToken(config.displayName);
-            setConnection(conn);
-            setLobby(config);
-            setPhase('live');
+            if (!room) throw new Error('Room is not ready');
+            await connect({
+                roomId,
+                token: conn.token,
+                serverUrl: conn.serverUrl,
+                lobby: config,
+                roomMeta: room,
+                isHost,
+                guestId,
+                mode,
+            });
         },
-        [fetchToken],
+        [fetchToken, connect, room, roomId, isHost, guestId, mode],
     );
 
     const handleLeave = useCallback(() => {
-        resetStore();
+        leave();
         router.push(ROUTES.HOME);
-    }, [resetStore, router]);
+    }, [leave, router]);
 
     // Still hydrating auth, or redirecting an unauthenticated user.
     if (!isHydrated || !user) {
@@ -70,6 +85,20 @@ export function MeetingGate({ roomId, mode = 'meeting' }: MeetingGateProps) {
             <FullScreen>
                 <Loader2 className="h-8 w-8 animate-spin" style={{ color: '#9CC5A1' }} />
             </FullScreen>
+        );
+    }
+
+    // Already connected to this room (fresh join or returned from PiP) → full screen.
+    if (isActiveHere && room) {
+        return (
+            <LiveRoom
+                room={room}
+                isHost={isHost}
+                guestId={guestId}
+                mode={mode}
+                onLeave={handleLeave}
+                onRoomChanged={refetch}
+            />
         );
     }
 
@@ -100,22 +129,6 @@ export function MeetingGate({ roomId, mode = 'meeting' }: MeetingGateProps) {
                     Return to Dashboard
                 </Link>
             </FullScreen>
-        );
-    }
-
-    if (phase === 'live' && connection && lobby) {
-        return (
-            <LiveRoom
-                token={connection.token}
-                serverUrl={connection.serverUrl}
-                lobby={lobby}
-                room={room}
-                isHost={isHost}
-                guestId={guestId}
-                mode={mode}
-                onLeave={handleLeave}
-                onRoomChanged={refetch}
-            />
         );
     }
 

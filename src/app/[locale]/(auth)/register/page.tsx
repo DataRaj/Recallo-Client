@@ -33,8 +33,9 @@ export default function RegisterPage() {
     setServerError(null);
     try {
       await registerUser(data);
-    } catch (e: any) {
-      setServerError(e?.message ?? "Registration failed. Try again.");
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Registration failed. Try again.';
+      setServerError(message);
     }
   };
 

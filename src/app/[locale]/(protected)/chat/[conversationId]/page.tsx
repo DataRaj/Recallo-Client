@@ -150,8 +150,8 @@ function MessageBubble({
       <p
         className="break-words px-3 py-2 text-[13px] leading-relaxed"
         style={{
-          background: isMe ? '#9CC5A1' : 'rgba(255,255,255,0.06)',
-          color: isMe ? '#1C2A2C' : '#FBF5DD',
+          background: isMe ? 'var(--color-chat-accent)' : 'rgba(255,255,255,0.06)',
+          color: isMe ? '#12181B' : 'var(--color-chat-text)',
           borderRadius: isMe ? '16px 16px 4px 16px' : '4px 16px 16px 16px',
           opacity: isPending ? 0.6 : 1,
         }}
@@ -439,8 +439,7 @@ export default function ChatConversationPage() {
       setCallingType(null);
     }
   }, [callingType, locale, router, receiverId, otherParticipant]);
-  // @ts-ignore
-  console.log(`user presence status ${otherParticipant?.id}`)
+
   const convoName = conversation?.name ?? otherParticipant?.name ?? `Chat ${conversationId}`;
   const isOtherOnline = otherParticipant ? onlineUserIds.has(otherParticipant.id) : false;
   const otherLastSeen = otherParticipant ? lastSeenByUser.get(otherParticipant.id) : undefined;
@@ -488,11 +487,11 @@ export default function ChatConversationPage() {
   const inputDisabled = connectionState === 'reconnecting' || connectionState === 'connecting';
 
   return (
-    <div className="flex h-full flex-col" style={{ background: '#273338' }}>
+    <div className="flex h-full flex-col" style={{ background: 'var(--color-chat-bg)' }}>
       {/* Header */}
       <div
         className="flex h-16 shrink-0 items-center justify-between px-5"
-        style={{ background: '#324147', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ background: 'var(--color-chat-surface)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
       >
         <div className="flex items-center gap-3">
           <div className="relative">

@@ -26,8 +26,9 @@ export default function LoginPage() {
     setServerError(null);
     try {
       await login(data);
-    } catch (e: any) {
-      setServerError(e?.message ?? "Invalid credentials. Try again.");
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Invalid credentials. Try again.';
+      setServerError(message);
     }
   };
 

@@ -20,10 +20,24 @@ interface RefreshResponse {
   data: { user: AuthUser; access_token: string; refresh_token: string };
 }
 
+/** Safely parse the JSON body from a Response; throws if parse fails or data is malformed. */
 async function fetchCurrentUser(): Promise<RefreshResponse> {
   const res = await fetch('/api/auth/refresh', { method: 'POST' });
   if (!res.ok) throw new Error('Unauthenticated');
-  return res.json() as Promise<RefreshResponse>;
+
+  const text = await res.text();
+  let json: unknown;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    throw new Error('Invalid JSON from refresh endpoint');
+  }
+
+  const data = json as RefreshResponse | null;
+  if (!data?.success || !data.data?.access_token || !data.data?.user) {
+    throw new Error('Unauthenticated');
+  }
+  return data;
 }
 
 export function useCurrentUser() {

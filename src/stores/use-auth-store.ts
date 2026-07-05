@@ -34,7 +34,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             setAuth: (user, accessToken) => set({ user, accessToken, isHydrated: true }),
             setLoading: isLoading => set({ isLoading }),
             setHydrated: isHydrated => set({ isHydrated }),
-            clearAuth: () => set(initialState),
+            // Keep isHydrated:true so useCurrentUser does NOT fire a new /refresh
+            // network call immediately after logout — the auth guard will redirect instead.
+            clearAuth: () => set({ ...initialState, isHydrated: true }),
         }),
         { name: 'AuthStore' },
     ),

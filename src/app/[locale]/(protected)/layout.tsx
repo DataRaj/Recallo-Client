@@ -31,6 +31,17 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Settings', icon: Settings, href: ROUTES.SETTINGS },
 ];
 
+type Feature = 'dashboard' | 'meeting' | 'chat' | 'archive';
+
+/** Map the active pathname (locale-stripped) to a feature theme atmosphere. */
+function featureForPath(pathname: string): Feature {
+  const path = pathname.replace(/^\/[a-z]{2}(-[a-z]{2})?(?=\/|$)/i, '') || '/';
+  if (path.startsWith('/chat')) return 'chat';
+  if (path.startsWith('/meetings') || path.startsWith('/webinars')) return 'meeting';
+  if (path.startsWith('/transcripts') || path.startsWith('/summaries')) return 'archive';
+  return 'dashboard';
+}
+
 function SidebarNavItem({ label, icon: Icon, href, isActive }: NavItem & { isActive: boolean }) {
   return (
     <Link
@@ -55,6 +66,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
   const { openModal } = useModal();
 
   const userInitial = user?.name.charAt(0).toUpperCase() || 'U';
+  const feature = featureForPath(pathname);
 
   const isNavItemActive = (href: string) => {
     const path = pathname.split('/').slice(2).join('/'); // Remove locale prefix
@@ -62,7 +74,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-dvh flex" style={{ background: '#E6F2DD' }}>
+    <div className="min-h-dvh flex" style={{ background: 'var(--color-bg)' }}>
           {/* Sidebar */}
           <aside
             className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-40 w-60 flex flex-col shrink-0 transition-transform duration-300 lg:translate-x-0`}
@@ -173,8 +185,12 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
               <div className="w-8" />
             </div>
 
-            {/* Page Content */}
-            <div className="overflow-y-auto min-h-dvh">
+            {/* Page Content — feature attribute diverts the theme atmosphere */}
+            <div
+              data-feature={feature}
+              className="overflow-y-auto min-h-dvh"
+              style={{ background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}
+            >
               {children}
             </div>
           </main>

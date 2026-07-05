@@ -47,11 +47,15 @@ function OAuthSuccessContent() {
         // 2. Use the refresh endpoint to get the full user object
         const meRes = await fetch('/api/auth/refresh', { method: 'POST' });
         if (meRes.ok) {
-          const meData = await meRes.json() as {
-            success: boolean;
-            data: { user: { id: number; name: string; email: string }; access_token: string };
-          };
-          if (meData.success && meData.data?.user) {
+          const meText = await meRes.text();
+          type MeData = { success?: boolean; data?: { user?: { id: number; name: string; email: string }; access_token?: string } };
+          let meData: MeData | null = null;
+          try {
+            meData = JSON.parse(meText) as MeData;
+          } catch {
+            // non-JSON response — fall through to fallback
+          }
+          if (meData?.success && meData.data?.user && meData.data.access_token) {
             setAuth(meData.data.user, meData.data.access_token);
             setHydrated(true);
             toast.success(`Welcome, ${meData.data.user.name}!`);
