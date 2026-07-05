@@ -14,17 +14,21 @@
   --color-accent:           #B0BA99;
   --color-accent-dark:      #8A9478;
 
-  /* Chat themes — default: midnight-chat */
+  /* Chat themes — default: recallo-dark */
   --color-chat-bg:          #273338;
   --color-chat-surface:     #324147;
   --color-chat-bubble:      #3C4C52;
   --color-chat-text:        #FBF5DD;
   --color-chat-text-2:      #D9D3BC;
   --color-chat-accent:      #9CC5A1;
+  /* Accent as space-separated RGB channels, for rgb(var(--x) / a) glows. */
+  --color-chat-accent-rgb:  156 197 161;
 
   /* Semantic */
   --color-danger:           #BA5A5A;
   --color-success:          #9CC5A1;
+  --color-live:             #34D399;
+  --color-live-warn:        #F59E0B;
 
   /* Radius */
   --radius-card:  14px;
@@ -169,4 +173,119 @@
   --color-chat-text:    #F8F4FF;
   --color-chat-text-2:  #C8C0E0;
   --color-chat-accent:  #B8A1FF;
+}
+
+[data-chat-theme="sunset"] {
+  --color-chat-bg:      #2A1B22;
+  --color-chat-surface: #37232C;
+  --color-chat-bubble:  #442B34;
+  --color-chat-text:    #FFF1EC;
+  --color-chat-text-2:  #E3C3BC;
+  --color-chat-accent:  #FF8C6B;
+}
+
+[data-chat-theme="cyberpunk"] {
+  --color-chat-bg:      #0E0B1E;
+  --color-chat-surface: #171233;
+  --color-chat-bubble:  #211A47;
+  --color-chat-text:    #EAF7FF;
+  --color-chat-text-2:  #9BA3D6;
+  --color-chat-accent:  #23E5DB;
+}
+
+/* Accent RGB channels per chat theme (keeps composer glows on-palette). */
+[data-chat-theme="midnight"]  { --color-chat-accent-rgb: 124 158 178; }
+[data-chat-theme="forest"]    { --color-chat-accent-rgb: 137 168 125; }
+[data-chat-theme="ocean"]     { --color-chat-accent-rgb: 58 175 169; }
+[data-chat-theme="lavender"]  { --color-chat-accent-rgb: 184 161 255; }
+[data-chat-theme="sunset"]    { --color-chat-accent-rgb: 255 140 107; }
+[data-chat-theme="cyberpunk"] { --color-chat-accent-rgb: 35 229 219; }
+
+/* ─── App-level theme modes (data-theme on <html>) ─── */
+[data-theme="dark"] {
+  --color-bg:             #12181B;
+  --color-surface:        #1A2226;
+  --color-surface-hover:  #232D31;
+  --color-border:         #2A353A;
+  --color-text-primary:   #ECF2E9;
+  --color-text-secondary: #9AA8A0;
+  --color-accent:         #9CC5A1;
+  --color-accent-dark:    #7FB08A;
+  --shadow-soft:          0px 8px 24px rgba(0,0,0,0.35);
+  --shadow-card:          0px 2px 8px rgba(0,0,0,0.30);
+}
+
+[data-theme="oled"] {
+  --color-bg:             #000000;
+  --color-surface:        #0A0E10;
+  --color-surface-hover:  #12181A;
+  --color-border:         #1B2225;
+  --color-text-primary:   #F2F5F0;
+  --color-text-secondary: #8A968E;
+  --color-accent:         #9CC5A1;
+  --color-accent-dark:    #7FB08A;
+  --shadow-soft:          0px 8px 24px rgba(0,0,0,0.6);
+  --shadow-card:          0px 2px 8px rgba(0,0,0,0.5);
+}
+
+/*
+ * ─── Feature-specific theme diversion (data-feature on the main container) ───
+ * Each feature remaps the shared surface tokens so its subtree adopts an
+ * optimised atmosphere, without touching the persistent sidebar or body.
+ */
+[data-feature] {
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
+}
+
+/* Meetings & Webinars — obsidian/cinematic with emerald/amber live accents. */
+[data-feature="meeting"] {
+  --color-bg:             #0D1117;
+  --color-surface:        #161B22;
+  --color-surface-hover:  #1C2530;
+  --color-border:         #26303B;
+  --color-text-primary:   #F0F3F0;
+  --color-text-secondary: #8B98A5;
+  --color-accent:         var(--color-live);
+  --color-text-accent:    var(--color-live-warn);
+}
+
+/* Private DM chats — inherit the active chat palette as the atmosphere. */
+[data-feature="chat"] {
+  --color-bg:             var(--color-chat-bg);
+  --color-surface:        var(--color-chat-surface);
+  --color-surface-hover:  var(--color-chat-bubble);
+  --color-border:         rgba(255,255,255,0.07);
+  --color-text-primary:   var(--color-chat-text);
+  --color-text-secondary: var(--color-chat-text-2);
+  --color-accent:         var(--color-chat-accent);
+}
+
+/* Dashboard & Archive — inherit the base mode with a warm executive accent. */
+[data-feature="dashboard"],
+[data-feature="archive"] {
+  --color-text-accent:    #BA5A5A;
+}
+
+/* ─── Composer micro-animations ─── */
+@keyframes recallo-send-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(var(--color-chat-accent-rgb) / 0); }
+  50%      { box-shadow: 0 0 14px 2px rgb(var(--color-chat-accent-rgb) / 0.55); }
+}
+
+@keyframes recallo-input-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(var(--color-chat-accent-rgb) / 0); }
+  50%      { box-shadow: 0 0 0 3px rgb(var(--color-chat-accent-rgb) / 0.18); }
+}
+
+@layer utilities {
+  .animate-send-glow { animation: recallo-send-glow 1.8s ease-in-out infinite; }
+  .animate-input-pulse { animation: recallo-input-pulse 1.6s ease-in-out infinite; }
+
+  /* Dark, blurred glass — for chat/meeting surfaces over dark backgrounds. */
+  .recallo-glass-dark {
+    background: rgb(var(--color-chat-accent-rgb) / 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
 }

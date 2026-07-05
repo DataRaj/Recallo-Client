@@ -12,6 +12,7 @@ import { ConnectionQuality } from 'livekit-client';
 import { MicOff, Signal, Hand } from 'lucide-react';
 import { colorFor, initialsFor } from '@/components/meeting/avatar';
 import { useMeetingStore } from '@/stores/use-meeting-store';
+import { useMeetingPreferencesStore } from '@/stores/use-meeting-preferences-store';
 
 interface VideoTileProps {
   trackRef: TrackReferenceOrPlaceholder;
@@ -23,6 +24,7 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
   const isSpeaking = useIsSpeaking(participant);
   const { quality } = useConnectionQualityIndicator({ participant });
   const handRaised = useMeetingStore(s => s.raisedHands[participant.identity] ?? false);
+  const mirror = useMeetingPreferencesStore(s => s.mirrorVideo);
 
   const name = participant.name || participant.identity;
   const color = colorFor(participant.identity);
@@ -42,7 +44,7 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
         ? (
             <VideoTrack
               trackRef={trackRef}
-              className={`absolute inset-0 h-full w-full object-cover ${isLocal ? '-scale-x-100' : ''}`}
+              className={`absolute inset-0 h-full w-full object-cover ${isLocal && mirror ? '-scale-x-100' : ''}`}
             />
           )
         : (
