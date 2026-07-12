@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { Home, Video, Mic, MessageSquare, FileText, Zap, Settings, Plus, LogOut, Menu, X, Bell } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
@@ -53,6 +53,14 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
   const { logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { openModal } = useModal();
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isSidebarOpen) setIsSidebarOpen(false);
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [isSidebarOpen]);
 
   const userInitial = user?.name.charAt(0).toUpperCase() || 'U';
 
@@ -159,15 +167,16 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
             {/* Top Bar with Mobile Toggle */}
             <div
               className="sticky top-0 z-30 px-4 py-3 lg:hidden flex items-center justify-between"
-              style={{ background: '#fff', borderBottom: '1px solid rgba(0,0,0,0.05)' }}
+              style={{ background: '#1C2A2C', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
             >
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-2 rounded-lg transition-all hover:bg-gray-100"
+                className="p-2 rounded-lg transition-all hover:bg-white/10"
+                style={{ color: 'rgba(251,245,221,0.7)' }}
               >
                 {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
-              <span className="font-semibold" style={{ color: '#273338' }}>
+              <span className="font-semibold" style={{ color: '#FBF5DD' }}>
                 Recallo
               </span>
               <div className="w-8" />

@@ -155,6 +155,28 @@ export async function prepareFileUpload(file: File): Promise<UploadedFile> {
   });
 }
 
+// ── User search ─────────────────────────────────────────────────────────────
+
+export interface UserSearchResult {
+  id: number;
+  name: string;
+  email: string;
+  avatar?: string;
+}
+
+export async function searchUsers(query: string): Promise<UserSearchResult[]> {
+  if (!query.trim()) return [];
+  try {
+    const response = await apiClient.get<APIResponse<UserSearchResult[]>>(
+      `/api/v1/users/search`,
+      { params: { q: query.trim() } },
+    );
+    return response.data.data ?? [];
+  } catch {
+    return [];
+  }
+}
+
 // ── GIF search (Tenor v2 public API) ────────────────────────────────────────
 
 export interface GifResult {

@@ -17,6 +17,18 @@ interface PreJoinLobbyProps {
 }
 
 export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting', onJoin }: PreJoinLobbyProps) {
+<<<<<<< Updated upstream
+=======
+  const muteMicOnJoin = usePreferencesStore(s => s.muteMicOnJoin);
+  const cameraOffOnJoin = usePreferencesStore(s => s.cameraOffOnJoin);
+  const setPref = usePreferencesStore(s => s.set);
+
+  const audioInputId = useMeetingPreferencesStore(s => s.selectedAudioInputId);
+  const audioOutputId = useMeetingPreferencesStore(s => s.selectedAudioOutputId);
+  const videoInputId = useMeetingPreferencesStore(s => s.selectedVideoInputId);
+  const setMeetingPref = useMeetingPreferencesStore(s => s.set);
+
+>>>>>>> Stashed changes
   const [name, setName] = useState(defaultName);
   const [micEnabled, setMicEnabled] = useState(true);
   const [camEnabled, setCamEnabled] = useState(true);
@@ -33,7 +45,46 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
     if (videoRef.current) videoRef.current.srcObject = null;
   }, []);
 
+<<<<<<< Updated upstream
   // Acquire / release the camera preview as the toggle changes.
+=======
+  const refreshDevices = useCallback(async () => {
+    if (typeof navigator === 'undefined' || !navigator.mediaDevices?.enumerateDevices) return;
+    try {
+      const all = await navigator.mediaDevices.enumerateDevices();
+      const next: DeviceLists = {
+        audioInput: all.filter(d => d.kind === 'audioinput' && d.deviceId),
+        audioOutput: all.filter(d => d.kind === 'audiooutput' && d.deviceId),
+        videoInput: all.filter(d => d.kind === 'videoinput' && d.deviceId),
+      };
+      setDevices(next);
+
+      // Fall back to system default if a saved device is no longer present.
+      const checks: Array<[string, MediaDeviceInfo[], 'selectedAudioInputId' | 'selectedAudioOutputId' | 'selectedVideoInputId']> = [
+        [audioInputId, next.audioInput, 'selectedAudioInputId'],
+        [audioOutputId, next.audioOutput, 'selectedAudioOutputId'],
+        [videoInputId, next.videoInput, 'selectedVideoInputId'],
+      ];
+      let anyMissing = false;
+      for (const [saved, list, key] of checks) {
+        const { missing } = resolveDevice(saved, list);
+        if (missing) {
+          anyMissing = true;
+          setMeetingPref(key, '');
+        }
+      }
+      if (anyMissing && !warnedRef.current) {
+        warnedRef.current = true;
+        toast('A saved device is unavailable — using the system default.');
+      }
+    }
+    catch {
+      // enumerateDevices can throw before permission is granted; ignore.
+    }
+  }, [audioInputId, audioOutputId, videoInputId, setMeetingPref]);
+
+  // Acquire / release the camera preview as the toggle or camera selection changes.
+>>>>>>> Stashed changes
   useEffect(() => {
     if (!camEnabled) {
       stopPreview();
@@ -56,6 +107,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
         if (!cancelled && denied) {
           setPermissionDenied(true);
           setCamEnabled(false);
+          setPref('cameraOffOnJoin', true);
         }
       }
     })();
@@ -129,7 +181,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
           <div className="absolute bottom-3 flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setMicEnabled(v => !v)}
+              onClick={() => setMicEnabled(v => { const next = !v; setPref('muteMicOnJoin', !next); return next; })}
               title={micEnabled ? 'Mic on' : 'Mic off'}
               className="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:scale-105"
               style={{
@@ -141,7 +193,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
             </button>
             <button
               type="button"
-              onClick={() => setCamEnabled(v => !v)}
+              onClick={() => setCamEnabled(v => { const next = !v; setPref('cameraOffOnJoin', !next); return next; })}
               title={camEnabled ? 'Camera on' : 'Camera off'}
               className="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:scale-105"
               style={{
@@ -164,6 +216,37 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
           </div>
         )}
 
+<<<<<<< Updated upstream
+=======
+        {/* Device selection */}
+        <div className="flex flex-col gap-2">
+          <DeviceSelect
+            icon={<Camera size={13} />}
+            label="Camera"
+            value={videoInputId}
+            devices={devices.videoInput}
+            fallbackLabel="Default camera"
+            onChange={id => setMeetingPref('selectedVideoInputId', id)}
+          />
+          <DeviceSelect
+            icon={<Mic size={13} />}
+            label="Microphone"
+            value={audioInputId}
+            devices={devices.audioInput}
+            fallbackLabel="Default microphone"
+            onChange={id => setMeetingPref('selectedAudioInputId', id)}
+          />
+          <DeviceSelect
+            icon={<Volume2 size={13} />}
+            label="Speaker"
+            value={audioOutputId}
+            devices={devices.audioOutput}
+            fallbackLabel="Default speaker"
+            onChange={id => setMeetingPref('selectedAudioOutputId', id)}
+          />
+        </div>
+
+>>>>>>> Stashed changes
         {/* Name */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="lobby-name" className="text-xs font-medium" style={{ color: 'rgba(251,245,221,0.6)' }}>

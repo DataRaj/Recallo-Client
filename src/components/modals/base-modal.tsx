@@ -3,7 +3,7 @@
  */
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { X } from 'lucide-react';
 
 interface ModalProps {
@@ -21,6 +21,13 @@ const sizeMap = {
 };
 
 export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalProps) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
