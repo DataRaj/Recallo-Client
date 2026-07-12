@@ -37,11 +37,12 @@ function resolveDevice(saved: string, list: MediaDeviceInfo[]): { id: string; mi
 export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting', onJoin }: PreJoinLobbyProps) {
   const muteMicOnJoin = usePreferencesStore(s => s.muteMicOnJoin);
   const cameraOffOnJoin = usePreferencesStore(s => s.cameraOffOnJoin);
+  const setPref = usePreferencesStore(s => s.set);
 
   const audioInputId = useMeetingPreferencesStore(s => s.selectedAudioInputId);
   const audioOutputId = useMeetingPreferencesStore(s => s.selectedAudioOutputId);
   const videoInputId = useMeetingPreferencesStore(s => s.selectedVideoInputId);
-  const setPref = useMeetingPreferencesStore(s => s.set);
+  const setMeetingPref = useMeetingPreferencesStore(s => s.set);
 
   const [name, setName] = useState(defaultName);
   const [micEnabled, setMicEnabled] = useState(!muteMicOnJoin);
@@ -84,7 +85,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
         const { missing } = resolveDevice(saved, list);
         if (missing) {
           anyMissing = true;
-          setPref(key, '');
+          setMeetingPref(key, '');
         }
       }
       if (anyMissing && !warnedRef.current) {
@@ -95,7 +96,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
     catch {
       // enumerateDevices can throw before permission is granted; ignore.
     }
-  }, [audioInputId, audioOutputId, videoInputId, setPref]);
+  }, [audioInputId, audioOutputId, videoInputId, setMeetingPref]);
 
   // Acquire / release the camera preview as the toggle or camera selection changes.
   useEffect(() => {
@@ -125,6 +126,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
         if (!cancelled && denied) {
           setPermissionDenied(true);
           setCamEnabled(false);
+          setPref('cameraOffOnJoin', true);
         }
       }
     })();
@@ -213,7 +215,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
           <div className="absolute bottom-3 flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setMicEnabled(v => !v)}
+              onClick={() => setMicEnabled(v => { const next = !v; setPref('muteMicOnJoin', !next); return next; })}
               title={micEnabled ? 'Mic on' : 'Mic off'}
               className="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:scale-105"
               style={{
@@ -225,7 +227,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
             </button>
             <button
               type="button"
-              onClick={() => setCamEnabled(v => !v)}
+              onClick={() => setCamEnabled(v => { const next = !v; setPref('cameraOffOnJoin', !next); return next; })}
               title={camEnabled ? 'Camera on' : 'Camera off'}
               className="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:scale-105"
               style={{
@@ -256,7 +258,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
             value={videoInputId}
             devices={devices.videoInput}
             fallbackLabel="Default camera"
-            onChange={id => setPref('selectedVideoInputId', id)}
+            onChange={id => setMeetingPref('selectedVideoInputId', id)}
           />
           <DeviceSelect
             icon={<Mic size={13} />}
@@ -264,7 +266,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
             value={audioInputId}
             devices={devices.audioInput}
             fallbackLabel="Default microphone"
-            onChange={id => setPref('selectedAudioInputId', id)}
+            onChange={id => setMeetingPref('selectedAudioInputId', id)}
           />
           <DeviceSelect
             icon={<Volume2 size={13} />}
@@ -272,7 +274,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
             value={audioOutputId}
             devices={devices.audioOutput}
             fallbackLabel="Default speaker"
-            onChange={id => setPref('selectedAudioOutputId', id)}
+            onChange={id => setMeetingPref('selectedAudioOutputId', id)}
           />
         </div>
 

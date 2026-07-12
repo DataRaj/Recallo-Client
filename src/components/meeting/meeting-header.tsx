@@ -4,9 +4,10 @@
 import { memo } from 'react';
 import Link from 'next/link';
 import { useParticipants } from '@livekit/components-react';
-import { Users, Wifi } from 'lucide-react';
+import { Users, Wifi, Timer } from 'lucide-react';
 import { ROUTES } from '@/lib/routes';
 import { useSessionTimer, formatCountdown } from '@/hooks/use-session-timer';
+import { useMeetingElapsedTimer } from '@/hooks/use-elapsed-timer';
 import { useIsRecording } from '@/hooks/use-is-recording';
 import type { Room } from '@/types/room';
 
@@ -17,6 +18,7 @@ interface MeetingHeaderProps {
 
 function MeetingHeaderImpl({ room, mode: _mode = 'meeting' }: MeetingHeaderProps) {
     const timeRemaining = useSessionTimer(room);
+    const elapsed = useMeetingElapsedTimer(room.status === 'active' ? room.startedAt : null);
     const participants = useParticipants();
     const isRecording = useIsRecording();
     const low = timeRemaining !== null && timeRemaining < 300;
@@ -40,14 +42,24 @@ function MeetingHeaderImpl({ room, mode: _mode = 'meeting' }: MeetingHeaderProps
                     <p className="truncate text-[12px] font-medium sm:text-[13px]" style={{ color: '#FBF5DD' }}>
                         {room.title || 'Meeting'}
                     </p>
-                    <div className="flex items-center gap-1.5">
-                        <span
-                            className="h-1.5 w-1.5 shrink-0 rounded-full"
-                            style={{ background: low ? '#BA5A5A' : '#9CC5A1' }}
-                        />
-                        <span className="text-[10px]" style={{ color: low ? '#BA5A5A' : 'rgba(251,245,221,0.4)' }}>
-                            {formatCountdown(timeRemaining)}
-                        </span>
+                    <div className="flex items-center gap-2">
+                        {room.status === 'active' && (
+                            <div className="flex items-center gap-1">
+                                <Timer size={9} style={{ color: '#9CC5A1' }} />
+                                <span className="font-mono text-[10px] tabular-nums" style={{ color: '#9CC5A1' }}>
+                                    {elapsed}
+                                </span>
+                            </div>
+                        )}
+                        <div className="flex items-center gap-1.5">
+                            <span
+                                className="h-1.5 w-1.5 shrink-0 rounded-full"
+                                style={{ background: low ? '#BA5A5A' : '#9CC5A1' }}
+                            />
+                            <span className="text-[10px]" style={{ color: low ? '#BA5A5A' : 'rgba(251,245,221,0.4)' }}>
+                                {formatCountdown(timeRemaining)}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -120,6 +120,7 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
               <input
                 value={title}
                 onChange={e => setTitle(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && title.trim()) void handleCreate(); }}
                 placeholder="e.g., Team Standup"
                 className="w-full px-3 py-2 rounded-[8px] border text-sm focus:outline-none"
                 style={{

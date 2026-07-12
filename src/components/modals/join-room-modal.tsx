@@ -133,6 +133,7 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
               <input
                 value={joinMethod === 'id' ? roomId : inviteLink}
                 onChange={e => joinMethod === 'id' ? setRoomId(e.target.value) : setInviteLink(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && canJoin) void handleJoin(); }}
                 placeholder={joinMethod === 'id' ? 'e.g., abc123xyz' : 'e.g., https://recallo.app/meeting/abc123'}
                 className="w-full px-3 py-2 rounded-[8px] border text-sm focus:outline-none"
                 style={{
@@ -151,6 +152,7 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
               <input
                 value={displayName}
                 onChange={e => setDisplayName(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && canJoin) void handleJoin(); }}
                 placeholder="Your name"
                 className="w-full px-3 py-2 rounded-[8px] border text-sm focus:outline-none"
                 style={{
