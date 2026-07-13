@@ -3,26 +3,26 @@
  * These model the REST history shape; the live WS shape is in types/realtime.ts.
  */
 
-export interface ChatUser {
+export type ChatUser = {
   id: number;
   name: string;
   email: string;
   avatar?: string;
   online?: boolean;
   lastSeen?: Date;
-}
+};
 
 export type MessageType = 'text' | 'gif' | 'file';
 
-export interface ChatAttachment {
+export type ChatAttachment = {
   id: string;
   filename: string;
   filesize: number;
   mimeType: string;
   url: string;
-}
+};
 
-export interface ChatMessage {
+export type ChatMessage = {
   id: string;
   conversationId: string;
   senderId: number;
@@ -35,9 +35,9 @@ export interface ChatMessage {
   attachment?: ChatAttachment;
   /** Tenor GIF URL when messageType === 'gif'. */
   gifUrl?: string;
-}
+};
 
-export interface Conversation {
+export type Conversation = {
   id: string;
   type: 'direct' | 'group' | 'meeting';
   participantIds: number[];
@@ -49,20 +49,20 @@ export interface Conversation {
   updatedAt: Date;
   name?: string;
   avatar?: string;
-}
+};
 
-export interface TypingIndicator {
+export type TypingIndicator = {
   conversationId: string;
   userId: number;
   userName: string;
   startedAt: Date;
-}
+};
 
-export interface ChatState {
+export type ChatState = {
   conversations: Map<string, Conversation>;
   currentConversationId: string | null;
   messages: Map<string, ChatMessage[]>;
   typingIndicators: Map<string, TypingIndicator>;
   isLoading: boolean;
   error: string | null;
-}
+};

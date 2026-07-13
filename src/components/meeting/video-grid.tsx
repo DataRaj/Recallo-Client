@@ -1,14 +1,21 @@
 'use client';
 
-import { memo, useMemo } from 'react';
-import { useTracks, type TrackReferenceOrPlaceholder } from '@livekit/components-react';
+import type { TrackReferenceOrPlaceholder } from '@livekit/components-react';
+import { useTracks } from '@livekit/components-react';
 import { Track } from 'livekit-client';
+import { memo, useMemo } from 'react';
 import { VideoTile } from '@/components/meeting/video-tile';
 
 function columnsFor(count: number): number {
-  if (count <= 1) return 1;
-  if (count <= 4) return 2;
-  if (count <= 9) return 3;
+  if (count <= 1) {
+    return 1;
+  }
+  if (count <= 4) {
+    return 2;
+  }
+  if (count <= 9) {
+    return 3;
+  }
   return 4;
 }
 
@@ -41,7 +48,7 @@ function VideoGridImpl() {
   return (
     <section className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden">
       <div
-        className="grid h-full w-full max-w-6xl gap-2.5"
+        className="grid size-full max-w-6xl gap-2.5"
         style={{
           gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
           gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
@@ -54,7 +61,7 @@ function VideoGridImpl() {
 
       {alone && (
         <div
-          className="pointer-events-none absolute left-1/2 top-4 -translate-x-1/2 rounded-full px-3 py-1 text-[11px]"
+          className="pointer-events-none absolute top-4 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-[11px]"
           style={{ background: 'rgba(0,0,0,0.4)', color: 'rgba(251,245,221,0.6)' }}
         >
           Waiting for others to join…

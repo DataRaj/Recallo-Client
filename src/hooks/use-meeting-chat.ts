@@ -1,17 +1,21 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import type { RemoteParticipant } from 'livekit-client';
+import type { ChatEnvelope, ChatMessage } from '@/types/meeting';
 import { useRoomContext } from '@livekit/components-react';
-import { RoomEvent, type RemoteParticipant } from 'livekit-client';
-import { useMeetingStore } from '@/stores/use-meeting-store';
-import { CHAT_TOPIC, type ChatEnvelope, type ChatMessage } from '@/types/meeting';
+import { RoomEvent } from 'livekit-client';
+import { useCallback, useEffect } from 'react';
 import { colorFor, initialsFor } from '@/components/meeting/avatar';
+import { useMeetingStore } from '@/stores/use-meeting-store';
+import { CHAT_TOPIC } from '@/types/meeting';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
 function isChatEnvelope(value: unknown): value is ChatEnvelope {
-  if (typeof value !== 'object' || value === null) return false;
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
   const e = value as Record<string, unknown>;
   return e.v === 1 && e.type === 'chat' && typeof e.text === 'string'
     && typeof e.id === 'string' && typeof e.senderName === 'string'
@@ -29,10 +33,14 @@ export function useChatReceiver() {
       _kind?: unknown,
       topic?: string,
     ) => {
-      if (topic !== CHAT_TOPIC) return;
+      if (topic !== CHAT_TOPIC) {
+        return;
+      }
       try {
         const parsed: unknown = JSON.parse(decoder.decode(payload));
-        if (!isChatEnvelope(parsed)) return;
+        if (!isChatEnvelope(parsed)) {
+          return;
+        }
         const identity = participant?.identity ?? parsed.id;
         const message: ChatMessage = {
           id: parsed.id,
@@ -45,8 +53,7 @@ export function useChatReceiver() {
           color: colorFor(identity),
         };
         addMessage(message);
-      }
-      catch {
+      } catch {
         // Ignore malformed payloads.
       }
     };
@@ -65,7 +72,9 @@ export function useChatSender() {
   const send = useCallback(
     async (text: string) => {
       const trimmed = text.trim();
-      if (!trimmed) return;
+      if (!trimmed) {
+        return;
+      }
 
       const local = room.localParticipant;
       const senderName = local.name || 'You';
@@ -83,8 +92,7 @@ export function useChatSender() {
           reliable: true,
           topic: CHAT_TOPIC,
         });
-      }
-      catch {
+      } catch {
         // Surface failure to the caller's UI if needed; swallow here so the
         // local echo still appears optimistically.
       }

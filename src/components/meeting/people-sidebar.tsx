@@ -1,17 +1,16 @@
 'use client';
 
-import { memo, useCallback } from 'react';
 import { useParticipants } from '@livekit/components-react';
-import { X, MicOff, VideoOff, Hand, MessageSquare, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Hand, Loader2, MessageSquare, MicOff, VideoOff, X } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { memo, useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { colorFor, initialsFor } from '@/components/meeting/avatar';
+import { ROUTES } from '@/lib/routes';
+import { createConversation } from '@/services/chat-service';
 import { useMeetingStore } from '@/stores/use-meeting-store';
 import { parseUserId } from '@/utils/identity';
-import { createConversation } from '@/services/chat-service';
-import { ROUTES } from '@/lib/routes';
-import { useState } from 'react';
 
 function PeopleSidebarImpl() {
   const participants = useParticipants();
@@ -24,8 +23,10 @@ function PeopleSidebarImpl() {
 
   const openDm = useCallback(async (identity: string) => {
     const uid = parseUserId(identity);
-    if (uid === null) return;
-    
+    if (uid === null) {
+      return;
+    }
+
     setLoadingId(identity);
     try {
       const convo = await createConversation(uid);
@@ -51,7 +52,9 @@ function PeopleSidebarImpl() {
           <div>
             <p className="text-[12px] font-medium" style={{ color: '#FBF5DD' }}>Participants</p>
             <p className="mt-0.5 text-[10px]" style={{ color: 'rgba(251,245,221,0.35)' }}>
-              {participants.length} in room
+              {participants.length}
+              {' '}
+              in room
             </p>
           </div>
           <button
@@ -66,7 +69,7 @@ function PeopleSidebarImpl() {
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-3">
-          {participants.map(p => {
+          {participants.map((p) => {
             const name = p.name || p.identity;
             const uid = parseUserId(p.identity);
             const canDm = !p.isLocal && uid !== null;
@@ -78,7 +81,7 @@ function PeopleSidebarImpl() {
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <div
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white"
+                    className="flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white"
                     style={{ background: colorFor(p.identity) }}
                   >
                     {initialsFor(name)}
@@ -100,9 +103,9 @@ function PeopleSidebarImpl() {
                   {canDm && (
                     <button
                       type="button"
-                      onClick={() => openDm(p.identity)}
+                      onClick={async () => openDm(p.identity)}
                       disabled={loadingId === p.identity}
-                      className="ml-1 rounded-[6px] p-1 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100 disabled:opacity-50"
+                      className="ml-1 rounded-[6px] p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white/10 disabled:opacity-50"
                       style={{ color: '#9CC5A1' }}
                       title={`Message ${name}`}
                     >

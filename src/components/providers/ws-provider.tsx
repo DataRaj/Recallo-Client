@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * WsProvider — mounts the WebSocket connection once per chat layout.
@@ -9,16 +9,17 @@
  * Mount in: src/app/[locale]/(protected)/chat/layout.tsx
  */
 
-import { createContext, useContext, ReactNode, useMemo } from 'react';
-import { useChatSocket } from '@/hooks/use-chat-socket';
-import type { WsSendMessage, WsSendTyping } from '@/types/realtime';
+import type { ReactNode } from "react";
+import type { WsSendMessage, WsSendTyping } from "@/types/realtime";
+import { createContext, use, useMemo } from "react";
+import { useChatSocket } from "@/hooks/use-chat-socket";
 
-interface WsContextValue {
+type WsContextValue = {
   sendMessage: (payload: WsSendMessage) => void;
   sendTyping: (payload: WsSendTyping) => void;
   sendDelivered: (messageId: number) => void;
   sendRead: (messageId: number) => void;
-}
+};
 
 const WsContext = createContext<WsContextValue | null>(null);
 
@@ -30,11 +31,13 @@ export function WsProvider({ children }: { children: ReactNode }) {
     [sendMessage, sendTyping, sendDelivered, sendRead],
   );
 
-  return <WsContext.Provider value={value}>{children}</WsContext.Provider>;
+  return <WsContext value={value}>{children}</WsContext>;
 }
 
 export function useWs(): WsContextValue {
-  const ctx = useContext(WsContext);
-  if (!ctx) throw new Error('useWs must be used inside <WsProvider>');
+  const ctx = use(WsContext);
+  if (!ctx) {
+    throw new Error("useWs must be used inside <WsProvider>");
+  }
   return ctx;
 }

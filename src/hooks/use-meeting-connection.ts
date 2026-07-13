@@ -1,19 +1,25 @@
 'use client';
 
+import type { MeetingConnection } from '@/types/meeting';
+import type { Room } from '@/types/room';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getRoom, getRoomToken } from '@/services/room-service';
-import { getMeetingIdentity } from '@/utils/identity';
 import { useAuthStore } from '@/stores/use-auth-store';
-import type { Room } from '@/types/room';
-import type { MeetingConnection } from '@/types/meeting';
+import { getMeetingIdentity } from '@/utils/identity';
 
 const DISPLAY_NAME_KEY = 'recallo_display_name';
 
 /** Ensure the LiveKit server URL is a ws(s):// URL for SDK connect. */
 function normalizeServerUrl(host: string): string {
-  if (host.startsWith('ws://') || host.startsWith('wss://')) return host;
-  if (host.startsWith('http://')) return `ws://${host.slice('http://'.length)}`;
-  if (host.startsWith('https://')) return `wss://${host.slice('https://'.length)}`;
+  if (host.startsWith('ws://') || host.startsWith('wss://')) {
+    return host;
+  }
+  if (host.startsWith('http://')) {
+    return `ws://${host.slice('http://'.length)}`;
+  }
+  if (host.startsWith('https://')) {
+    return `wss://${host.slice('https://'.length)}`;
+  }
   return `wss://${host}`;
 }
 
@@ -25,7 +31,7 @@ function errorMessage(err: unknown, fallback: string): string {
   return fallback;
 }
 
-interface UseMeetingConnectionResult {
+type UseMeetingConnectionResult = {
   room: Room | null;
   isLoading: boolean;
   error: string | null;
@@ -35,7 +41,7 @@ interface UseMeetingConnectionResult {
   fetchToken: (displayName: string) => Promise<MeetingConnection>;
   /** Re-fetch room state (e.g. after extending the session). */
   refetch: () => Promise<void>;
-}
+};
 
 export function useMeetingConnection(roomId: string): UseMeetingConnectionResult {
   const user = useAuthStore(s => s.user);
@@ -47,31 +53,37 @@ export function useMeetingConnection(roomId: string): UseMeetingConnectionResult
 
   // Stable meeting identity (`u<id>` when authed, else guest UUID).
   const guestIdRef = useRef<string>('');
-  if (!guestIdRef.current) guestIdRef.current = getMeetingIdentity();
+  if (!guestIdRef.current) {
+    guestIdRef.current = getMeetingIdentity();
+  }
 
   const load = useCallback(
     async (signal?: { aborted: boolean }) => {
       try {
         const guestId = guestIdRef.current;
         const fetched = await getRoom(roomId);
-        if (signal?.aborted) return;
+        if (signal?.aborted) {
+          return;
+        }
 
         const host = fetched.host_guest_id === guestId;
         const savedName
           = user?.name
-          ?? (typeof window !== 'undefined' ? localStorage.getItem(DISPLAY_NAME_KEY) : null)
-          ?? (host ? 'Host' : 'Guest');
+            ?? (typeof window !== 'undefined' ? localStorage.getItem(DISPLAY_NAME_KEY) : null)
+            ?? (host ? 'Host' : 'Guest');
 
         setRoom(fetched);
         setIsHost(host);
         setDefaultName(savedName);
-      }
-      catch (err: unknown) {
-        if (signal?.aborted) return;
+      } catch (err: unknown) {
+        if (signal?.aborted) {
+          return;
+        }
         setError(errorMessage(err, 'Failed to connect to room'));
-      }
-      finally {
-        if (!signal?.aborted) setIsLoading(false);
+      } finally {
+        if (!signal?.aborted) {
+          setIsLoading(false);
+        }
       }
     },
     [roomId, user?.name],

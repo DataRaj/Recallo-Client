@@ -3,9 +3,9 @@
  */
 'use client';
 
-import { Mic, MicOff, Video, VideoOff, Share2, Disc, MessageCircle, X } from 'lucide-react';
+import { Disc, MessageCircle, Mic, MicOff, Share2, Video, VideoOff, X } from 'lucide-react';
 
-interface RoomControlsProps {
+type RoomControlsProps = {
   isMuted: boolean;
   isCameraOff: boolean;
   isRecording: boolean;
@@ -18,7 +18,7 @@ interface RoomControlsProps {
   onLeaveRoom: () => void;
   canRecord?: boolean;
   canScreenShare?: boolean;
-}
+};
 
 export function RoomControls({
   isMuted,
@@ -40,7 +40,7 @@ export function RoomControls({
 
   return (
     <div
-      className="flex flex-wrap gap-2 p-4 rounded-[12px]"
+      className="flex flex-wrap gap-2 rounded-[12px] p-4"
       style={{ background: '#273338', borderTop: '1px solid rgba(255,255,255,0.06)' }}
     >
       {/* Mute */}

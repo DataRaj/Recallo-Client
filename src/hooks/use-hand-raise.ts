@@ -1,16 +1,20 @@
 'use client';
 
+import type { RemoteParticipant } from 'livekit-client';
+import type { HandSignal } from '@/types/meeting';
+import { useLocalParticipant, useRoomContext } from '@livekit/components-react';
+import { RoomEvent } from 'livekit-client';
 import { useCallback, useEffect } from 'react';
-import { useRoomContext, useLocalParticipant } from '@livekit/components-react';
-import { RoomEvent, type RemoteParticipant } from 'livekit-client';
 import { useMeetingStore } from '@/stores/use-meeting-store';
-import { SIGNAL_TOPIC, type HandSignal } from '@/types/meeting';
+import { SIGNAL_TOPIC } from '@/types/meeting';
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
 function isHandSignal(value: unknown): value is HandSignal {
-  if (typeof value !== 'object' || value === null) return false;
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
   const s = value as Record<string, unknown>;
   return s.v === 1 && s.type === 'hand' && typeof s.raised === 'boolean';
 }
@@ -32,12 +36,15 @@ export function useHandRaiseSync() {
       _kind?: unknown,
       topic?: string,
     ) => {
-      if (topic !== SIGNAL_TOPIC || !participant) return;
+      if (topic !== SIGNAL_TOPIC || !participant) {
+        return;
+      }
       try {
         const parsed: unknown = JSON.parse(decoder.decode(payload));
-        if (isHandSignal(parsed)) setHandRaised(participant.identity, parsed.raised);
-      }
-      catch {
+        if (isHandSignal(parsed)) {
+          setHandRaised(participant.identity, parsed.raised);
+        }
+      } catch {
         // Ignore malformed signals.
       }
     };
@@ -84,8 +91,7 @@ export function useHandRaiseControl() {
         reliable: true,
         topic: SIGNAL_TOPIC,
       });
-    }
-    catch {
+    } catch {
       setHandRaised(identity, !next); // revert on failure
     }
   }, [room, identity, setHandRaised]);

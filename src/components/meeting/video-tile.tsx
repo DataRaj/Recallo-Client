@@ -1,28 +1,31 @@
 'use client';
 
-import { memo } from 'react';
+import type { TrackReferenceOrPlaceholder } from '@livekit/components-react';
 import {
-  VideoTrack,
-  useIsSpeaking,
-  useConnectionQualityIndicator,
   isTrackReference,
-  type TrackReferenceOrPlaceholder,
+
+  useConnectionQualityIndicator,
+  useIsSpeaking,
+  VideoTrack,
 } from '@livekit/components-react';
 import { ConnectionQuality } from 'livekit-client';
-import { MicOff, Signal, Hand } from 'lucide-react';
+import { Hand, MicOff, Signal } from 'lucide-react';
+import { memo } from 'react';
 import { colorFor, initialsFor } from '@/components/meeting/avatar';
+import { useMeetingPreferencesStore } from '@/stores/use-meeting-preferences-store';
 import { useMeetingStore } from '@/stores/use-meeting-store';
 
-interface VideoTileProps {
+type VideoTileProps = {
   trackRef: TrackReferenceOrPlaceholder;
   isLocal: boolean;
-}
+};
 
 function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
   const participant = trackRef.participant;
   const isSpeaking = useIsSpeaking(participant);
   const { quality } = useConnectionQualityIndicator({ participant });
   const handRaised = useMeetingStore(s => s.raisedHands[participant.identity] ?? false);
+  const mirror = useMeetingPreferencesStore(s => s.mirrorVideo);
 
   const name = participant.name || participant.identity;
   const color = colorFor(participant.identity);
@@ -42,13 +45,13 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
         ? (
             <VideoTrack
               trackRef={trackRef}
-              className={`absolute inset-0 h-full w-full object-cover ${isLocal ? '-scale-x-100' : ''}`}
+              className={`absolute inset-0 size-full object-cover ${isLocal && mirror ? '-scale-x-100' : ''}`}
             />
           )
         : (
             <div className="flex flex-col items-center gap-2">
               <div
-                className="flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold text-white sm:h-12 sm:w-12"
+                className="flex size-11 items-center justify-center rounded-full text-sm font-semibold text-white sm:size-12"
                 style={{ background: color }}
               >
                 {initialsFor(name)}
@@ -83,7 +86,7 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
       {/* Hand raised */}
       {handRaised && (
         <div
-          className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full"
+          className="absolute top-2 right-2 flex size-6 items-center justify-center rounded-full"
           style={{ background: '#E5B567' }}
           title={`${name} raised their hand`}
         >
@@ -94,7 +97,7 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
       {/* Mic muted indicator */}
       {!micOn && (
         <div
-          className="absolute bottom-2 right-2 flex h-5 w-5 items-center justify-center rounded-full"
+          className="absolute right-2 bottom-2 flex size-5 items-center justify-center rounded-full"
           style={{ background: 'rgba(0,0,0,0.5)' }}
         >
           <MicOff size={10} style={{ color: 'rgba(255,255,255,0.5)' }} />
@@ -104,7 +107,7 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
       {/* Poor connection indicator */}
       {(quality === ConnectionQuality.Poor || quality === ConnectionQuality.Lost) && (
         <div
-          className="absolute left-2 top-2 flex h-5 w-5 items-center justify-center rounded-full"
+          className="absolute top-2 left-2 flex size-5 items-center justify-center rounded-full"
           style={{ background: 'rgba(186,90,90,0.85)' }}
           title="Weak connection"
         >

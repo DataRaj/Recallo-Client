@@ -15,12 +15,12 @@
  * importing the socket hook directly.
  */
 
+import type { ChatMessage } from '@/types/chat';
+import type { WsConnectionState } from '@/types/realtime';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { WsConnectionState } from '@/types/realtime';
-import type { ChatMessage } from '@/types/chat';
 
-interface WsState {
+type WsState = {
   connectionState: WsConnectionState;
   /** User ids that are currently online (from 'online'/'offline' events). */
   onlineUserIds: Set<number>;
@@ -32,9 +32,9 @@ interface WsState {
   typingByConversation: Map<string, Set<number>>;
   /** Known user names fetched from REST — id → name. */
   userNames: Map<number, string>;
-}
+};
 
-interface WsActions {
+type WsActions = {
   setConnectionState: (state: WsConnectionState) => void;
   setOnline: (userId: number) => void;
   setOffline: (userId: number) => void;
@@ -51,7 +51,7 @@ interface WsActions {
   markDelivered: (messageId: string) => void;
   markRead: (messageId: string) => void;
   reset: () => void;
-}
+};
 
 const initial: WsState = {
   connectionState: 'idle',
@@ -64,19 +64,19 @@ const initial: WsState = {
 
 export const useWsStore = create<WsState & WsActions>()(
   devtools(
-    (set) => ({
+    set => ({
       ...initial,
 
-      setConnectionState: (connectionState) => set({ connectionState }),
+      setConnectionState: connectionState => set({ connectionState }),
 
-      setOnline: (userId) =>
+      setOnline: userId =>
         set((s) => {
           const next = new Set(s.onlineUserIds);
           next.add(userId);
           return { onlineUserIds: next };
         }),
 
-      setOffline: (userId) =>
+      setOffline: userId =>
         set((s) => {
           const nextOnline = new Set(s.onlineUserIds);
           nextOnline.delete(userId);
@@ -104,8 +104,10 @@ export const useWsStore = create<WsState & WsActions>()(
         set((s) => {
           const map = new Map(s.messagesByConversation);
           const existing = map.get(privateId) ?? [];
-          const hasDup = existing.some((m) => m.id === message.id);
-          if (hasDup) return {};
+          const hasDup = existing.some(m => m.id === message.id);
+          if (hasDup) {
+            return {};
+          }
           map.set(privateId, [...existing, message]);
           return { messagesByConversation: map };
         }),
@@ -114,8 +116,11 @@ export const useWsStore = create<WsState & WsActions>()(
         set((s) => {
           const map = new Map(s.typingByConversation);
           const conv = new Set(map.get(privateId) ?? []);
-          if (isTyping) conv.add(userId);
-          else conv.delete(userId);
+          if (isTyping) {
+            conv.add(userId);
+          } else {
+            conv.delete(userId);
+          }
           map.set(privateId, conv);
           return { typingByConversation: map };
         }),
@@ -127,23 +132,27 @@ export const useWsStore = create<WsState & WsActions>()(
           return { userNames: next };
         }),
 
-      flushPending: (privateId) =>
+      flushPending: privateId =>
         set((s) => {
           const map = new Map(s.messagesByConversation);
           const existing = map.get(privateId);
-          if (!existing) return {};
-          map.set(privateId, existing.filter((m) => !m.id.startsWith('pending-')));
+          if (!existing) {
+            return {};
+          }
+          map.set(privateId, existing.filter(m => !m.id.startsWith('pending-')));
           return { messagesByConversation: map };
         }),
 
-      markDelivered: (messageId) =>
+      markDelivered: messageId =>
         set((s) => {
           const map = new Map(s.messagesByConversation);
           for (const [privId, msgs] of map.entries()) {
-            const idx = msgs.findIndex((m) => m.id === messageId);
+            const idx = msgs.findIndex(m => m.id === messageId);
             const msg = msgs[idx];
             if (idx !== -1 && msg) {
-              if (msg.updatedAt) return {};
+              if (msg.updatedAt) {
+                return {};
+              }
               const newMsgs = [...msgs];
               newMsgs[idx] = { ...msg, updatedAt: new Date() };
               map.set(privId, newMsgs);
@@ -153,11 +162,11 @@ export const useWsStore = create<WsState & WsActions>()(
           return {};
         }),
 
-      markRead: (messageId) =>
+      markRead: messageId =>
         set((s) => {
           const map = new Map(s.messagesByConversation);
           for (const [privId, msgs] of map.entries()) {
-            const idx = msgs.findIndex((m) => m.id === messageId);
+            const idx = msgs.findIndex(m => m.id === messageId);
             const msg = msgs[idx];
             if (idx !== -1 && msg) {
               const newMsgs = [...msgs];

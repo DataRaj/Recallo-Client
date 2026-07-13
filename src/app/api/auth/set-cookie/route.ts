@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 /**
  * POST /api/auth/set-cookie
  *
@@ -5,10 +6,16 @@
  * Stores the refresh_token in an httpOnly cookie so it's never accessible from JS.
  */
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
-  const body = await req.json() as { refresh_token?: string };
+  // Use safe text-based parse to avoid unhandled SyntaxError if body is malformed.
+  const text = await req.text();
+  let body: { refresh_token?: string } = {};
+  try {
+    body = JSON.parse(text) as typeof body;
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
 
   if (!body.refresh_token) {
     return NextResponse.json({ error: 'Missing refresh_token' }, { status: 400 });

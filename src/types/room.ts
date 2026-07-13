@@ -5,7 +5,7 @@
 export type RoomType = 'meeting' | 'webinar' | 'private-meeting';
 export type RoomStatus = 'pending' | 'active' | 'ended' | 'cancelled';
 
-export interface RoomParticipant {
+export type RoomParticipant = {
   id: number;
   userId: number;
   name: string;
@@ -17,9 +17,9 @@ export interface RoomParticipant {
   isOnline: boolean;
   isMuted: boolean;
   isCameraOff: boolean;
-}
+};
 
-export interface Room {
+export type Room = {
   id: string;
   type: RoomType;
   title: string;
@@ -42,9 +42,9 @@ export interface Room {
   extend_used: boolean;
   tier: 'guest' | 'standard' | 'pro';
   session_duration_mins?: number;
-}
+};
 
-export interface RoomSettings {
+export type RoomSettings = {
   allowGuests: boolean;
   requireApproval: boolean;
   allowChat: boolean;
@@ -53,29 +53,29 @@ export interface RoomSettings {
   allowParticipantRecording: boolean;
   muteOnJoin: boolean;
   cameraOffOnJoin: boolean;
-}
+};
 
-export interface CreateRoomInput {
+export type CreateRoomInput = {
   type: RoomType;
   title: string;
   description?: string;
   scheduledFor?: Date;
   maxParticipants?: number;
   settings?: Partial<RoomSettings>;
-}
+};
 
-export interface JoinRoomInput {
+export type JoinRoomInput = {
   roomId: string;
   name?: string;
   email?: string;
   displayName?: string;
-}
+};
 
-export interface RoomInvite {
+export type RoomInvite = {
   id: string;
   roomId: string;
   inviteLink: string;
   expiresAt?: Date;
   maxUses?: number;
   usesRemaining?: number;
-}
+};

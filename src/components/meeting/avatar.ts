@@ -4,9 +4,13 @@ const FALLBACK_COLOR = '#9CC5A1';
 export function initialsFor(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   const first = parts[0];
-  if (!first) return '?';
+  if (!first) {
+    return '?';
+  }
   const last = parts[parts.length - 1];
-  if (parts.length === 1 || !last) return first.slice(0, 2).toUpperCase();
+  if (parts.length === 1 || !last) {
+    return first.slice(0, 2).toUpperCase();
+  }
   return ((first[0] ?? '') + (last[0] ?? '')).toUpperCase();
 }
 

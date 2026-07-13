@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'sonner';
-import { useAuthStore } from '@/stores/use-auth-store';
-import { ROUTES } from '@/lib/routes';
 import { Loader2 } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'sonner';
+import { ROUTES } from '@/lib/routes';
+import { useAuthStore } from '@/stores/use-auth-store';
 
 /**
  * OAuth Success landing page.
@@ -47,11 +47,25 @@ function OAuthSuccessContent() {
         // 2. Use the refresh endpoint to get the full user object
         const meRes = await fetch('/api/auth/refresh', { method: 'POST' });
         if (meRes.ok) {
-          const meData = await meRes.json() as {
-            success: boolean;
-            data: { user: { id: number; name: string; email: string }; access_token: string };
+          const meText = await meRes.text();
+          type MeData = {
+            success?: boolean;
+            data?: {
+              user?: { id: number; name: string; email: string };
+              access_token?: string;
+            };
           };
-          if (meData.success && meData.data?.user) {
+          let meData: MeData | null = null;
+          try {
+            meData = JSON.parse(meText) as MeData;
+          } catch {
+            // non-JSON response — fall through to fallback
+          }
+          if (
+            meData?.success
+            && meData.data?.user
+            && meData.data.access_token
+          ) {
             setAuth(meData.data.user, meData.data.access_token);
             setHydrated(true);
             toast.success(`Welcome, ${meData.data.user.name}!`);
@@ -65,33 +79,35 @@ function OAuthSuccessContent() {
         setHydrated(false); // let useCurrentUser re-hydrate on dashboard mount
         toast.success('Signed in with GitHub!');
         router.replace(ROUTES.HOME);
+
+        console.log(router, 'Router');
       } catch {
         toast.error('Failed to complete authentication. Please try again.');
         router.replace(ROUTES.LOGIN);
       }
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div
-      className="min-h-dvh flex items-center justify-center"
-      style={{ background: '#E6F2DD' }}
+      className="flex min-h-dvh items-center justify-center bg-[var(--color-bg)]"
     >
       <div className="flex flex-col items-center gap-5">
         <div
-          className="w-14 h-14 rounded-[16px] flex items-center justify-center text-white text-xl font-semibold"
-          style={{ background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)' }}
+          className="flex size-14 items-center justify-center rounded-[16px] text-xl font-semibold text-white"
+          style={{
+            background: 'linear-gradient(135deg, var(--color-text-accent) 0%, #8A4040 100%)',
+          }}
         >
           R
         </div>
         <div className="flex flex-col items-center gap-2">
           <Loader2
-            className="animate-spin"
+            className="animate-spin text-[var(--color-accent)]"
             size={20}
-            style={{ color: '#B0BA99' }}
           />
-          <p className="text-sm font-medium" style={{ color: '#8D7A7A' }}>
+          <p className="text-sm font-medium text-[var(--color-text-secondary)]">
             Completing sign in…
           </p>
         </div>
@@ -102,11 +118,18 @@ function OAuthSuccessContent() {
 
 export default function OAuthSuccessPage() {
   return (
-    <React.Suspense fallback={
-      <div className="min-h-dvh flex items-center justify-center" style={{ background: '#E6F2DD' }}>
-        <Loader2 className="animate-spin" size={20} style={{ color: '#B0BA99' }} />
-      </div>
-    }>
+    <React.Suspense
+      fallback={(
+        <div
+          className="flex min-h-dvh items-center justify-center bg-[var(--color-bg)]"
+        >
+          <Loader2
+            className="animate-spin text-[var(--color-accent)]"
+            size={20}
+          />
+        </div>
+      )}
+    >
       <OAuthSuccessContent />
     </React.Suspense>
   );

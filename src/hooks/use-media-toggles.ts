@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useState } from 'react';
 import { useLocalParticipant } from '@livekit/components-react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
 function mediaErrorMessage(err: unknown): string {
@@ -29,48 +29,48 @@ export function useMediaToggles() {
   const screenShareEnabled = localParticipant.isScreenShareEnabled;
 
   const toggleMic = useCallback(async () => {
-    if (micBusy) return;
+    if (micBusy) {
+      return;
+    }
     setMicBusy(true);
     try {
       await localParticipant.setMicrophoneEnabled(!localParticipant.isMicrophoneEnabled);
-    }
-    catch (err) {
+    } catch (err) {
       toast.error(mediaErrorMessage(err));
-    }
-    finally {
+    } finally {
       setMicBusy(false);
     }
   }, [localParticipant, micBusy]);
 
   const toggleCam = useCallback(async () => {
-    if (camBusy) return;
+    if (camBusy) {
+      return;
+    }
     setCamBusy(true);
     try {
       await localParticipant.setCameraEnabled(!localParticipant.isCameraEnabled);
-    }
-    catch (err) {
+    } catch (err) {
       toast.error(mediaErrorMessage(err));
-    }
-    finally {
+    } finally {
       setCamBusy(false);
     }
   }, [localParticipant, camBusy]);
 
   const toggleScreenShare = useCallback(async () => {
-    if (screenBusy) return;
+    if (screenBusy) {
+      return;
+    }
     setScreenBusy(true);
     try {
       await localParticipant.setScreenShareEnabled(!localParticipant.isScreenShareEnabled);
-    }
-    catch (err) {
+    } catch (err) {
       // The browser picker throws NotAllowedError when the user cancels — that
       // isn't an error worth surfacing.
       const name = (err as { name?: string })?.name;
       if (name !== 'NotAllowedError' && name !== 'AbortError') {
         toast.error(mediaErrorMessage(err));
       }
-    }
-    finally {
+    } finally {
       setScreenBusy(false);
     }
   }, [localParticipant, screenBusy]);

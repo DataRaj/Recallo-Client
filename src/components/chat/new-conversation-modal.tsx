@@ -1,59 +1,93 @@
 'use client';
 
-/**
- * NewConversationModal
- *
- * Simple modal to start a private conversation by numeric user id
- * (no user-search endpoint exists yet on the backend).
- *
- * Can be opened programmatically from the chat layout header "+".
- */
-
-import { useCallback, useRef, useState, useEffect } from 'react';
-import { X, MessageSquare, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { createConversation } from '@/services/chat-service';
-import { ROUTES } from '@/lib/routes';
+import type { UserSearchResult } from '@/services/chat-service';
+import { Loader2, MessageSquare, Search, User, X } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ROUTES } from '@/lib/routes';
+import { createConversation, searchUsers } from '@/services/chat-service';
 
-interface NewConversationModalProps {
-  /** When non-null, the modal is open. */
+type NewConversationModalProps = {
   open: boolean;
-  /** Pre-fill with a user id. */
   prefillUserId?: number;
   onClose: () => void;
+};
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(t);
+  }, [value, delay]);
+  return debounced;
 }
 
-export function NewConversationModal({
-  open,
-  prefillUserId,
-  onClose,
-}: NewConversationModalProps) {
+function userInitials(name: string): string {
+  return name.split(' ').map(p => p[0] ?? '').join('').toUpperCase().slice(0, 2);
+}
+
+export function NewConversationModal({ open, prefillUserId, onClose }: NewConversationModalProps) {
   const router = useRouter();
   const locale = useLocale();
-  const [userId, setUserId] = useState(prefillUserId ? String(prefillUserId) : '');
+
+  const [query, setQuery] = useState(prefillUserId ? String(prefillUserId) : '');
+  const [results, setResults] = useState<UserSearchResult[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [selected, setSelected] = useState<UserSearchResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const debouncedQuery = useDebounce(query, 300);
 
   useEffect(() => {
     if (open) {
-      setUserId(prefillUserId ? String(prefillUserId) : '');
+      setQuery(prefillUserId ? String(prefillUserId) : '');
+      setResults([]);
+      setSelected(null);
       setError(null);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [open, prefillUserId]);
 
-  const handleSubmit = useCallback(async () => {
-    const id = parseInt(userId.trim(), 10);
-    if (isNaN(id) || id <= 0) {
-      setError('Enter a valid numeric user ID.');
+  useEffect(() => {
+    if (!debouncedQuery.trim() || selected) {
+      setResults([]);
+      return;
+    }
+    let cancelled = false;
+    setSearching(true);
+    searchUsers(debouncedQuery).then((data) => {
+      if (!cancelled) {
+        setResults(data); setSearching(false);
+      }
+    }).catch(() => {
+      if (!cancelled) {
+        setSearching(false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedQuery, selected]);
+
+  const handleSelect = useCallback((user: UserSearchResult) => {
+    setSelected(user);
+    setQuery(user.name);
+    setResults([]);
+    setError(null);
+  }, []);
+
+  const handleStart = useCallback(async () => {
+    const targetId = selected?.id ?? Number.parseInt(query.trim(), 10);
+    if (!selected && (isNaN(targetId) || targetId <= 0)) {
+      setError('Select a user or enter a valid numeric ID.');
       return;
     }
     setBusy(true);
     setError(null);
     try {
-      const convo = await createConversation(id);
+      const convo = await createConversation(targetId);
       onClose();
       router.push(`/${locale}${ROUTES.CHAT_CONVERSATION(convo.id)}`);
     } catch (err: unknown) {
@@ -62,25 +96,45 @@ export function NewConversationModal({
     } finally {
       setBusy(false);
     }
-  }, [userId, locale, router, onClose]);
+  }, [selected, query, locale, router, onClose]);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [open, onClose]);
+
+  if (!open) {
+    return null;
+  }
+
+  const showDropdown = results.length > 0 && !selected;
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
     >
       <div
         className="w-full max-w-md rounded-2xl p-6 shadow-2xl"
         style={{ background: '#1E2E30', border: '1px solid rgba(255,255,255,0.08)' }}
       >
-        {/* Header */}
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div
-              className="flex h-8 w-8 items-center justify-center rounded-xl"
+              className="flex size-8 items-center justify-center rounded-xl"
               style={{ background: 'rgba(156,197,161,0.15)' }}
             >
               <MessageSquare size={15} style={{ color: '#9CC5A1' }} />
@@ -99,37 +153,118 @@ export function NewConversationModal({
           </button>
         </div>
 
-        <p className="mb-4 text-[12px] leading-relaxed" style={{ color: 'rgba(251,245,221,0.55)' }}>
-          Enter the numeric user ID of the person you want to message. You can find this in their
-          profile or from the meeting participants list.
-        </p>
+        <div className="relative">
+          <label className="block">
+            <span className="mb-1.5 block text-[11px] font-medium" style={{ color: 'rgba(251,245,221,0.5)' }}>
+              Search by name, email, or user ID
+            </span>
+            <div className="relative flex items-center">
+              <Search size={13} className="absolute left-3 shrink-0" style={{ color: 'rgba(251,245,221,0.35)' }} />
+              <input
+                ref={inputRef}
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value); setSelected(null); setError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (results[0] && !selected) {
+                      handleSelect(results[0]);
+                    } else if (selected || query.trim()) {
+                      void handleStart();
+                    }
+                  }
+                }}
+                placeholder="e.g. Alex Kim or 42"
+                className="w-full rounded-[10px] border py-2.5 pr-3 pl-9 text-[13px] transition-all outline-none focus:ring-1"
+                style={{
+                  background: '#273338',
+                  borderColor: error ? '#BA5A5A' : 'rgba(255,255,255,0.08)',
+                  color: '#FBF5DD',
+                }}
+              />
+              {searching && (
+                <Loader2 size={13} className="absolute right-3 animate-spin" style={{ color: 'rgba(251,245,221,0.4)' }} />
+              )}
+            </div>
+          </label>
 
-        {/* Input */}
-        <label className="block">
-          <span className="mb-1.5 block text-[11px] font-medium" style={{ color: 'rgba(251,245,221,0.5)' }}>
-            User ID
-          </span>
-          <input
-            ref={inputRef}
-            type="number"
-            min={1}
-            value={userId}
-            onChange={(e) => { setUserId(e.target.value); setError(null); }}
-            onKeyDown={(e) => { if (e.key === 'Enter') void handleSubmit(); }}
-            placeholder="e.g. 42"
-            className="w-full rounded-[10px] border px-3 py-2.5 text-[13px] outline-none transition-all focus:ring-1"
-            style={{
-              background: '#273338',
-              borderColor: error ? '#BA5A5A' : 'rgba(255,255,255,0.08)',
-              color: '#FBF5DD',
-            }}
-          />
-          {error && (
-            <p className="mt-1.5 text-[11px]" style={{ color: '#BA5A5A' }}>{error}</p>
+          {showDropdown && (
+            <div
+              className="absolute inset-x-0 top-full z-10 mt-1 overflow-hidden rounded-[12px] shadow-2xl"
+              style={{ background: '#273338', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              {results.map(user => (
+                <button
+                  key={user.id}
+                  type="button"
+                  onClick={() => handleSelect(user)}
+                  className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-white/5"
+                >
+                  <div
+                    className="flex size-8 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-white"
+                    style={{ background: '#9CC5A1' }}
+                  >
+                    {user.avatar
+                      ? <img src={user.avatar} alt={user.name} className="size-8 rounded-full object-cover" />
+                      : userInitials(user.name)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-[13px] font-medium" style={{ color: '#FBF5DD' }}>{user.name}</p>
+                    <p className="truncate text-[11px]" style={{ color: 'rgba(251,245,221,0.45)' }}>{user.email}</p>
+                  </div>
+                  <span
+                    className="ml-auto shrink-0 rounded-[8px] px-2.5 py-1 text-[11px] font-medium"
+                    style={{ background: 'rgba(156,197,161,0.15)', color: '#9CC5A1' }}
+                  >
+                    Chat
+                  </span>
+                </button>
+              ))}
+            </div>
           )}
-        </label>
 
-        {/* Actions */}
+          {!showDropdown && !searching && debouncedQuery.trim() && !selected && results.length === 0 && (
+            <div className="mt-2 flex items-center gap-2 text-[11px]" style={{ color: 'rgba(251,245,221,0.4)' }}>
+              <User size={12} />
+              No users found. You can still enter a numeric user ID to start a chat.
+            </div>
+          )}
+        </div>
+
+        {selected && (
+          <div
+            className="mt-3 flex items-center gap-2.5 rounded-[10px] px-3 py-2.5"
+            style={{ background: 'rgba(156,197,161,0.08)', border: '1px solid rgba(156,197,161,0.2)' }}
+          >
+            <div
+              className="flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
+              style={{ background: '#9CC5A1' }}
+            >
+              {userInitials(selected.name)}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[12px] font-medium" style={{ color: '#9CC5A1' }}>{selected.name}</p>
+              <p className="truncate text-[10px]" style={{ color: 'rgba(156,197,161,0.7)' }}>{selected.email}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setSelected(null); setQuery('');
+              }}
+              className="shrink-0 rounded p-0.5 hover:bg-white/10"
+              style={{ color: 'rgba(156,197,161,0.7)' }}
+            >
+              <X size={12} />
+            </button>
+          </div>
+        )}
+
+        {error && (
+          <p className="mt-2 text-[11px]" style={{ color: '#BA5A5A' }}>{error}</p>
+        )}
+
         <div className="mt-5 flex items-center justify-end gap-2">
           <button
             onClick={onClose}
@@ -139,8 +274,8 @@ export function NewConversationModal({
             Cancel
           </button>
           <button
-            onClick={() => void handleSubmit()}
-            disabled={busy || !userId.trim()}
+            onClick={() => void handleStart()}
+            disabled={busy || (!selected && !query.trim())}
             className="flex items-center gap-2 rounded-[10px] px-4 py-2 text-[13px] font-medium transition-all hover:opacity-90 disabled:opacity-50"
             style={{ background: '#9CC5A1', color: '#1E2E30' }}
           >

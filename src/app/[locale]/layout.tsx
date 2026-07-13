@@ -3,8 +3,10 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { PostHogProvider } from '@/components/analytics/post-hog-provider';
+import { ActiveMeetingProvider } from '@/components/providers/active-meeting-provider';
 import { NuqsProvider } from '@/components/providers/nuqs-adapter';
 import { QueryProvider } from '@/components/providers/query-provider';
+import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/providers/toaster';
 import { routing } from '@/libs/i18n-routing';
 import '@/styles/global.css';
@@ -57,7 +59,11 @@ export default async function RootLayout(props: {
           <NuqsProvider>
             <NextIntlClientProvider>
               <PostHogProvider>
-                {props.children}
+                <ThemeProvider>
+                  <ActiveMeetingProvider>
+                    {props.children}
+                  </ActiveMeetingProvider>
+                </ThemeProvider>
                 <Toaster />
               </PostHogProvider>
             </NextIntlClientProvider>

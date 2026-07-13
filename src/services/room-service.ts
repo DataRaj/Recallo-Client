@@ -2,10 +2,10 @@
  * Room service for API communication with Recallo Go Backend
  */
 
-import { apiClient } from '@/libs/api-client';
 import type { Room } from '@/types/room';
+import { apiClient } from '@/libs/api-client';
 
-export interface BackendRoom {
+export type BackendRoom = {
   id: number;
   host_guest_id: string;
   livekit_room_name: string;
@@ -17,12 +17,12 @@ export interface BackendRoom {
   ended_at?: string;
   created_at: string;
   session_duration_mins: number;
-}
+};
 
-export interface TokenResponse {
+export type TokenResponse = {
   token: string;
   livekit_host: string;
-}
+};
 
 // Map the backend structure to client-side Room structure
 export function mapBackendRoom(r: BackendRoom): Room {
@@ -79,7 +79,7 @@ export async function getRoomToken(
   roomId: string,
   guestId: string,
   displayName: string,
-  isHost: boolean
+  isHost: boolean,
 ): Promise<TokenResponse> {
   const response = await apiClient.get<TokenResponse>(`/api/v1/rooms/${roomId}/token`, {
     params: {
@@ -93,11 +93,11 @@ export async function getRoomToken(
 
 export async function extendRoomSession(
   roomId: string,
-  guestId: string
+  guestId: string,
 ): Promise<{ extended: boolean; message: string }> {
   const response = await apiClient.post<{ extended: boolean; message: string }>(
     `/api/v1/rooms/${roomId}/extend`,
-    { guest_id: guestId }
+    { guest_id: guestId },
   );
   return response.data;
 }

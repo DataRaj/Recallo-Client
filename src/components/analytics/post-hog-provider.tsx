@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import posthog from "posthog-js";
-import { PostHogProvider as PHProvider } from "posthog-js/react";
-import { useEffect } from "react";
-import { Env } from "@/libs/Env";
-import { SuspendedPostHogPageView } from "./post-hog-page-view";
+import posthog from 'posthog-js';
+import { PostHogProvider as PHProvider } from 'posthog-js/react';
+import { useEffect } from 'react';
+import { Env } from '@/libs/Env';
+import { SuspendedPostHogPageView } from './post-hog-page-view';
 
-export const PostHogProvider = (props: { children: React.ReactNode }) => {
+export const PostHogProvider = async (props: { children: React.ReactNode }) => {
   useEffect(() => {
     if (Env.NEXT_PUBLIC_POSTHOG_KEY) {
       posthog.init(Env.NEXT_PUBLIC_POSTHOG_KEY, {

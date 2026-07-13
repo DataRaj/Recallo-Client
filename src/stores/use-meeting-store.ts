@@ -1,12 +1,12 @@
 'use client';
 
+import type { ChatMessage } from '@/types/meeting';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { ChatMessage } from '@/types/meeting';
 
 export type SidebarTab = 'none' | 'chat' | 'people';
 
-interface MeetingState {
+type MeetingState = {
   sidebar: SidebarTab;
   unreadChat: number;
   messages: ChatMessage[];
@@ -14,9 +14,9 @@ interface MeetingState {
   raisedHands: Record<string, boolean>;
   /** User override to stay on the grid even while a screen share is active. */
   forceGrid: boolean;
-}
+};
 
-interface MeetingActions {
+type MeetingActions = {
   setSidebar: (tab: SidebarTab) => void;
   toggleSidebar: (tab: Exclude<SidebarTab, 'none'>) => void;
   addMessage: (message: ChatMessage) => void;
@@ -25,7 +25,7 @@ interface MeetingActions {
   clearHand: (identity: string) => void;
   setForceGrid: (forceGrid: boolean) => void;
   reset: () => void;
-}
+};
 
 const initialState: MeetingState = {
   sidebar: 'none',
@@ -47,7 +47,7 @@ export const useMeetingStore = create<MeetingState & MeetingActions>()(
         })),
 
       toggleSidebar: tab =>
-        set(state => {
+        set((state) => {
           const next = state.sidebar === tab ? 'none' : tab;
           return {
             sidebar: next,
@@ -67,14 +67,18 @@ export const useMeetingStore = create<MeetingState & MeetingActions>()(
       markChatRead: () => set({ unreadChat: 0 }),
 
       setHandRaised: (identity, raised) =>
-        set(state => {
-          if ((state.raisedHands[identity] ?? false) === raised) return state;
+        set((state) => {
+          if ((state.raisedHands[identity] ?? false) === raised) {
+            return state;
+          }
           return { raisedHands: { ...state.raisedHands, [identity]: raised } };
         }),
 
       clearHand: identity =>
-        set(state => {
-          if (!(identity in state.raisedHands)) return state;
+        set((state) => {
+          if (!(identity in state.raisedHands)) {
+            return state;
+          }
           const next = { ...state.raisedHands };
           delete next[identity];
           return { raisedHands: next };

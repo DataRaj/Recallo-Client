@@ -1,50 +1,56 @@
 'use client';
 
-import { ReactNode, useEffect, useState, useCallback } from 'react';
+import type { ReactNode } from 'react';
+import type { Conversation } from '@/types/chat';
+import { Loader2, Plus, Search, User, Wifi, WifiOff } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { Search, Plus, User, Loader2, Wifi, WifiOff } from 'lucide-react';
-import { ROUTES } from '@/lib/routes';
+import { useCallback, useEffect, useState } from 'react';
 
-import { useWsStore } from '@/stores/use-ws-store';
-import { getConversations } from '@/services/chat-service';
-import { useCurrentUser } from '@/hooks/use-current-user';
+import { ChatThemePicker } from '@/components/chat/chat-theme-picker';
 import { NewConversationModal } from '@/components/chat/new-conversation-modal';
-import type { Conversation } from '@/types/chat';
+import { useCurrentUser } from '@/hooks/use-current-user';
+import { ROUTES } from '@/lib/routes';
+import { getConversations } from '@/services/chat-service';
+import { useWsStore } from '@/stores/use-ws-store';
 
 function formatTime(d: Date | string | undefined): string {
-  if (!d) return '';
+  if (!d) {
+    return '';
+  }
   const date = d instanceof Date ? d : new Date(d);
   return date.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
 }
 
 function ConversationName(convo: Conversation, currentUserId: number): string {
-  if (convo.name) return convo.name;
-  const other = convo.participants.find((p) => p.id !== currentUserId);
+  if (convo.name) {
+    return convo.name;
+  }
+  const other = convo.participants.find(p => p.id !== currentUserId);
   return other?.name ?? `Conversation ${convo.id}`;
 }
 
 function ConversationAvatar({ name, online }: { name: string; online: boolean }) {
-  const initials = name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   return (
     <div className="relative shrink-0">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#3C4C52] text-sm font-semibold text-[#FBF5DD]">
+      <div className="flex size-10 items-center justify-center rounded-full bg-[var(--color-chat-bubble)] text-sm font-semibold text-[var(--color-chat-text)]">
         {initials || <User size={16} />}
       </div>
       {online && (
-        <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#273338] bg-[#9CC5A1]" />
+        <div className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-[var(--color-chat-bg)] bg-[var(--color-chat-accent)]" />
       )}
     </div>
   );
 }
 
 function ConnectionBadge() {
-  const state = useWsStore((s) => s.connectionState);
+  const state = useWsStore(s => s.connectionState);
   if (state === 'open') {
     return (
       <div className="flex items-center gap-1" title="Live — connected">
-        <Wifi size={11} style={{ color: '#9CC5A1' }} />
-        <span className="text-[10px]" style={{ color: '#9CC5A1' }}>Live</span>
+        <Wifi size={11} style={{ color: 'var(--color-chat-accent)' }} />
+        <span className="text-[10px]" style={{ color: 'var(--color-chat-accent)' }}>Live</span>
       </div>
     );
   }
@@ -73,7 +79,7 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
 
-  const onlineUserIds = useWsStore((s) => s.onlineUserIds);
+  const onlineUserIds = useWsStore(s => s.onlineUserIds);
 
   const load = useCallback(async () => {
     try {
@@ -86,10 +92,12 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   // Refresh sidebar list when new messages arrive so last-message preview updates.
-  const messagesByConversation = useWsStore((s) => s.messagesByConversation);
+  const messagesByConversation = useWsStore(s => s.messagesByConversation);
   useEffect(() => {
     void load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,35 +109,38 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
   });
 
   return (
-    <div className="flex h-[calc(100vh-60px)] bg-[#273338] text-[#FBF5DD] font-sans lg:h-screen">
+    <div className="flex h-[calc(100vh-60px)] bg-[var(--color-chat-bg)] font-sans text-[var(--color-chat-text)] lg:h-screen">
       {/* Sidebar */}
-      <div className="flex w-80 shrink-0 flex-col border-r border-white/10 bg-[#273338]">
+      <div className="flex w-80 shrink-0 flex-col border-r border-white/10 bg-[var(--color-chat-bg)]">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
           <div>
             <h2 className="text-[15px] font-semibold tracking-tight">Messages</h2>
             <ConnectionBadge />
           </div>
-          <button
-            id="new-conversation-btn"
-            onClick={() => setShowModal(true)}
-            className="rounded-lg p-2 text-[#9CC5A1] transition-colors hover:bg-white/5"
-            title="New conversation"
-          >
-            <Plus size={18} />
-          </button>
+          <div className="flex items-center gap-1">
+            <ChatThemePicker />
+            <button
+              id="new-conversation-btn"
+              onClick={() => setShowModal(true)}
+              className="rounded-lg p-2 text-[var(--color-chat-accent)] transition-colors hover:bg-white/5"
+              title="New conversation"
+            >
+              <Plus size={18} />
+            </button>
+          </div>
         </div>
 
         {/* Search */}
         <div className="px-4 py-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#D9D3BC]" />
+            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-[var(--color-chat-text-2)]" />
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={e => setSearch(e.target.value)}
               placeholder="Search…"
-              className="w-full rounded-lg bg-[#324147] py-2 pl-9 pr-4 text-sm text-[#FBF5DD] placeholder-[#D9D3BC]/60 transition-all focus:outline-none focus:ring-1 focus:ring-[#9CC5A1]"
+              className="w-full rounded-lg bg-[var(--color-chat-surface)] py-2 pr-4 pl-9 text-sm text-[var(--color-chat-text)] placeholder-[var(--color-chat-text-2)]/60 transition-all focus:ring-1 focus:ring-[var(--color-chat-accent)] focus:outline-none"
             />
           </div>
         </div>
@@ -138,7 +149,7 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
         <div className="flex-1 overflow-y-auto px-2 pb-2">
           {loadingConvos && (
             <div className="flex items-center justify-center py-10">
-              <Loader2 size={20} className="animate-spin text-[#9CC5A1]" />
+              <Loader2 size={20} className="animate-spin text-[var(--color-chat-accent)]" />
             </div>
           )}
           {!loadingConvos && filtered.length === 0 && (
@@ -148,7 +159,7 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
           )}
           {!loadingConvos && filtered.map((conv) => {
             const name = user ? ConversationName(conv, user.id) : `#${conv.id}`;
-            const otherParticipant = conv.participants.find((p) => p.id !== user?.id);
+            const otherParticipant = conv.participants.find(p => p.id !== user?.id);
             const isOnline = otherParticipant ? onlineUserIds.has(otherParticipant.id) : false;
             const lastMsgText = conv.lastMessage?.content ?? 'No messages yet';
             const lastAt = conv.lastMessageAt ? formatTime(conv.lastMessageAt) : '';
@@ -158,19 +169,19 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
                 key={conv.id}
                 href={ROUTES.CHAT_CONVERSATION(conv.id)}
                 className={`mb-1 flex items-center gap-3 rounded-xl p-3 transition-all ${
-                  currentId === conv.id ? 'bg-[#324147]' : 'hover:bg-white/5'
+                  currentId === conv.id ? 'bg-[var(--color-chat-surface)]' : 'hover:bg-white/5'
                 }`}
               >
                 <ConversationAvatar name={name} online={isOnline} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between">
-                    <h3 className="truncate text-sm font-medium text-[#FBF5DD]">{name}</h3>
-                    {lastAt && <span className="shrink-0 text-[10px] text-[#D9D3BC]">{lastAt}</span>}
+                    <h3 className="truncate text-sm font-medium text-[var(--color-chat-text)]">{name}</h3>
+                    {lastAt && <span className="shrink-0 text-[10px] text-[var(--color-chat-text-2)]">{lastAt}</span>}
                   </div>
-                  <p className="mt-0.5 truncate text-xs text-[#D9D3BC]">{lastMsgText}</p>
+                  <p className="mt-0.5 truncate text-xs text-[var(--color-chat-text-2)]">{lastMsgText}</p>
                 </div>
                 {conv.unreadCount > 0 && (
-                  <div className="min-w-5 shrink-0 rounded-full bg-[#9CC5A1] px-1.5 py-0.5 text-center text-[10px] font-bold text-[#273338]">
+                  <div className="min-w-5 shrink-0 rounded-full bg-[var(--color-chat-accent)] px-1.5 py-0.5 text-center text-[10px] font-bold text-[var(--color-chat-bg)]">
                     {conv.unreadCount > 9 ? '9+' : conv.unreadCount}
                   </div>
                 )}
@@ -181,7 +192,7 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
       </div>
 
       {/* Main chat area */}
-      <div className="flex flex-1 flex-col bg-[#273338]">
+      <div className="flex flex-1 flex-col bg-[var(--color-chat-bg)]">
         {children}
       </div>
 

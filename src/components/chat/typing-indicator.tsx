@@ -7,13 +7,13 @@ export function TypingIndicator() {
   return (
     <div className="flex items-start gap-2">
       <div
-        className="px-3.5 py-3 flex items-center gap-1.5"
+        className="flex items-center gap-1.5 px-3.5 py-3"
         style={{ background: '#3C4C52', borderRadius: '14px 14px 14px 4px' }}
       >
         {[0, 0.2, 0.4].map((delay, i) => (
           <span
             key={i}
-            className="w-1.5 h-1.5 rounded-full inline-block"
+            className="inline-block size-1.5 rounded-full"
             style={{
               background: '#9CC5A1',
               opacity: 0.7,

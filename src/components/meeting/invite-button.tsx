@@ -1,16 +1,18 @@
 'use client';
 
+import { Check, Link2 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
-import { Link2, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface InviteButtonProps {
+type InviteButtonProps = {
   /** Locale-less route path, e.g. ROUTES.MEETING_DETAIL(id) → "/meeting/123". */
   path: string;
-}
+};
 
 function buildShareUrl(path: string): string {
-  if (typeof window === 'undefined') return path;
+  if (typeof window === 'undefined') {
+    return path;
+  }
   const seg = window.location.pathname.split('/')[1] ?? '';
   const localePrefix = /^[a-z]{2}(-[a-z]{2})?$/i.test(seg) ? `/${seg}` : '';
   return `${window.location.origin}${localePrefix}${path}`;
@@ -26,8 +28,7 @@ function InviteButtonImpl({ path }: InviteButtonProps) {
       setCopied(true);
       toast.success('Invite link copied');
       window.setTimeout(() => setCopied(false), 2000);
-    }
-    catch {
+    } catch {
       // Clipboard can be blocked (insecure context / permissions) — show the
       // URL so the user can copy it manually.
       toast.error('Copy failed', { description: url });

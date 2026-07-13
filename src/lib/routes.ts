@@ -6,34 +6,34 @@
 export const ROUTES = {
   // Marketing/Public
   HOME_PAGE: '/',
-  
+
   // Auth
   LOGIN: '/login',
   REGISTER: '/register',
   OAUTH_SUCCESS: '/oauth/success',
-  
+
   // Protected - Dashboard
   HOME: '/home',
   SETTINGS: '/settings',
-  
+
   // Protected - Meetings
   MEETINGS: '/meetings',
   MEETING_DETAIL: (roomId: string) => `/meeting/${roomId}`,
-  
+
   // Protected - Webinars
   WEBINARS: '/webinars',
   WEBINAR_DETAIL: (roomId: string) => `/webinar/${roomId}`,
-  
+
   // Protected - Chat
   CHATS: '/chat',
   CHAT_CONVERSATION: (conversationId: string) => `/chat/${conversationId}`,
-  
+
   // Protected - Archive
   TRANSCRIPTS: '/transcripts',
   TRANSCRIPT_DETAIL: (meetingId: string) => `/transcripts/${meetingId}`,
   SUMMARIES: '/summaries',
   SUMMARY_DETAIL: (meetingId: string) => `/summaries/${meetingId}`,
-  
+
   // API
   API_AUTH_LOGIN: '/api/auth/login',
   API_AUTH_REGISTER: '/api/auth/register',
@@ -78,7 +78,7 @@ export const PUBLIC_ROUTES = [
  */
 export function isProtectedRoute(pathname: string): boolean {
   const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}(-[a-z]{2})?(?=\/|$)/i, '') || '/';
-  return PROTECTED_ROUTES.some(pattern => {
+  return PROTECTED_ROUTES.some((pattern) => {
     const regex = new RegExp(`^${pattern.replace(/\*/g, '.*')}$`);
     return regex.test(pathWithoutLocale) || regex.test(pathname);
   });
@@ -98,7 +98,7 @@ export function isAuthRoute(pathname: string): boolean {
  */
 export function isPublicRoute(pathname: string): boolean {
   const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}(-[a-z]{2})?(?=\/|$)/i, '') || '/';
-  return PUBLIC_ROUTES.some(pattern => {
+  return PUBLIC_ROUTES.some((pattern) => {
     const regex = new RegExp(`^${pattern.replace(/\*/g, '.*')}$`);
     return regex.test(pathWithoutLocale) || regex.test(pathname);
   });

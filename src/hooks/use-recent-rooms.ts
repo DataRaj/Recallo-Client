@@ -1,7 +1,8 @@
 'use client';
 
+import type { RecentRoom } from '@/utils/recent-rooms';
 import { useEffect, useState } from 'react';
-import { getRecentRooms, RECENT_ROOMS_EVENT, type RecentRoom } from '@/utils/recent-rooms';
+import { getRecentRooms, RECENT_ROOMS_EVENT } from '@/utils/recent-rooms';
 
 /**
  * Reactive view of the locally-tracked recent rooms.

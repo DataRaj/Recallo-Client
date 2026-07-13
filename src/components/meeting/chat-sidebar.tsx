@@ -1,9 +1,9 @@
 'use client';
 
+import { Send, X } from 'lucide-react';
 import { memo, useCallback, useDeferredValue, useLayoutEffect, useRef, useState } from 'react';
-import { X, Send } from 'lucide-react';
-import { useMeetingStore } from '@/stores/use-meeting-store';
 import { useChatSender } from '@/hooks/use-meeting-chat';
+import { useMeetingStore } from '@/stores/use-meeting-store';
 
 function formatTime(ms: number): string {
   return new Date(ms).toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
@@ -21,11 +21,15 @@ function ChatSidebarImpl() {
   // Auto-scroll to bottom on new messages.
   useLayoutEffect(() => {
     const el = scrollRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
   }, [messages.length]);
 
   const handleSend = useCallback(() => {
-    if (!input.trim()) return;
+    if (!input.trim()) {
+      return;
+    }
     void send(input);
     setInput('');
   }, [input, send]);
@@ -63,7 +67,7 @@ function ChatSidebarImpl() {
             className={`flex gap-2.5 ${message.direction === 'outgoing' ? 'flex-row-reverse' : ''}`}
           >
             <div
-              className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
+              className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
               style={{ background: message.color }}
             >
               {message.initials}
@@ -80,7 +84,7 @@ function ChatSidebarImpl() {
                 </span>
               </div>
               <p
-                className="mt-0.5 inline-block break-words rounded-[8px] px-2.5 py-1.5 text-[12px] leading-relaxed"
+                className="mt-0.5 inline-block rounded-[8px] px-2.5 py-1.5 text-[12px] leading-relaxed break-words"
                 style={{
                   color: '#FBF5DD',
                   background: message.direction === 'outgoing' ? 'rgba(156,197,161,0.15)' : 'rgba(255,255,255,0.05)',
@@ -99,8 +103,10 @@ function ChatSidebarImpl() {
           <input
             value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') handleSend();
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSend();
+              }
             }}
             placeholder="Send a message..."
             className="min-w-0 flex-1 bg-transparent text-[12px] placeholder:opacity-40 focus:outline-none"

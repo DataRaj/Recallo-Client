@@ -1,14 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import type { Room } from '@/types/room';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { ROUTES } from '@/lib/routes';
-import type { Room } from '@/types/room';
 
 export function formatCountdown(seconds: number | null): string {
-  if (seconds === null) return '--:--';
-  if (seconds <= 0) return '00:00';
+  if (seconds === null) {
+    return '--:--';
+  }
+  if (seconds <= 0) {
+    return '00:00';
+  }
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
@@ -19,7 +23,9 @@ export function useSessionTimer(room: Room | null): number | null {
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!room) return;
+    if (!room) {
+      return;
+    }
 
     if (room.status === 'pending') {
       setTimeRemaining((room.session_duration_mins ?? 30) * 60);
@@ -43,8 +49,7 @@ export function useSessionTimer(room: Room | null): number | null {
         clearInterval(interval);
         toast.error('Session expired!');
         router.push(ROUTES.HOME);
-      }
-      else {
+      } else {
         setTimeRemaining(Math.floor(remainingMs / 1000));
       }
     };

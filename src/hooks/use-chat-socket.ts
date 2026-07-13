@@ -14,22 +14,22 @@
  *  - Typing debounce helpers returned for components.
  */
 
-import { useCallback, useEffect, useRef } from 'react';
-import { useAuthStore } from '@/stores/use-auth-store';
-import { useWsStore } from '@/stores/use-ws-store';
-import { Env } from '@/libs/Env';
+import type { ChatMessage, MessageType } from '@/types/chat';
 import type {
   WsInboundEvent,
+  WsMessageData,
   WsMessagePayload,
   WsReceiptPayload,
-  WsTypingPayload,
-  WsSendMessage,
-  WsSendTyping,
   WsSendDelivered,
+  WsSendMessage,
   WsSendRead,
-  WsMessageData,
+  WsSendTyping,
+  WsTypingPayload,
 } from '@/types/realtime';
-import type { ChatMessage, MessageType } from '@/types/chat';
+import { useCallback, useEffect, useRef } from 'react';
+import { Env } from '@/libs/Env';
+import { useAuthStore } from '@/stores/use-auth-store';
+import { useWsStore } from '@/stores/use-ws-store';
 
 // Reconnect schedule: 1 s, 2 s, 4 s, 8 s, 16 s, 30 s (capped).
 const BACKOFF_STEPS = [1000, 2000, 4000, 8000, 16000, 30000];
@@ -41,9 +41,10 @@ function wsUrl(accessToken: string): string {
 
 /** Normalise a WsMessageData into a ChatMessage stored in the WsStore. */
 function normaliseMessage(data: WsMessageData, currentUserId: number): ChatMessage {
-  const messageType: MessageType =
-    data.message_type === 'gif' ? 'gif' :
-    data.message_type === 'file' ? 'file' : 'text';
+  const messageType: MessageType
+    = data.message_type === 'gif'
+      ? 'gif'
+      : data.message_type === 'file' ? 'file' : 'text';
 
   return {
     id: String(data.id),
@@ -90,7 +91,9 @@ export function useChatSocket() {
 
   const flushQueue = useCallback(() => {
     const ws = wsRef.current;
-    if (!ws || ws.readyState !== WebSocket.OPEN) return;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      return;
+    }
     while (outboundQueue.current.length > 0) {
       const msg = outboundQueue.current.shift()!;
       ws.send(msg);
@@ -125,14 +128,18 @@ export function useChatSocket() {
     wsRef.current = ws;
 
     ws.onopen = () => {
-      if (!mountedRef.current) { ws.close(); return; }
+      if (!mountedRef.current) {
+        ws.close(); return;
+      }
       backoffIdx.current = 0;
       setConnectionState('open');
       flushQueue();
     };
 
     ws.onmessage = (evt) => {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current) {
+        return;
+      }
       try {
         const event = JSON.parse(evt.data as string) as WsInboundEvent;
         const { user: currentUser } = useAuthStore.getState();
@@ -143,7 +150,9 @@ export function useChatSocket() {
             const users = event.payload as Array<{ id: number }>;
             if (Array.isArray(users)) {
               users.forEach((u) => {
-                if (u && u.id) setOnline(u.id);
+                if (u && u.id) {
+                  setOnline(u.id);
+                }
               });
             }
             break;
@@ -157,11 +166,11 @@ export function useChatSocket() {
           case 'message': {
             const { message } = event.payload as WsMessagePayload;
             const msg = normaliseMessage(message, currentUserId);
-            
+
             // Remove optimistic pending messages before merging confirmed server echo
             flushPending(String(message.private_id));
             mergeMessage(String(message.private_id), msg);
-            
+
             // Auto-send delivered receipt only for incoming (not our own echo).
             if (message.from_id !== currentUserId) {
               const ack: WsSendDelivered = { message_id: Number(message.id) };
@@ -203,7 +212,9 @@ export function useChatSocket() {
     };
 
     ws.onclose = () => {
-      if (!mountedRef.current) return;
+      if (!mountedRef.current) {
+        return;
+      }
       setConnectionState('reconnecting');
       const delay = BACKOFF_STEPS[Math.min(backoffIdx.current, BACKOFF_STEPS.length - 1)];
       backoffIdx.current = Math.min(backoffIdx.current + 1, BACKOFF_STEPS.length - 1);
@@ -224,7 +235,11 @@ export function useChatSocket() {
     // start immediately with a small StrictMode-safe delay.
     const { accessToken } = useAuthStore.getState();
     if (accessToken) {
-      const t = setTimeout(() => { if (mountedRef.current) connect(); }, 100);
+      const t = setTimeout(() => {
+        if (mountedRef.current) {
+          connect();
+        }
+      }, 100);
       // Store timer ref so cleanup can cancel it.
       reconnectTimer.current = t;
     }
@@ -243,7 +258,9 @@ export function useChatSocket() {
           wsRef.current.close();
           wsRef.current = null;
         }
-        if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+        if (reconnectTimer.current) {
+          clearTimeout(reconnectTimer.current);
+        }
         useWsStore.getState().setConnectionState('closed');
       }
     });
@@ -251,7 +268,9 @@ export function useChatSocket() {
     return () => {
       mountedRef.current = false;
       unsub();
-      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+      if (reconnectTimer.current) {
+        clearTimeout(reconnectTimer.current);
+      }
       if (wsRef.current) {
         wsRef.current.onclose = null;
         wsRef.current.close();

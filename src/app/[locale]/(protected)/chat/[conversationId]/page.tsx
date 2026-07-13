@@ -20,26 +20,31 @@
  *  - Mark as read on open
  */
 
-import {
-  useCallback, useEffect, useLayoutEffect, useRef, useState, useMemo,
-} from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import type { PendingFile } from '@/components/chat/message-input';
+import type { GifResult } from '@/services/chat-service';
+import type { ChatMessage, Conversation, MessageType } from '@/types/chat';
+import type { WsSendMessage } from '@/types/realtime';
+import { Info, Loader2, MessageSquare, MoreVertical, Phone, Video } from 'lucide-react';
 import { useLocale } from 'next-intl';
-import { Phone, Video, Info, MoreVertical, Loader2, MessageSquare } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { toast } from 'sonner';
-import { useCurrentUser } from '@/hooks/use-current-user';
+import { ChatMessageInput } from '@/components/chat/message-input';
 import { useWs } from '@/components/providers/ws-provider';
-import { useWsStore } from '@/stores/use-ws-store';
+import { useCurrentUser } from '@/hooks/use-current-user';
+import { ROUTES } from '@/lib/routes';
 import { getConversation, getMessages } from '@/services/chat-service';
 import { createRoom } from '@/services/room-service';
+import { useWsStore } from '@/stores/use-ws-store';
 import { getMeetingIdentity } from '@/utils/identity';
 import { recordRecentRoom } from '@/utils/recent-rooms';
-import { ChatMessageInput } from '@/components/chat/message-input';
-import type { PendingFile } from '@/components/chat/message-input';
-import type { Conversation, ChatMessage, MessageType } from '@/types/chat';
-import type { GifResult } from '@/services/chat-service';
-import type { WsSendMessage } from '@/types/realtime';
-import { ROUTES } from '@/lib/routes';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -51,34 +56,49 @@ function formatTime(d: Date | string): string {
 function formatDate(d: Date | string): string {
   const date = d instanceof Date ? d : new Date(d);
   const now = new Date();
-  if (date.toDateString() === now.toDateString()) return 'Today';
+  if (date.toDateString() === now.toDateString()) {
+    return 'Today';
+  }
   const yesterday = new Date(now);
   yesterday.setDate(yesterday.getDate() - 1);
-  if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+  if (date.toDateString() === yesterday.toDateString()) {
+    return 'Yesterday';
+  }
   return date.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function relativeTime(d: Date): string {
   const diff = Date.now() - d.getTime();
   const mins = Math.round(diff / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) {
+    return 'just now';
+  }
+  if (mins < 60) {
+    return `${mins}m ago`;
+  }
   const hours = Math.round(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) {
+    return `${hours}h ago`;
+  }
   return `${Math.round(hours / 24)}d ago`;
 }
 
 function avatarInitials(name: string): string {
   return name
     .split(' ')
-    .map((w) => w[0] ?? '')
+    .map(w => w[0] ?? '')
     .join('')
     .slice(0, 2)
     .toUpperCase();
 }
 
 const AVATAR_COLORS = [
-  '#BA5A5A', '#9CC5A1', '#5A7BA6', '#C4A45A', '#8A5AC4', '#5AC4B8',
+  '#BA5A5A',
+  '#9CC5A1',
+  '#5A7BA6',
+  '#C4A45A',
+  '#8A5AC4',
+  '#5AC4B8',
 ];
 function avatarColor(id: number): string {
   return AVATAR_COLORS[id % AVATAR_COLORS.length] ?? '#9CC5A1';
@@ -134,13 +154,15 @@ function MessageBubble({
           className="flex items-center gap-2 rounded-[10px] px-3 py-2 transition-opacity hover:opacity-80"
           style={{ background: 'rgba(255,255,255,0.08)' }}
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg text-[9px] font-bold" style={{ background: color }}>
+          <div className="flex size-9 items-center justify-center rounded-lg text-[9px] font-bold" style={{ background: color }}>
             {mimeType.split('/')[1]?.toUpperCase().slice(0, 4) ?? 'FILE'}
           </div>
           <div className="min-w-0">
             <p className="truncate text-[12px] font-medium text-[#FBF5DD]">{filename}</p>
             <p className="text-[10px]" style={{ color: 'rgba(251,245,221,0.4)' }}>
-              {(message.attachment.filesize / 1024).toFixed(1)} KB
+              {(message.attachment.filesize / 1024).toFixed(1)}
+              {' '}
+              KB
             </p>
           </div>
         </a>
@@ -148,10 +170,10 @@ function MessageBubble({
     }
     return (
       <p
-        className="break-words px-3 py-2 text-[13px] leading-relaxed"
+        className="px-3 py-2 text-[13px] leading-relaxed break-words"
         style={{
-          background: isMe ? '#9CC5A1' : 'rgba(255,255,255,0.06)',
-          color: isMe ? '#1C2A2C' : '#FBF5DD',
+          background: isMe ? 'var(--color-chat-accent)' : 'rgba(255,255,255,0.06)',
+          color: isMe ? '#12181B' : 'var(--color-chat-text)',
           borderRadius: isMe ? '16px 16px 4px 16px' : '4px 16px 16px 16px',
           opacity: isPending ? 0.6 : 1,
         }}
@@ -164,7 +186,7 @@ function MessageBubble({
   return (
     <div className={`flex gap-2.5 ${isMe ? 'flex-row-reverse' : ''}`}>
       <div
-        className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
+        className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
         style={{ background: color }}
       >
         {avatarInitials(senderName)}
@@ -176,18 +198,22 @@ function MessageBubble({
           </span>
         )}
         {contentNode}
-        <span className="mt-0.5 mx-1 flex items-center gap-1 text-[10px]" style={{ color: 'rgba(251,245,221,0.3)' }}>
+        <span className="mx-1 mt-0.5 flex items-center gap-1 text-[10px]" style={{ color: 'rgba(251,245,221,0.3)' }}>
           {formatTime(message.createdAt)}
           {isPending && <span>· Sending…</span>}
           {isMe && !isPending && (
-            <span className="flex ml-0.5">
-              {message.readAt ? (
-                <span className="text-[#9CC5A1]" title="Read">✓✓</span>
-              ) : message.updatedAt ? (
-                <span title="Delivered">✓✓</span>
-              ) : (
-                <span title="Sent">✓</span>
-              )}
+            <span className="ml-0.5 flex">
+              {message.readAt
+                ? (
+                    <span className="text-[#9CC5A1]" title="Read">✓✓</span>
+                  )
+                : message.updatedAt
+                  ? (
+                      <span title="Delivered">✓✓</span>
+                    )
+                  : (
+                      <span title="Sent">✓</span>
+                    )}
             </span>
           )}
         </span>
@@ -213,18 +239,20 @@ function DateDivider({ label }: { label: string }) {
 // ── Typing indicator UI ───────────────────────────────────────────────────────
 
 function TypingDots({ names }: { names: string[] }) {
-  if (names.length === 0) return null;
-  const label =
-    names.length === 1
+  if (names.length === 0) {
+    return null;
+  }
+  const label
+    = names.length === 1
       ? `${names[0]} is typing…`
       : `${names.slice(0, 2).join(', ')} are typing…`;
   return (
     <div className="flex items-center gap-1.5 px-2 pb-1">
       <div className="flex gap-0.5">
-        {[0, 1, 2].map((i) => (
+        {[0, 1, 2].map(i => (
           <div
             key={i}
-            className="h-1.5 w-1.5 animate-bounce rounded-full"
+            className="size-1.5 animate-bounce rounded-full"
             style={{ background: '#9CC5A1', animationDelay: `${i * 0.15}s` }}
           />
         ))}
@@ -255,12 +283,12 @@ export default function ChatConversationPage() {
   const { sendMessage, sendTyping, sendRead } = useWs();
 
   // Stable selectors — never returns inline fallbacks so useSyncExternalStore doesn't loop.
-  const wsMessages = useWsStore((s) => s.messagesByConversation.get(conversationId) ?? EMPTY_MESSAGES);
-  const typingUserIds = useWsStore((s) => s.typingByConversation.get(conversationId) ?? EMPTY_TYPING);
-  const onlineUserIds = useWsStore((s) => s.onlineUserIds);
-  const lastSeenByUser = useWsStore((s) => s.lastSeenByUser);
-  const setMessages = useWsStore((s) => s.setMessages);
-  const mergeMessage = useWsStore((s) => s.mergeMessage);
+  const wsMessages = useWsStore(s => s.messagesByConversation.get(conversationId) ?? EMPTY_MESSAGES);
+  const typingUserIds = useWsStore(s => s.typingByConversation.get(conversationId) ?? EMPTY_TYPING);
+  const onlineUserIds = useWsStore(s => s.onlineUserIds);
+  const lastSeenByUser = useWsStore(s => s.lastSeenByUser);
+  const setMessages = useWsStore(s => s.setMessages);
+  const mergeMessage = useWsStore(s => s.mergeMessage);
 
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [loadingHistory, setLoadingHistory] = useState(true);
@@ -281,20 +309,26 @@ export default function ChatConversationPage() {
           getConversation(conversationId),
           getMessages(conversationId),
         ]);
-        if (cancelled) return;
+        if (cancelled) {
+          return;
+        }
         setConversation(convo);
-        const other = convo.participants.find((p) => p.id !== user?.id);
+        const other = convo.participants.find(p => p.id !== user?.id);
         setReceiverId(other?.id ?? null);
         setMessages(conversationId, history);
       } catch {
         // History unavailable; WS messages still arrive live.
       } finally {
-        if (!cancelled) setLoadingHistory(false);
+        if (!cancelled) {
+          setLoadingHistory(false);
+        }
       }
     }
 
     void loadAll();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [conversationId, user?.id, setMessages]);
 
   // ── Mark read on open ────────────────────────────────────────────────────
@@ -311,24 +345,30 @@ export default function ChatConversationPage() {
 
   useLayoutEffect(() => {
     const el = scrollRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
   }, [wsMessages.length]);
 
   // ── Typing indicator helper ──────────────────────────────────────────────
 
   const handleTyping = useCallback((isTyping: boolean) => {
-    if (!receiverId || !conversation) return;
+    if (!receiverId || !conversation) {
+      return;
+    }
     sendTyping({ private_id: Number(conversationId), receiver_id: receiverId, is_typing: isTyping });
   }, [conversationId, receiverId, conversation, sendTyping]);
 
   // ── Build typing names ───────────────────────────────────────────────────
 
   const typingNames = useMemo(() => {
-    if (!conversation) return [];
+    if (!conversation) {
+      return [];
+    }
     return [...typingUserIds]
-      .filter((id) => id !== user?.id)
+      .filter(id => id !== user?.id)
       .map((id) => {
-        const p = conversation.participants.find((x) => x.id === id);
+        const p = conversation.participants.find(x => x.id === id);
         return p?.name ?? `User ${id}`;
       });
   }, [typingUserIds, conversation, user?.id]);
@@ -337,7 +377,9 @@ export default function ChatConversationPage() {
 
   const makeWsPayload = useCallback(
     (overrides: Partial<WsSendMessage>): WsSendMessage | null => {
-      if (!receiverId || !conversation) return null;
+      if (!receiverId || !conversation) {
+        return null;
+      }
       return {
         private_id: Number(conversationId),
         receiver_id: receiverId,
@@ -358,7 +400,9 @@ export default function ChatConversationPage() {
     messageType: MessageType,
     extras?: { gifUrl?: string; attachment?: ChatMessage['attachment'] },
   ) => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
     const tempMsg: ChatMessage = {
       id: nextPendingId(),
       conversationId,
@@ -374,7 +418,9 @@ export default function ChatConversationPage() {
 
   const handleSendText = useCallback((text: string) => {
     const payload = makeWsPayload({ message_type: 'text', content: text });
-    if (!payload) return;
+    if (!payload) {
+      return;
+    }
     optimisticInsert(text, 'text');
     sendMessage(payload);
   }, [makeWsPayload, sendMessage, optimisticInsert]);
@@ -385,7 +431,9 @@ export default function ChatConversationPage() {
       content: gif.url,
       gif_url: gif.fullUrl,
     });
-    if (!payload) return;
+    if (!payload) {
+      return;
+    }
     optimisticInsert(gif.url, 'gif', { gifUrl: gif.fullUrl });
     sendMessage(payload);
   }, [makeWsPayload, sendMessage, optimisticInsert]);
@@ -399,7 +447,9 @@ export default function ChatConversationPage() {
       file_size: file.size,
       file_mime: file.mime,
     });
-    if (!payload) return;
+    if (!payload) {
+      return;
+    }
     optimisticInsert(file.name, 'file', {
       attachment: {
         id: 'pending',
@@ -414,12 +464,14 @@ export default function ChatConversationPage() {
 
   // ── Conversation header data ─────────────────────────────────────────────
 
-  const otherParticipant = conversation?.participants.find((p) => p.id !== user?.id);
+  const otherParticipant = conversation?.participants.find(p => p.id !== user?.id);
 
   // ── Voice / Video calling ────────────────────────────────────────────────
 
   const handleCallPress = useCallback(async (type: 'voice' | 'video') => {
-    if (callingType) return;
+    if (callingType) {
+      return;
+    }
     setCallingType(type);
     try {
       const guestId = getMeetingIdentity();
@@ -439,8 +491,7 @@ export default function ChatConversationPage() {
       setCallingType(null);
     }
   }, [callingType, locale, router, receiverId, otherParticipant]);
-  // @ts-ignore
-  console.log(`user presence status ${otherParticipant?.id}`)
+
   const convoName = conversation?.name ?? otherParticipant?.name ?? `Chat ${conversationId}`;
   const isOtherOnline = otherParticipant ? onlineUserIds.has(otherParticipant.id) : false;
   const otherLastSeen = otherParticipant ? lastSeenByUser.get(otherParticipant.id) : undefined;
@@ -464,7 +515,7 @@ export default function ChatConversationPage() {
         elements.push(<DateDivider key={`d-${dateStr}`} label={dateStr} />);
       }
       const isMe = msg.senderId === user?.id;
-      const sender = conversation?.participants.find((p) => p.id === msg.senderId);
+      const sender = conversation?.participants.find(p => p.id === msg.senderId);
       const senderName = isMe
         ? (user?.name ?? 'You')
         : (sender?.name ?? `User ${msg.senderId}`);
@@ -484,26 +535,26 @@ export default function ChatConversationPage() {
   }, [wsMessages, user, conversation]);
 
   // Input is only disabled while actively reconnecting, not during normal connected or idle state.
-  const connectionState = useWsStore((s) => s.connectionState);
+  const connectionState = useWsStore(s => s.connectionState);
   const inputDisabled = connectionState === 'reconnecting' || connectionState === 'connecting';
 
   return (
-    <div className="flex h-full flex-col" style={{ background: '#273338' }}>
+    <div className="flex h-full flex-col" style={{ background: 'var(--color-chat-bg)' }}>
       {/* Header */}
       <div
         className="flex h-16 shrink-0 items-center justify-between px-5"
-        style={{ background: '#324147', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ background: 'var(--color-chat-surface)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
       >
         <div className="flex items-center gap-3">
           <div className="relative">
             <div
-              className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold text-white"
+              className="flex size-9 items-center justify-center rounded-full text-sm font-semibold text-white"
               style={{ background: otherColor }}
             >
               {avatarInitials(convoName)}
             </div>
             {isOtherOnline && (
-              <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-[#324147] bg-[#9CC5A1]" />
+              <div className="absolute right-0 bottom-0 size-2.5 rounded-full border-2 border-[#324147] bg-[#9CC5A1]" />
             )}
           </div>
           <div>
@@ -549,7 +600,7 @@ export default function ChatConversationPage() {
         {!loadingHistory && wsMessages.length === 0 && (
           <div className="flex flex-col items-center justify-center gap-3 py-16">
             <div
-              className="flex h-14 w-14 items-center justify-center rounded-2xl"
+              className="flex size-14 items-center justify-center rounded-2xl"
               style={{ background: 'rgba(156,197,161,0.1)' }}
             >
               <MessageSquare size={26} style={{ color: '#9CC5A1' }} />
@@ -566,7 +617,7 @@ export default function ChatConversationPage() {
 
       {/* Input */}
       <div
-        className="shrink-0 px-4 pb-4 pt-2"
+        className="shrink-0 px-4 pt-2 pb-4"
         style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
       >
         <ChatMessageInput

@@ -3,16 +3,17 @@
  */
 'use client';
 
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { X } from 'lucide-react';
+import { useEffect } from 'react';
 
-interface ModalProps {
+type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   children: ReactNode;
   size?: 'sm' | 'md' | 'lg';
-}
+};
 
 const sizeMap = {
   sm: 'max-w-md',
@@ -21,7 +22,22 @@ const sizeMap = {
 };
 
 export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalProps) {
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <>
@@ -35,13 +51,13 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div
-          className={`w-full ${sizeMap[size]} rounded-[16px] shadow-lg flex flex-col max-h-[90vh]`}
+          className={`w-full ${sizeMap[size]} flex max-h-[90vh] flex-col rounded-[16px] shadow-lg`}
           style={{ background: '#273338' }}
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
           <div
-            className="flex items-center justify-between px-6 py-4 border-b"
+            className="flex items-center justify-between border-b px-6 py-4"
             style={{ borderColor: 'rgba(255,255,255,0.06)' }}
           >
             <h2 className="text-lg font-semibold" style={{ color: '#FBF5DD' }}>
@@ -49,7 +65,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
             </h2>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-[8px] transition-all duration-200 hover:bg-white/10"
+              className="rounded-[8px] p-1.5 transition-all duration-200 hover:bg-white/10"
               style={{ color: 'rgba(251,245,221,0.4)' }}
             >
               <X size={20} />

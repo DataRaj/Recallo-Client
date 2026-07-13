@@ -3,18 +3,18 @@
  */
 'use client';
 
-import { useEffect, useRef } from 'react';
+import type { ChatMessage } from '@/types/chat';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import type { ChatMessage } from '@/types/chat';
+import { useEffect, useRef } from 'react';
 
 dayjs.extend(relativeTime);
 
-interface MessageListProps {
+type MessageListProps = {
   messages: ChatMessage[];
   currentUserId: number;
   isLoading?: boolean;
-}
+};
 
 export function MessageList({ messages, currentUserId, isLoading }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -24,15 +24,15 @@ export function MessageList({ messages, currentUserId, isLoading }: MessageListP
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-3">
+    <div className="flex-1 space-y-3 overflow-y-auto p-4">
       {isLoading && (
         <div className="flex justify-center py-8">
-          <div className="w-8 h-8 border-4 border-[#9CC5A1] border-t-transparent rounded-full animate-spin" />
+          <div className="size-8 animate-spin rounded-full border-4 border-[#9CC5A1] border-t-transparent" />
         </div>
       )}
 
       {messages.length === 0 && !isLoading && (
-        <div className="flex flex-col items-center justify-center h-full text-center">
+        <div className="flex h-full flex-col items-center justify-center text-center">
           <p style={{ color: 'rgba(251,245,221,0.4)' }} className="text-sm">
             No messages yet. Start the conversation!
           </p>

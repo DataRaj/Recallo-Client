@@ -5,16 +5,17 @@
  */
 'use client';
 
-import { ReactNode, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import { ROUTES, isAuthRoute } from '@/lib/routes';
+import type { ReactNode } from 'react';
 import { Loader2 } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useCurrentUser } from '@/hooks/use-current-user';
+import { isAuthRoute, ROUTES } from '@/lib/routes';
 
-interface ProtectedRouteProps {
+type ProtectedRouteProps = {
   children: ReactNode;
   requireAuth?: boolean;
-}
+};
 
 export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteProps) {
   const { user, isLoading, isHydrated } = useCurrentUser();
@@ -22,13 +23,14 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!isHydrated) return; // Still loading
+    if (!isHydrated) {
+      return;
+    } // Still loading
 
     if (requireAuth && !user) {
       // User is not authenticated and route requires auth
       router.replace(ROUTES.LOGIN);
-    }
-    else if (!requireAuth && user && isAuthRoute(pathname)) {
+    } else if (!requireAuth && user && isAuthRoute(pathname)) {
       // User IS authenticated but on an auth route (login/register)
       // Redirect to home
       router.replace(ROUTES.HOME);
@@ -39,12 +41,12 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
   if (!isHydrated || isLoading) {
     return (
       <div
-        className="min-h-dvh flex items-center justify-center"
+        className="flex min-h-dvh items-center justify-center"
         style={{ background: '#E6F2DD' }}
       >
         <div className="flex flex-col items-center gap-5">
           <div
-            className="w-14 h-14 rounded-[16px] flex items-center justify-center text-white text-xl font-semibold"
+            className="flex size-14 items-center justify-center rounded-[16px] text-xl font-semibold text-white"
             style={{ background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)' }}
           >
             R

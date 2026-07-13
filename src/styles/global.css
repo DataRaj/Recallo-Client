@@ -1,47 +1,55 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&display=swap");
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&display=swap');
+@import 'tailwindcss';
 
 /* ─── Recallo Design Tokens ─── */
 @theme {
   /* Light theme (default) */
-  --color-bg:               #E6F2DD;
-  --color-surface:          #F3F8EF;
-  --color-surface-hover:    #DDEBD5;
-  --color-border:           #D5E3CC;
-  --color-text-primary:     #2C3E2D;
-  --color-text-secondary:   #8D7A7A;
-  --color-text-accent:      #BA5A5A;
-  --color-accent:           #B0BA99;
-  --color-accent-dark:      #8A9478;
+  --color-bg: #e6f2dd;
+  --color-surface: #f3f8ef;
+  --color-surface-hover: #ddebd5;
+  --color-border: #d5e3cc;
+  --color-text-primary: #2c3e2d;
+  --color-text-secondary: #8d7a7a;
+  --color-text-accent: #ba5a5a;
+  --color-accent: #b0ba99;
+  --color-accent-dark: #8a9478;
 
-  /* Chat themes — default: midnight-chat */
-  --color-chat-bg:          #273338;
-  --color-chat-surface:     #324147;
-  --color-chat-bubble:      #3C4C52;
-  --color-chat-text:        #FBF5DD;
-  --color-chat-text-2:      #D9D3BC;
-  --color-chat-accent:      #9CC5A1;
+  /* Chat themes — default: recallo-dark */
+  --color-chat-bg: #273338;
+  --color-chat-surface: #324147;
+  --color-chat-bubble: #3c4c52;
+  --color-chat-text: #fbf5dd;
+  --color-chat-text-2: #d9d3bc;
+  --color-chat-accent: #9cc5a1;
+  /* Accent as space-separated RGB channels, for rgb(var(--x) / a) glows. */
+  --color-chat-accent-rgb: 156 197 161;
 
   /* Semantic */
-  --color-danger:           #BA5A5A;
-  --color-success:          #9CC5A1;
+  --color-danger: #ba5a5a;
+  --color-success: #9cc5a1;
+  --color-live: #34d399;
+  --color-live-warn: #f59e0b;
 
   /* Radius */
-  --radius-card:  14px;
-  --radius-btn:   10px;
+  --radius-card: 14px;
+  --radius-btn: 10px;
   --radius-input: 10px;
 
   /* Shadows */
-  --shadow-soft: 0px 8px 24px rgba(0,0,0,0.05);
-  --shadow-card: 0px 2px 8px rgba(0,0,0,0.04);
+  --shadow-soft: 0px 8px 24px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0px 2px 8px rgba(0, 0, 0, 0.04);
 
   /* Typography */
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
 }
 
 /* ─── Base ─── */
 @layer base {
-  *, *::before, *::after { box-sizing: border-box; }
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
   html {
     font-family: var(--font-sans);
@@ -53,19 +61,29 @@
     color: var(--color-text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   /* Global interactive transitions */
-  a, button, input, select, textarea, [role="button"], [role="tab"], [role="switch"], [role="dialog"] {
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  [role='button'],
+  [role='tab'],
+  [role='switch'],
+  [role='dialog'] {
+    transition-property:
+      color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform,
+      filter, backdrop-filter;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 200ms;
   }
 
   /* Subtle scale down on click for premium feel */
-  button:active:not(:disabled), 
-  [role="button"]:active:not(:disabled),
+  button:active:not(:disabled),
+  [role='button']:active:not(:disabled),
   a:active:not([disabled]) {
     transform: scale(0.97);
   }
@@ -73,48 +91,87 @@
 
 /* ─── Keyframes ─── */
 @keyframes recallo-fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes recallo-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes recallo-slide-in-right {
-  from { opacity: 0; transform: translateX(20px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes recallo-slide-down {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes recallo-pulse-dot {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.3; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 @keyframes recallo-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ─── Utilities ─── */
 @layer utilities {
-  .animate-fade-up         { animation: recallo-fade-up 0.5s cubic-bezier(0.22,1,0.36,1) both; }
-  .animate-fade-in         { animation: recallo-fade-in 0.3s ease both; }
-  .animate-slide-in-right  { animation: recallo-slide-in-right 0.35s cubic-bezier(0.22,1,0.36,1) both; }
-  .animate-slide-down      { animation: recallo-slide-down 0.25s cubic-bezier(0.22,1,0.36,1) both; }
-  .animate-pulse-dot       { animation: recallo-pulse-dot 2s ease-in-out infinite; }
+  .animate-fade-up {
+    animation: recallo-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .animate-fade-in {
+    animation: recallo-fade-in 0.3s ease both;
+  }
+  .animate-slide-in-right {
+    animation: recallo-slide-in-right 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .animate-slide-down {
+    animation: recallo-slide-down 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .animate-pulse-dot {
+    animation: recallo-pulse-dot 2s ease-in-out infinite;
+  }
 
   /* Glass morphism */
   .recallo-glass {
-    background: rgba(255,255,255,0.65);
+    background: rgba(255, 255, 255, 0.65);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.4);
+    border: 1px solid rgba(255, 255, 255, 0.4);
   }
 
   /* Card */
@@ -135,38 +192,182 @@
 }
 
 /* ─── Chat theme overrides (data-chat-theme attribute) ─── */
-[data-chat-theme="midnight"] {
-  --color-chat-bg:      #161A1D;
-  --color-chat-surface: #1E2428;
-  --color-chat-bubble:  #252C30;
-  --color-chat-text:    #F5F3F0;
-  --color-chat-text-2:  #B8B4AC;
-  --color-chat-accent:  #7C9EB2;
+[data-chat-theme='midnight'] {
+  --color-chat-bg: #161a1d;
+  --color-chat-surface: #1e2428;
+  --color-chat-bubble: #252c30;
+  --color-chat-text: #f5f3f0;
+  --color-chat-text-2: #b8b4ac;
+  --color-chat-accent: #7c9eb2;
 }
 
-[data-chat-theme="forest"] {
-  --color-chat-bg:      #1F2D24;
+[data-chat-theme='forest'] {
+  --color-chat-bg: #1f2d24;
   --color-chat-surface: #273320;
-  --color-chat-bubble:  #2F3C2A;
-  --color-chat-text:    #F3F5E9;
-  --color-chat-text-2:  #C8CCBA;
-  --color-chat-accent:  #89A87D;
+  --color-chat-bubble: #2f3c2a;
+  --color-chat-text: #f3f5e9;
+  --color-chat-text-2: #c8ccba;
+  --color-chat-accent: #89a87d;
 }
 
-[data-chat-theme="ocean"] {
-  --color-chat-bg:      #17252A;
-  --color-chat-surface: #1E3038;
-  --color-chat-bubble:  #263C45;
-  --color-chat-text:    #DEF2F1;
-  --color-chat-text-2:  #B0CDC9;
-  --color-chat-accent:  #3AAFA9;
+[data-chat-theme='ocean'] {
+  --color-chat-bg: #17252a;
+  --color-chat-surface: #1e3038;
+  --color-chat-bubble: #263c45;
+  --color-chat-text: #def2f1;
+  --color-chat-text-2: #b0cdc9;
+  --color-chat-accent: #3aafa9;
 }
 
-[data-chat-theme="lavender"] {
-  --color-chat-bg:      #25213A;
-  --color-chat-surface: #2E2A45;
-  --color-chat-bubble:  #383351;
-  --color-chat-text:    #F8F4FF;
-  --color-chat-text-2:  #C8C0E0;
-  --color-chat-accent:  #B8A1FF;
+[data-chat-theme='lavender'] {
+  --color-chat-bg: #25213a;
+  --color-chat-surface: #2e2a45;
+  --color-chat-bubble: #383351;
+  --color-chat-text: #f8f4ff;
+  --color-chat-text-2: #c8c0e0;
+  --color-chat-accent: #b8a1ff;
+}
+
+[data-chat-theme='sunset'] {
+  --color-chat-bg: #2a1b22;
+  --color-chat-surface: #37232c;
+  --color-chat-bubble: #442b34;
+  --color-chat-text: #fff1ec;
+  --color-chat-text-2: #e3c3bc;
+  --color-chat-accent: #ff8c6b;
+}
+
+[data-chat-theme='cyberpunk'] {
+  --color-chat-bg: #0e0b1e;
+  --color-chat-surface: #171233;
+  --color-chat-bubble: #211a47;
+  --color-chat-text: #eaf7ff;
+  --color-chat-text-2: #9ba3d6;
+  --color-chat-accent: #23e5db;
+}
+
+/* Accent RGB channels per chat theme (keeps composer glows on-palette). */
+[data-chat-theme='midnight'] {
+  --color-chat-accent-rgb: 124 158 178;
+}
+[data-chat-theme='forest'] {
+  --color-chat-accent-rgb: 137 168 125;
+}
+[data-chat-theme='ocean'] {
+  --color-chat-accent-rgb: 58 175 169;
+}
+[data-chat-theme='lavender'] {
+  --color-chat-accent-rgb: 184 161 255;
+}
+[data-chat-theme='sunset'] {
+  --color-chat-accent-rgb: 255 140 107;
+}
+[data-chat-theme='cyberpunk'] {
+  --color-chat-accent-rgb: 35 229 219;
+}
+
+/* ─── App-level theme modes (data-theme on <html>) ─── */
+[data-theme='dark'] {
+  --color-bg: #12181b;
+  --color-surface: #1a2226;
+  --color-surface-hover: #232d31;
+  --color-border: #2a353a;
+  --color-text-primary: #ecf2e9;
+  --color-text-secondary: #9aa8a0;
+  --color-accent: #9cc5a1;
+  --color-accent-dark: #7fb08a;
+  --shadow-soft: 0px 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0px 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='oled'] {
+  --color-bg: #000000;
+  --color-surface: #0a0e10;
+  --color-surface-hover: #12181a;
+  --color-border: #1b2225;
+  --color-text-primary: #f2f5f0;
+  --color-text-secondary: #8a968e;
+  --color-accent: #9cc5a1;
+  --color-accent-dark: #7fb08a;
+  --shadow-soft: 0px 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/*
+ * ─── Feature-specific theme diversion (data-feature on the main container) ───
+ * Each feature remaps the shared surface tokens so its subtree adopts an
+ * optimised atmosphere, without touching the persistent sidebar or body.
+ */
+[data-feature] {
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    border-color 300ms ease;
+}
+
+/* Meetings & Webinars — obsidian/cinematic with emerald/amber live accents. */
+[data-feature='meeting'] {
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-surface-hover: #1c2530;
+  --color-border: #26303b;
+  --color-text-primary: #f0f3f0;
+  --color-text-secondary: #8b98a5;
+  --color-accent: var(--color-live);
+  --color-text-accent: var(--color-live-warn);
+}
+
+/* Private DM chats — inherit the active chat palette as the atmosphere. */
+[data-feature='chat'] {
+  --color-bg: var(--color-chat-bg);
+  --color-surface: var(--color-chat-surface);
+  --color-surface-hover: var(--color-chat-bubble);
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-text-primary: var(--color-chat-text);
+  --color-text-secondary: var(--color-chat-text-2);
+  --color-accent: var(--color-chat-accent);
+}
+
+/* Dashboard & Archive — inherit the base mode with a warm executive accent. */
+[data-feature='dashboard'],
+[data-feature='archive'] {
+  --color-text-accent: #ba5a5a;
+}
+
+/* ─── Composer micro-animations ─── */
+@keyframes recallo-send-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(var(--color-chat-accent-rgb) / 0);
+  }
+  50% {
+    box-shadow: 0 0 14px 2px rgb(var(--color-chat-accent-rgb) / 0.55);
+  }
+}
+
+@keyframes recallo-input-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(var(--color-chat-accent-rgb) / 0);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgb(var(--color-chat-accent-rgb) / 0.18);
+  }
+}
+
+@layer utilities {
+  .animate-send-glow {
+    animation: recallo-send-glow 1.8s ease-in-out infinite;
+  }
+  .animate-input-pulse {
+    animation: recallo-input-pulse 1.6s ease-in-out infinite;
+  }
+
+  /* Dark, blurred glass — for chat/meeting surfaces over dark backgrounds. */
+  .recallo-glass-dark {
+    background: rgb(var(--color-chat-accent-rgb) / 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
 }

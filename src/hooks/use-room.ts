@@ -1,15 +1,16 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import type { CreateRoomInput, JoinRoomInput, Room } from '@/types/room';
+import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { ROUTES } from '@/lib/routes';
-import type { Room, CreateRoomInput, JoinRoomInput } from '@/types/room';
+import { createRoom as apiCreateRoom, endRoom as apiEndRoom, getRoom as apiGetRoom } from '@/services/room-service';
 import { getMeetingIdentity } from '@/utils/identity';
 import { recordRecentRoom } from '@/utils/recent-rooms';
-import { createRoom as apiCreateRoom, getRoom as apiGetRoom, endRoom as apiEndRoom } from '@/services/room-service';
 
-interface UseRoomResult {
+type UseRoomResult = {
   room: Room | null;
   isLoading: boolean;
   error: string | null;
@@ -17,13 +18,14 @@ interface UseRoomResult {
   joinRoom: (input: JoinRoomInput) => Promise<Room>;
   leaveRoom: (roomId: string) => Promise<void>;
   endRoom: (roomId: string) => Promise<void>;
-}
+};
 
 export function useRoom(): UseRoomResult {
   const [room, setRoom] = useState<Room | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const locale = useLocale();
 
   const createRoom = useCallback(async (input: CreateRoomInput): Promise<Room> => {
     setIsLoading(true);
@@ -32,6 +34,8 @@ export function useRoom(): UseRoomResult {
       const guestId = getMeetingIdentity();
       const newRoom = await apiCreateRoom(input.title, guestId);
       setRoom(newRoom);
+      // recordRecentRoom dispatches RECENT_ROOMS_EVENT, so the originating tab's
+      // recent list refreshes even though we don't navigate away from it.
       recordRecentRoom({
         id: newRoom.id,
         title: newRoom.title,
@@ -39,23 +43,23 @@ export function useRoom(): UseRoomResult {
         role: 'host',
       });
       toast.success('Room created successfully');
-      router.push(
-        input.type === 'webinar'
-          ? ROUTES.WEBINAR_DETAIL(newRoom.id)
-          : ROUTES.MEETING_DETAIL(newRoom.id),
-      );
+      // Open the meeting in a new tab so the dashboard tab stays put.
+      const path = input.type === 'webinar'
+        ? ROUTES.WEBINAR_DETAIL(newRoom.id)
+        : ROUTES.MEETING_DETAIL(newRoom.id);
+      if (typeof window !== 'undefined') {
+        window.open(`/${locale}${path}`, '_blank', 'noopener,noreferrer');
+      }
       return newRoom;
-    }
-    catch (err) {
+    } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to create room';
       setError(message);
       toast.error(message);
       throw err;
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
-  }, [router]);
+  }, [locale]);
 
   const joinRoom = useCallback(async (input: JoinRoomInput): Promise<Room> => {
     setIsLoading(true);
@@ -74,18 +78,16 @@ export function useRoom(): UseRoomResult {
       if (input.displayName) {
         localStorage.setItem('recallo_display_name', input.displayName);
       }
-      
+
       toast.success('Room found, connecting...');
       router.push(ROUTES.MEETING_DETAIL(existingRoom.id));
       return existingRoom;
-    }
-    catch (err) {
+    } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to find room';
       setError(message);
       toast.error(message);
       throw err;
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   }, [router]);
@@ -97,13 +99,11 @@ export function useRoom(): UseRoomResult {
       setRoom(null);
       toast.success('Left room');
       router.push(ROUTES.HOME);
-    }
-    catch (err) {
+    } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to leave room';
       setError(message);
       toast.error(message);
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   }, [router]);
@@ -117,13 +117,11 @@ export function useRoom(): UseRoomResult {
       setRoom(null);
       toast.success('Room ended successfully');
       router.push(ROUTES.HOME);
-    }
-    catch (err) {
+    } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to end room';
       setError(message);
       toast.error(message);
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   }, [router]);
