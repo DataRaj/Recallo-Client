@@ -1,35 +1,37 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import type { LobbyConfig } from '@/types/meeting';
+import { AlertCircle, Camera, Loader2, Mic, MicOff, Video, VideoOff, Volume2 } from 'lucide-react';
 import Link from 'next/link';
-import { Mic, MicOff, Video, VideoOff, Loader2, AlertCircle, Volume2, Camera } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
+import { initialsFor } from '@/components/meeting/avatar';
 import { ROUTES } from '@/lib/routes';
 import { DisplayNameSchema } from '@/schemas/meeting.schema';
-import { initialsFor } from '@/components/meeting/avatar';
-import { usePreferencesStore } from '@/stores/use-preferences-store';
 import { useMeetingPreferencesStore } from '@/stores/use-meeting-preferences-store';
-import type { LobbyConfig } from '@/types/meeting';
+import { usePreferencesStore } from '@/stores/use-preferences-store';
 
-interface PreJoinLobbyProps {
+type PreJoinLobbyProps = {
   roomTitle: string;
   defaultName: string;
   isHost: boolean;
   mode?: 'meeting' | 'webinar';
   onJoin: (config: LobbyConfig) => Promise<void>;
-}
+};
 
-interface DeviceLists {
+type DeviceLists = {
   audioInput: MediaDeviceInfo[];
   audioOutput: MediaDeviceInfo[];
   videoInput: MediaDeviceInfo[];
-}
+};
 
 const EMPTY_DEVICES: DeviceLists = { audioInput: [], audioOutput: [], videoInput: [] };
 
 /** Return the deviceId to actually use: the saved one if still present, else ''. */
 function resolveDevice(saved: string, list: MediaDeviceInfo[]): { id: string; missing: boolean } {
-  if (!saved) return { id: '', missing: false };
+  if (!saved) {
+    return { id: '', missing: false };
+  }
   const found = list.some(d => d.deviceId === saved);
   return { id: found ? saved : '', missing: !found };
 }
@@ -60,11 +62,15 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
   const stopPreview = useCallback(() => {
     streamRef.current?.getTracks().forEach(track => track.stop());
     streamRef.current = null;
-    if (videoRef.current) videoRef.current.srcObject = null;
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
   }, []);
 
   const refreshDevices = useCallback(async () => {
-    if (typeof navigator === 'undefined' || !navigator.mediaDevices?.enumerateDevices) return;
+    if (typeof navigator === 'undefined' || !navigator.mediaDevices?.enumerateDevices) {
+      return;
+    }
     try {
       const all = await navigator.mediaDevices.enumerateDevices();
       const next: DeviceLists = {
@@ -92,8 +98,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
         warnedRef.current = true;
         toast('A saved device is unavailable — using the system default.');
       }
-    }
-    catch {
+    } catch {
       // enumerateDevices can throw before permission is granted; ignore.
     }
   }, [audioInputId, audioOutputId, videoInputId, setMeetingPref]);
@@ -116,12 +121,13 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
           return;
         }
         streamRef.current = stream;
-        if (videoRef.current) videoRef.current.srcObject = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
         setPermissionDenied(false);
         // Labels become available after permission is granted.
         void refreshDevices();
-      }
-      catch (err) {
+      } catch (err) {
         const denied = (err as { name?: string })?.name === 'NotAllowedError';
         if (!cancelled && denied) {
           setPermissionDenied(true);
@@ -139,7 +145,9 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
   // Populate the device lists up-front and keep them fresh on hot-plug.
   useEffect(() => {
     void refreshDevices();
-    if (typeof navigator === 'undefined' || !navigator.mediaDevices) return;
+    if (typeof navigator === 'undefined' || !navigator.mediaDevices) {
+      return;
+    }
     const handler = () => void refreshDevices();
     navigator.mediaDevices.addEventListener('devicechange', handler);
     return () => navigator.mediaDevices.removeEventListener('devicechange', handler);
@@ -170,8 +178,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
 
     try {
       await onJoin(joinConfig);
-    }
-    catch {
+    } catch {
       // Parent surfaces the toast; re-enable the form to retry.
       setJoining(false);
     }
@@ -199,12 +206,12 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
                   autoPlay
                   playsInline
                   muted
-                  className="h-full w-full -scale-x-100 object-cover"
+                  className="size-full -scale-x-100 object-cover"
                 />
               )
             : (
                 <div
-                  className="flex h-16 w-16 items-center justify-center rounded-full text-lg font-semibold text-white"
+                  className="flex size-16 items-center justify-center rounded-full text-lg font-semibold text-white"
                   style={{ background: '#9CC5A1' }}
                 >
                   {initialsFor(name || 'Guest')}
@@ -215,9 +222,11 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
           <div className="absolute bottom-3 flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setMicEnabled(v => { const next = !v; setPref('muteMicOnJoin', !next); return next; })}
+              onClick={() => setMicEnabled((v) => {
+                const next = !v; setPref('muteMicOnJoin', !next); return next;
+              })}
               title={micEnabled ? 'Mic on' : 'Mic off'}
-              className="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:scale-105"
+              className="flex size-10 items-center justify-center rounded-full transition-all hover:scale-105"
               style={{
                 background: micEnabled ? 'rgba(255,255,255,0.15)' : '#BA5A5A',
                 color: '#FBF5DD',
@@ -227,9 +236,11 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
             </button>
             <button
               type="button"
-              onClick={() => setCamEnabled(v => { const next = !v; setPref('cameraOffOnJoin', !next); return next; })}
+              onClick={() => setCamEnabled((v) => {
+                const next = !v; setPref('cameraOffOnJoin', !next); return next;
+              })}
               title={camEnabled ? 'Camera on' : 'Camera off'}
-              className="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:scale-105"
+              className="flex size-10 items-center justify-center rounded-full transition-all hover:scale-105"
               style={{
                 background: camEnabled ? 'rgba(255,255,255,0.15)' : '#BA5A5A',
                 color: '#FBF5DD',
@@ -288,8 +299,10 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
             value={name}
             maxLength={50}
             onChange={e => setName(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') handleJoin();
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleJoin();
+              }
             }}
             placeholder="e.g. Alex Kim"
             className="rounded-[10px] px-3 py-2.5 text-sm focus:outline-none"
@@ -321,14 +334,14 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
   );
 }
 
-interface DeviceSelectProps {
+type DeviceSelectProps = {
   icon: React.ReactNode;
   label: string;
   value: string;
   devices: MediaDeviceInfo[];
   fallbackLabel: string;
   onChange: (deviceId: string) => void;
-}
+};
 
 function DeviceSelect({ icon, label, value, devices, fallbackLabel, onChange }: DeviceSelectProps) {
   return (

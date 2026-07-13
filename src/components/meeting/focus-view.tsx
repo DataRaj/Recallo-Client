@@ -1,13 +1,14 @@
 'use client';
 
-import { memo, useMemo } from 'react';
-import { VideoTrack, useTracks, type TrackReference, type TrackReferenceOrPlaceholder } from '@livekit/components-react';
+import type { TrackReference, TrackReferenceOrPlaceholder } from '@livekit/components-react';
+import { useTracks, VideoTrack } from '@livekit/components-react';
 import { Track } from 'livekit-client';
+import { memo, useMemo } from 'react';
 import { VideoTile } from '@/components/meeting/video-tile';
 
-interface FocusViewProps {
+type FocusViewProps = {
   screenTrack: TrackReference;
-}
+};
 
 function trackKey(ref: TrackReferenceOrPlaceholder): string {
   const source = ref.publication?.source ?? ref.source ?? 'camera';
@@ -35,7 +36,7 @@ function FocusViewImpl({ screenTrack }: FocusViewProps) {
   return (
     <section className="flex min-h-0 flex-1 flex-col gap-2.5">
       <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[12px]" style={{ background: '#000' }}>
-        <VideoTrack trackRef={screenTrack} className="h-full w-full object-contain" />
+        <VideoTrack trackRef={screenTrack} className="size-full object-contain" />
         <div
           className="absolute bottom-2 left-2 rounded-[7px] px-2 py-1 text-[11px] font-medium text-white/90"
           style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)' }}

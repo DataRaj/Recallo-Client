@@ -10,20 +10,22 @@
  */
 'use client';
 
-import { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useAuthStore } from '@/stores/use-auth-store';
 import type { AuthUser } from '@/types/auth';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useAuthStore } from '@/stores/use-auth-store';
 
-interface RefreshResponse {
+type RefreshResponse = {
   success: boolean;
   data: { user: AuthUser; access_token: string; refresh_token: string };
-}
+};
 
 /** Safely parse the JSON body from a Response; throws if parse fails or data is malformed. */
 async function fetchCurrentUser(): Promise<RefreshResponse> {
   const res = await fetch('/api/auth/refresh', { method: 'POST' });
-  if (!res.ok) throw new Error('Unauthenticated');
+  if (!res.ok) {
+    throw new Error('Unauthenticated');
+  }
 
   const text = await res.text();
   let json: unknown;

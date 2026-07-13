@@ -6,16 +6,16 @@
  * Calls onSelect with the full GIF URL to embed in a message.
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { Search, X, Loader2 } from 'lucide-react';
-import { searchGifs, getTrendingGifs } from '@/services/chat-service';
 import type { GifResult } from '@/services/chat-service';
+import { Loader2, Search, X } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDebounce } from '@/hooks/use-debounced-value';
+import { getTrendingGifs, searchGifs } from '@/services/chat-service';
 
-interface GifPickerProps {
+type GifPickerProps = {
   onSelect: (gif: GifResult) => void;
   onClose: () => void;
-}
+};
 
 export function GifPicker({ onSelect, onClose }: GifPickerProps) {
   const [query, setQuery] = useState('');
@@ -44,7 +44,11 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
 
   // Close on Escape
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
@@ -52,7 +56,7 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
   return (
     <div
       ref={containerRef}
-      className="absolute bottom-full left-0 mb-2 w-80 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+      className="absolute bottom-full left-0 mb-2 flex w-80 flex-col overflow-hidden rounded-2xl shadow-2xl"
       style={{
         background: '#1C2A2C',
         border: '1px solid rgba(255,255,255,0.08)',
@@ -62,13 +66,13 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
     >
       {/* Header */}
       <div
-        className="flex items-center justify-between px-3 py-2 shrink-0"
+        className="flex shrink-0 items-center justify-between px-3 py-2"
         style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
       >
         <span className="text-[12px] font-semibold" style={{ color: '#FBF5DD' }}>GIFs</span>
         <button
           onClick={onClose}
-          className="rounded-[6px] p-1 hover:bg-white/10 transition-colors"
+          className="rounded-[6px] p-1 transition-colors hover:bg-white/10"
           style={{ color: 'rgba(251,245,221,0.45)' }}
           aria-label="Close GIF picker"
         >
@@ -77,14 +81,14 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
       </div>
 
       {/* Search */}
-      <div className="px-2 py-2 shrink-0">
+      <div className="shrink-0 p-2">
         <div className="flex items-center gap-2 rounded-[8px] px-2.5 py-1.5" style={{ background: '#273338' }}>
           <Search size={12} style={{ color: 'rgba(251,245,221,0.4)' }} />
           <input
             autoFocus
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={e => setQuery(e.target.value)}
             placeholder="Search GIFs…"
             className="flex-1 bg-transparent text-[12px] placeholder:opacity-40 focus:outline-none"
             style={{ color: '#FBF5DD' }}
@@ -114,11 +118,11 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
         )}
         {!loading && !error && gifs.length > 0 && (
           <div className="columns-2 gap-1.5">
-            {gifs.map((gif) => (
+            {gifs.map(gif => (
               <button
                 key={gif.id}
                 onClick={() => onSelect(gif)}
-                className="mb-1.5 block w-full overflow-hidden rounded-[8px] transition-opacity hover:opacity-80 focus:outline-none focus:ring-1 focus:ring-[#9CC5A1]"
+                className="mb-1.5 block w-full overflow-hidden rounded-[8px] transition-opacity hover:opacity-80 focus:ring-1 focus:ring-[#9CC5A1] focus:outline-none"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -136,7 +140,7 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
 
       {/* Powered by Tenor */}
       <div
-        className="shrink-0 flex items-center justify-center py-1.5"
+        className="flex shrink-0 items-center justify-center py-1.5"
         style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
       >
         <span className="text-[9px]" style={{ color: 'rgba(251,245,221,0.2)' }}>Powered by Tenor</span>

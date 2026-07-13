@@ -3,16 +3,16 @@
  */
 'use client';
 
-import { useState } from 'react';
+import type { CreateRoomInput, RoomType } from '@/types/room';
 import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { useRoom } from '@/hooks/use-room';
 import { Modal } from './base-modal';
-import type { RoomType, CreateRoomInput } from '@/types/room';
 
-interface CreateRoomModalProps {
+type CreateRoomModalProps = {
   isOpen: boolean;
   onClose: () => void;
-}
+};
 
 const ROOM_OPTIONS: { id: string; type: RoomType; label: string; description: string }[] = [
   {
@@ -51,7 +51,9 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
 
   const handleCreate = async () => {
     const selectedOption = ROOM_OPTIONS.find(o => o.id === selectedOptionId);
-    if (!selectedOption || !title.trim()) return;
+    if (!selectedOption || !title.trim()) {
+      return;
+    }
 
     const input: CreateRoomInput = {
       type: selectedOption.type,
@@ -64,8 +66,7 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
       await createRoom(input);
       onClose();
       resetForm();
-    }
-    catch {
+    } catch {
       // Error is handled by useRoom hook
     }
   };
@@ -86,13 +87,13 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
               <button
                 key={option.id}
                 onClick={() => setSelectedOptionId(option.id)}
-                className="w-full p-4 rounded-[12px] text-left transition-all duration-200 border hover:border-opacity-50"
+                className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
                 style={{
                   borderColor: 'rgba(255,255,255,0.06)',
                   background: '#324147',
                 }}
               >
-                <h3 className="font-semibold mb-1" style={{ color: '#FBF5DD' }}>
+                <h3 className="mb-1 font-semibold" style={{ color: '#FBF5DD' }}>
                   {option.label}
                 </h3>
                 <p className="text-sm" style={{ color: 'rgba(251,245,221,0.6)' }}>
@@ -114,15 +115,19 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
 
             {/* Title input */}
             <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: '#FBF5DD' }}>
+              <label className="mb-2 block text-sm font-medium" style={{ color: '#FBF5DD' }}>
                 Meeting Title
               </label>
               <input
                 value={title}
                 onChange={e => setTitle(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && title.trim()) void handleCreate(); }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && title.trim()) {
+                    void handleCreate();
+                  }
+                }}
                 placeholder="e.g., Team Standup"
-                className="w-full px-3 py-2 rounded-[8px] border text-sm focus:outline-none"
+                className="w-full rounded-[8px] border px-3 py-2 text-sm focus:outline-none"
                 style={{
                   borderColor: 'rgba(255,255,255,0.06)',
                   background: '#3C4C52',
@@ -133,7 +138,7 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
 
             {/* Description input */}
             <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: '#FBF5DD' }}>
+              <label className="mb-2 block text-sm font-medium" style={{ color: '#FBF5DD' }}>
                 Description (optional)
               </label>
               <textarea
@@ -141,7 +146,7 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
                 onChange={e => setDescription(e.target.value)}
                 placeholder="Add a description..."
                 rows={3}
-                className="w-full px-3 py-2 rounded-[8px] border text-sm focus:outline-none resize-none"
+                className="w-full resize-none rounded-[8px] border px-3 py-2 text-sm focus:outline-none"
                 style={{
                   borderColor: 'rgba(255,255,255,0.06)',
                   background: '#3C4C52',
@@ -153,14 +158,14 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
             {/* Schedule date (optional) */}
             {(selectedOptionId === 'scheduled' || selectedOptionId === 'webinar') && (
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: '#FBF5DD' }}>
+                <label className="mb-2 block text-sm font-medium" style={{ color: '#FBF5DD' }}>
                   Schedule For (optional)
                 </label>
                 <input
                   type="datetime-local"
                   value={scheduledFor}
                   onChange={e => setScheduledFor(e.target.value)}
-                  className="w-full px-3 py-2 rounded-[8px] border text-sm focus:outline-none"
+                  className="w-full rounded-[8px] border px-3 py-2 text-sm focus:outline-none"
                   style={{
                     borderColor: 'rgba(255,255,255,0.06)',
                     background: '#3C4C52',
@@ -178,7 +183,7 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
                   resetForm();
                 }}
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 rounded-[8px] font-medium transition-all duration-200 disabled:opacity-50"
+                className="flex-1 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50"
                 style={{
                   background: '#3C4C52',
                   color: '#FBF5DD',
@@ -189,7 +194,7 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
               <button
                 onClick={handleCreate}
                 disabled={isLoading || !title.trim()}
-                className="flex-1 px-4 py-2 rounded-[8px] font-medium transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex flex-1 items-center justify-center gap-2 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50"
                 style={{
                   background: '#BA5A5A',
                   color: '#fff',

@@ -2,7 +2,7 @@
 
 import { Loader2 } from 'lucide-react';
 
-interface ControlButtonProps {
+type ControlButtonProps = {
   icon: React.ComponentType<{ size?: number }>;
   label: string;
   active?: boolean;
@@ -11,7 +11,7 @@ interface ControlButtonProps {
   busy?: boolean;
   comingSoon?: boolean;
   onClick?: () => void;
-}
+};
 
 export function ControlButton({
   icon: Icon,
@@ -34,7 +34,7 @@ export function ControlButton({
       type="button"
     >
       <div
-        className="flex h-10 w-10 items-center justify-center rounded-[12px] transition-all duration-200 group-enabled:group-hover:scale-105 group-enabled:group-active:scale-95"
+        className="flex size-10 items-center justify-center rounded-[12px] transition-all duration-200 group-enabled:group-hover:scale-105 group-enabled:group-active:scale-95"
         style={{
           background: danger
             ? '#BA5A5A'

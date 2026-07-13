@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
-import { useAuthStore } from "@/stores/use-auth-store";
-import { ROUTES } from "@/lib/routes";
-import { Loader2 } from "lucide-react";
+import { Loader2 } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect } from 'react';
+import { toast } from 'sonner';
+import { ROUTES } from '@/lib/routes';
+import { useAuthStore } from '@/stores/use-auth-store';
 
 /**
  * OAuth Success landing page.
@@ -26,26 +26,26 @@ function OAuthSuccessContent() {
   const { setAuth, setHydrated } = useAuthStore();
 
   useEffect(() => {
-    const accessToken = params.get("access_token");
-    const refreshToken = params.get("refresh_token");
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
 
     if (!accessToken || !refreshToken) {
-      toast.error("OAuth authentication failed. Please try again.");
-      router.replace("/login");
+      toast.error('OAuth authentication failed. Please try again.');
+      router.replace('/login');
       return;
     }
 
     (async () => {
       try {
         // 1. Store refresh_token as httpOnly cookie
-        await fetch("/api/auth/set-cookie", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        await fetch('/api/auth/set-cookie', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ refresh_token: refreshToken }),
         });
 
         // 2. Use the refresh endpoint to get the full user object
-        const meRes = await fetch("/api/auth/refresh", { method: "POST" });
+        const meRes = await fetch('/api/auth/refresh', { method: 'POST' });
         if (meRes.ok) {
           const meText = await meRes.text();
           type MeData = {
@@ -62,14 +62,14 @@ function OAuthSuccessContent() {
             // non-JSON response — fall through to fallback
           }
           if (
-            meData?.success &&
-            meData.data?.user &&
-            meData.data.access_token
+            meData?.success
+            && meData.data?.user
+            && meData.data.access_token
           ) {
             setAuth(meData.data.user, meData.data.access_token);
             setHydrated(true);
             toast.success(`Welcome, ${meData.data.user.name}!`);
-            router.replace("/dashboard");
+            router.replace('/dashboard');
             return;
           }
         }
@@ -77,12 +77,12 @@ function OAuthSuccessContent() {
         // Fallback: set access token only — dashboard will hydrate user from cookie
         setAuth(null, accessToken);
         setHydrated(false); // let useCurrentUser re-hydrate on dashboard mount
-        toast.success("Signed in with GitHub!");
+        toast.success('Signed in with GitHub!');
         router.replace(ROUTES.HOME);
 
-        console.log(router, "Router");
+        console.log(router, 'Router');
       } catch {
-        toast.error("Failed to complete authentication. Please try again.");
+        toast.error('Failed to complete authentication. Please try again.');
         router.replace(ROUTES.LOGIN);
       }
     })();
@@ -91,13 +91,13 @@ function OAuthSuccessContent() {
 
   return (
     <div
-      className="min-h-dvh flex items-center justify-center bg-[var(--color-bg)]"
+      className="flex min-h-dvh items-center justify-center bg-[var(--color-bg)]"
     >
       <div className="flex flex-col items-center gap-5">
         <div
-          className="w-14 h-14 rounded-[16px] flex items-center justify-center text-white text-xl font-semibold"
+          className="flex size-14 items-center justify-center rounded-[16px] text-xl font-semibold text-white"
           style={{
-            background: "linear-gradient(135deg, var(--color-text-accent) 0%, #8A4040 100%)",
+            background: 'linear-gradient(135deg, var(--color-text-accent) 0%, #8A4040 100%)',
           }}
         >
           R
@@ -119,16 +119,16 @@ function OAuthSuccessContent() {
 export default function OAuthSuccessPage() {
   return (
     <React.Suspense
-      fallback={
+      fallback={(
         <div
-          className="min-h-dvh flex items-center justify-center bg-[var(--color-bg)]"
+          className="flex min-h-dvh items-center justify-center bg-[var(--color-bg)]"
         >
           <Loader2
             className="animate-spin text-[var(--color-accent)]"
             size={20}
           />
         </div>
-      }
+      )}
     >
       <OAuthSuccessContent />
     </React.Suspense>

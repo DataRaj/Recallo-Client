@@ -15,8 +15,8 @@
 
 import React, {
   createContext,
+  use,
   useCallback,
-  useContext,
   useEffect,
   useState,
 } from "react";
@@ -39,21 +39,25 @@ export type ResolvedMode = "light" | "dark";
 
 const CHAT_STORAGE_KEY = "recallo-chat-theme";
 
-interface ThemeContextValue {
+type ThemeContextValue = {
   theme: AppTheme;
   setTheme: (theme: AppTheme) => void;
   resolvedMode: ResolvedMode;
   chatTheme: ChatThemeKey;
   setChatTheme: (theme: ChatThemeKey) => void;
-}
+};
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 /** Resolve 'system' to a concrete mode using the OS colour-scheme preference. */
 function resolveMode(theme: AppTheme): ResolvedMode {
-  if (theme !== "system") return theme;
+  if (theme !== "system") {
+    return theme;
+  }
 
-  if (typeof window === "undefined") return "light";
+  if (typeof window === "undefined") {
+    return "light";
+  }
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
@@ -73,7 +77,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const stored = localStorage.getItem(
       CHAT_STORAGE_KEY,
     ) as ChatThemeKey | null;
-    if (stored && stored in CHAT_THEMES) setChatThemeState(stored);
+    if (stored && stored in CHAT_THEMES) {
+      setChatThemeState(stored);
+    }
   }, []);
 
   // Apply the app mode to <html>, and keep it in sync with the OS when 'system'.
@@ -82,12 +88,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const mode = resolveMode(theme);
       setResolvedMode(mode);
       const el = document.documentElement;
-      if (mode === "light") el.removeAttribute("data-theme");
-      else el.setAttribute("data-theme", mode);
+      if (mode === "light") {
+        el.removeAttribute("data-theme");
+      } else {
+        el.setAttribute("data-theme", mode);
+      }
     };
     apply();
 
-    if (theme !== "system") return;
+    if (theme !== "system") {
+      return;
+    }
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
@@ -110,16 +121,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   console.log("Theme: ", theme, resolvedMode, chatTheme);
   return (
-    <ThemeContext.Provider
+    <ThemeContext
       value={{ theme, setTheme, resolvedMode, chatTheme, setChatTheme }}
     >
       {children}
-    </ThemeContext.Provider>
+    </ThemeContext>
   );
 }
 
 export function useTheme(): ThemeContextValue {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
+  const ctx = use(ThemeContext);
+  if (!ctx) {
+    throw new Error("useTheme must be used within ThemeProvider");
+  }
   return ctx;
 }

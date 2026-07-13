@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 /**
  * POST /api/auth/set-cookie
  *
@@ -5,7 +6,6 @@
  * Stores the refresh_token in an httpOnly cookie so it's never accessible from JS.
  */
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
   // Use safe text-based parse to avoid unhandled SyntaxError if body is malformed.

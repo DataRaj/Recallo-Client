@@ -1,7 +1,7 @@
 'use client';
 
-import { useChatReceiver } from '@/hooks/use-meeting-chat';
 import { useHandRaiseSync } from '@/hooks/use-hand-raise';
+import { useChatReceiver } from '@/hooks/use-meeting-chat';
 
 /**
  * Mounts room-wide data-channel listeners (chat + hand-raise) exactly once, at

@@ -1,18 +1,18 @@
 'use client';
 
-import { useCallback, useRef, useState, useEffect } from 'react';
-import { X, MessageSquare, Loader2, Search, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { createConversation, searchUsers } from '@/services/chat-service';
 import type { UserSearchResult } from '@/services/chat-service';
-import { ROUTES } from '@/lib/routes';
+import { Loader2, MessageSquare, Search, User, X } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ROUTES } from '@/lib/routes';
+import { createConversation, searchUsers } from '@/services/chat-service';
 
-interface NewConversationModalProps {
+type NewConversationModalProps = {
   open: boolean;
   prefillUserId?: number;
   onClose: () => void;
-}
+};
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -57,12 +57,18 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
     }
     let cancelled = false;
     setSearching(true);
-    searchUsers(debouncedQuery).then(data => {
-      if (!cancelled) { setResults(data); setSearching(false); }
+    searchUsers(debouncedQuery).then((data) => {
+      if (!cancelled) {
+        setResults(data); setSearching(false);
+      }
     }).catch(() => {
-      if (!cancelled) setSearching(false);
+      if (!cancelled) {
+        setSearching(false);
+      }
     });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [debouncedQuery, selected]);
 
   const handleSelect = useCallback((user: UserSearchResult) => {
@@ -73,7 +79,7 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
   }, []);
 
   const handleStart = useCallback(async () => {
-    const targetId = selected?.id ?? parseInt(query.trim(), 10);
+    const targetId = selected?.id ?? Number.parseInt(query.trim(), 10);
     if (!selected && (isNaN(targetId) || targetId <= 0)) {
       setError('Select a user or enter a valid numeric ID.');
       return;
@@ -93,13 +99,21 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
   }, [selected, query, locale, router, onClose]);
 
   useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    if (!open) {
+      return;
+    }
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open) {
+    return null;
+  }
 
   const showDropdown = results.length > 0 && !selected;
 
@@ -107,7 +121,11 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
     >
       <div
         className="w-full max-w-md rounded-2xl p-6 shadow-2xl"
@@ -116,7 +134,7 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div
-              className="flex h-8 w-8 items-center justify-center rounded-xl"
+              className="flex size-8 items-center justify-center rounded-xl"
               style={{ background: 'rgba(156,197,161,0.15)' }}
             >
               <MessageSquare size={15} style={{ color: '#9CC5A1' }} />
@@ -146,15 +164,20 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
                 ref={inputRef}
                 type="text"
                 value={query}
-                onChange={(e) => { setQuery(e.target.value); setSelected(null); setError(null); }}
+                onChange={(e) => {
+                  setQuery(e.target.value); setSelected(null); setError(null);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    if (results[0] && !selected) handleSelect(results[0]);
-                    else if (selected || query.trim()) void handleStart();
+                    if (results[0] && !selected) {
+                      handleSelect(results[0]);
+                    } else if (selected || query.trim()) {
+                      void handleStart();
+                    }
                   }
                 }}
                 placeholder="e.g. Alex Kim or 42"
-                className="w-full rounded-[10px] border py-2.5 pl-9 pr-3 text-[13px] outline-none transition-all focus:ring-1"
+                className="w-full rounded-[10px] border py-2.5 pr-3 pl-9 text-[13px] transition-all outline-none focus:ring-1"
                 style={{
                   background: '#273338',
                   borderColor: error ? '#BA5A5A' : 'rgba(255,255,255,0.08)',
@@ -169,7 +192,7 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
 
           {showDropdown && (
             <div
-              className="absolute left-0 right-0 top-full mt-1 overflow-hidden rounded-[12px] shadow-2xl z-10"
+              className="absolute inset-x-0 top-full z-10 mt-1 overflow-hidden rounded-[12px] shadow-2xl"
               style={{ background: '#273338', border: '1px solid rgba(255,255,255,0.08)' }}
             >
               {results.map(user => (
@@ -180,11 +203,11 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
                   className="flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-white/5"
                 >
                   <div
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-white"
+                    className="flex size-8 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-white"
                     style={{ background: '#9CC5A1' }}
                   >
                     {user.avatar
-                      ? <img src={user.avatar} alt={user.name} className="h-8 w-8 rounded-full object-cover" />
+                      ? <img src={user.avatar} alt={user.name} className="size-8 rounded-full object-cover" />
                       : userInitials(user.name)}
                   </div>
                   <div className="min-w-0">
@@ -216,7 +239,7 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
             style={{ background: 'rgba(156,197,161,0.08)', border: '1px solid rgba(156,197,161,0.2)' }}
           >
             <div
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
+              className="flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
               style={{ background: '#9CC5A1' }}
             >
               {userInitials(selected.name)}
@@ -227,7 +250,9 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
             </div>
             <button
               type="button"
-              onClick={() => { setSelected(null); setQuery(''); }}
+              onClick={() => {
+                setSelected(null); setQuery('');
+              }}
               className="shrink-0 rounded p-0.5 hover:bg-white/10"
               style={{ color: 'rgba(156,197,161,0.7)' }}
             >

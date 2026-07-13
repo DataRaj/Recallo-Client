@@ -1,11 +1,10 @@
 import { z } from 'zod';
 
-
 export const DisplayNameSchema = z
   .string()
   .trim()
   .regex(
-    /^[a-zA-Z\s\-]{2,50}$/,
+    /^[a-z\s\-]{2,50}$/i,
     'Use 2–50 letters, spaces, or hyphens only',
   );
 

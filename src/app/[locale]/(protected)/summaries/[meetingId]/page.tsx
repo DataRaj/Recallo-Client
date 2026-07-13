@@ -1,26 +1,26 @@
 'use client';
 
-import { use, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import type { SummaryData } from '@/services/summary-service';
+import type { Room } from '@/types/room';
 import {
+  AlertCircle,
   ArrowLeft,
   Brain,
-  Sparkles,
-  Flag,
-  Tag,
   Calendar,
   Clock,
-  User,
+  Flag,
   ListTodo,
   Loader2,
-  AlertCircle
+  Sparkles,
+  Tag,
+  User,
 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { use, useEffect, useState } from 'react';
 import { ROUTES } from '@/lib/routes';
 import { getRoom } from '@/services/room-service';
 import { getRoomSummary } from '@/services/summary-service';
-import type { SummaryData } from '@/services/summary-service';
-import type { Room } from '@/types/room';
 
 type PageProps = {
   params: Promise<{
@@ -44,7 +44,9 @@ export default function SummaryDetailPage({ params }: PageProps) {
     const loadData = async () => {
       try {
         const r = await getRoom(meetingId);
-        if (active) setRoom(r);
+        if (active) {
+          setRoom(r);
+        }
       } catch {
         // room details are non-critical
       }
@@ -56,7 +58,9 @@ export default function SummaryDetailPage({ params }: PageProps) {
           setLoading(false);
         }
       } catch (err: unknown) {
-        if (!active) return;
+        if (!active) {
+          return;
+        }
         const status = (err as { response?: { status?: number } })?.response?.status;
         if (status === 404) {
           setProcessing(true);
@@ -69,19 +73,21 @@ export default function SummaryDetailPage({ params }: PageProps) {
     };
 
     loadData();
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [meetingId]);
 
   if (loading) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] text-[#FBF5DD] px-4">
-        <div className="relative flex items-center justify-center w-24 h-24 mb-8">
-          <div className="absolute inset-0 rounded-full border-4 border-[#9CC5A1]/10 animate-pulse" />
-          <div className="absolute inset-2 rounded-full border-4 border-[#9CC5A1]/20 animate-spin border-t-[#9CC5A1]" />
-          <Brain className="w-8 h-8 text-[#9CC5A1] animate-bounce" />
+      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-[#FBF5DD]">
+        <div className="relative mb-8 flex size-24 items-center justify-center">
+          <div className="absolute inset-0 animate-pulse rounded-full border-4 border-[#9CC5A1]/10" />
+          <div className="absolute inset-2 animate-spin rounded-full border-4 border-[#9CC5A1]/20 border-t-[#9CC5A1]" />
+          <Brain className="size-8 animate-bounce text-[#9CC5A1]" />
         </div>
-        <h2 className="text-xl font-bold flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-[#9CC5A1] animate-pulse" />
+        <h2 className="flex items-center gap-2 text-xl font-bold">
+          <Sparkles className="size-5 animate-pulse text-[#9CC5A1]" />
           Loading insights...
         </h2>
       </div>
@@ -90,16 +96,16 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
   if (processing) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] text-[#FBF5DD] px-4 text-center">
-        <Loader2 className="w-10 h-10 text-[#9CC5A1] animate-spin mb-6" />
-        <h2 className="text-xl font-bold mb-2">AI is synthesizing meeting insights...</h2>
-        <p className="text-sm text-white/50 max-w-sm">
+      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-center text-[#FBF5DD]">
+        <Loader2 className="mb-6 size-10 animate-spin text-[#9CC5A1]" />
+        <h2 className="mb-2 text-xl font-bold">AI is synthesizing meeting insights...</h2>
+        <p className="max-w-sm text-sm text-white/50">
           Grok is analyzing the transcript and generating your summary. This usually takes under a minute.
           Refresh the page in a moment to see your results.
         </p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-6 px-4 py-2 rounded-xl border border-white/10 text-xs font-semibold hover:bg-white/5 transition-all text-[#D9D3BC]"
+          className="mt-6 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[#D9D3BC] transition-all hover:bg-white/5"
         >
           Refresh
         </button>
@@ -109,12 +115,12 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
   if (error) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] text-[#FBF5DD] px-4 text-center">
-        <AlertCircle className="w-10 h-10 text-[#BA5A5A] mb-4" />
-        <p className="text-white/60 text-sm">{error}</p>
+      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-center text-[#FBF5DD]">
+        <AlertCircle className="mb-4 size-10 text-[#BA5A5A]" />
+        <p className="text-sm text-white/60">{error}</p>
         <button
           onClick={() => router.push(ROUTES.HOME)}
-          className="mt-6 px-4 py-2 rounded-xl border border-white/10 text-xs font-semibold hover:bg-white/5 transition-all text-[#D9D3BC]"
+          className="mt-6 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[#D9D3BC] transition-all hover:bg-white/5"
         >
           Go Home
         </button>
@@ -123,41 +129,43 @@ export default function SummaryDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#141E1F] text-[#FBF5DD] pb-16 font-sans">
+    <div className="min-h-screen bg-[#141E1F] pb-16 font-sans text-[#FBF5DD]">
       {/* Navbar */}
-      <header className="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-[#1C2A2C] sticky top-0 z-30">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[#1C2A2C] px-6">
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push(ROUTES.HOME)}
-            className="p-2 hover:bg-white/5 rounded-lg transition-all text-[#D9D3BC] hover:text-[#FBF5DD]"
+            className="rounded-lg p-2 text-[#D9D3BC] transition-all hover:bg-white/5 hover:text-[#FBF5DD]"
           >
             <ArrowLeft size={18} />
           </button>
           <div className="flex items-center gap-2.5">
-            <Brain className="w-5 h-5 text-[#9CC5A1]" />
+            <Brain className="size-5 text-[#9CC5A1]" />
             <h1 className="text-md font-semibold text-[#FBF5DD]">AI Meeting Insights</h1>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5">
-          <span className="text-xs px-2.5 py-1 rounded-full bg-[#9CC5A1]/10 text-[#9CC5A1] border border-[#9CC5A1]/20 font-medium capitalize">
+          <span className="rounded-full border border-[#9CC5A1]/20 bg-[#9CC5A1]/10 px-2.5 py-1 text-xs font-medium text-[#9CC5A1] capitalize">
             {summary?.category || 'meeting'}
           </span>
           <span className="text-[10px] text-white/40">
-            Powered by {summary?.model}
+            Powered by
+            {' '}
+            {summary?.model}
           </span>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main className="max-w-5xl mx-auto px-6 pt-8 space-y-6">
+      <main className="mx-auto max-w-5xl space-y-6 px-6 pt-8">
         {/* Title Section */}
-        <div className="rounded-2xl p-6 bg-[#1C2A2C] border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col justify-between gap-4 rounded-2xl border border-white/5 bg-[#1C2A2C] p-6 md:flex-row md:items-center">
           <div>
             <h2 className="text-2xl font-bold text-[#FBF5DD]">
               {room?.title || meetingId}
             </h2>
-            <div className="flex flex-wrap items-center gap-4 mt-2 text-xs text-white/50">
+            <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-white/50">
               <span className="flex items-center gap-1.5">
                 <Calendar size={13} className="text-[#9CC5A1]" />
                 {summary ? new Date(summary.created_at).toLocaleDateString() : '—'}
@@ -175,37 +183,37 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
           <Link
             href={ROUTES.TRANSCRIPT_DETAIL(meetingId)}
-            className="self-start md:self-auto px-4 py-2 rounded-xl border border-white/10 text-xs font-semibold hover:bg-white/5 transition-all text-[#D9D3BC] hover:text-[#FBF5DD]"
+            className="self-start rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[#D9D3BC] transition-all hover:bg-white/5 hover:text-[#FBF5DD] md:self-auto"
           >
             View Full Transcript
           </Link>
         </div>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Left Column (2 cols width): Summary & Key Points */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-6 lg:col-span-2">
             {/* Executive Summary */}
-            <div className="rounded-2xl p-6 bg-[#1C2A2C] border border-white/5">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-[#9CC5A1] mb-3 flex items-center gap-2">
+            <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#9CC5A1] uppercase">
                 <Brain size={16} />
                 Executive Summary
               </h3>
-              <p className="text-sm text-white/80 leading-relaxed font-normal">
+              <p className="text-sm leading-relaxed font-normal text-white/80">
                 {summary?.executive_summary}
               </p>
             </div>
 
             {/* Key Points */}
-            <div className="rounded-2xl p-6 bg-[#1C2A2C] border border-white/5">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-[#9CC5A1] mb-4 flex items-center gap-2">
+            <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#9CC5A1] uppercase">
                 <Sparkles size={16} />
                 Key Discussion Points
               </h3>
               <ul className="space-y-3">
                 {summary?.key_points.map((point, index) => (
-                  <li key={index} className="flex gap-3 text-sm text-white/80 leading-relaxed">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#9CC5A1] mt-2 shrink-0" />
+                  <li key={index} className="flex gap-3 text-sm leading-relaxed text-white/80">
+                    <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#9CC5A1]" />
                     <span>{point}</span>
                   </li>
                 ))}
@@ -213,15 +221,15 @@ export default function SummaryDetailPage({ params }: PageProps) {
             </div>
 
             {/* Decisions Made */}
-            <div className="rounded-2xl p-6 bg-[#1C2A2C] border border-white/5">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-[#BA5A5A] mb-4 flex items-center gap-2">
+            <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#BA5A5A] uppercase">
                 <Flag size={16} />
                 Decisions Made
               </h3>
               <ul className="space-y-3">
                 {summary?.decisions_made.map((decision, index) => (
-                  <li key={index} className="flex gap-3 text-sm text-white/80 leading-relaxed">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#BA5A5A] mt-2 shrink-0" />
+                  <li key={index} className="flex gap-3 text-sm leading-relaxed text-white/80">
+                    <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#BA5A5A]" />
                     <span>{decision}</span>
                   </li>
                 ))}
@@ -232,8 +240,8 @@ export default function SummaryDetailPage({ params }: PageProps) {
           {/* Right Column (1 col width): Action Items & Tags */}
           <div className="space-y-6">
             {/* Action Items */}
-            <div className="rounded-2xl p-6 bg-[#1C2A2C] border border-white/5">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-[#9CC5A1] mb-4 flex items-center gap-2">
+            <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#9CC5A1] uppercase">
                 <ListTodo size={16} />
                 Action Items
               </h3>
@@ -241,28 +249,28 @@ export default function SummaryDetailPage({ params }: PageProps) {
                 {summary?.action_items.map((item, index) => (
                   <div
                     key={index}
-                    className="p-3.5 rounded-xl bg-[#273338] border border-white/5 space-y-2.5 transition-all hover:border-white/10"
+                    className="space-y-2.5 rounded-xl border border-white/5 bg-[#273338] p-3.5 transition-all hover:border-white/10"
                   >
                     <div className="flex gap-2">
                       <input
                         type="checkbox"
                         id={`todo-${index}`}
-                        className="mt-1 rounded border-white/10 text-[#9CC5A1] focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                        className="mt-1 cursor-pointer rounded border-white/10 text-[#9CC5A1] focus:ring-0 focus:ring-offset-0"
                       />
                       <label
                         htmlFor={`todo-${index}`}
-                        className="text-xs text-white/85 leading-snug font-medium cursor-pointer"
+                        className="cursor-pointer text-xs leading-snug font-medium text-white/85"
                       >
                         {item.task}
                       </label>
                     </div>
 
-                    <div className="flex items-center justify-between text-[10px] text-white/40 pl-6">
+                    <div className="flex items-center justify-between pl-6 text-[10px] text-white/40">
                       <span className="flex items-center gap-1">
                         <User size={10} className="text-[#9CC5A1]" />
                         {item.assignee}
                       </span>
-                      <span className="px-2 py-0.5 rounded bg-white/5 font-medium border border-white/5">
+                      <span className="rounded border border-white/5 bg-white/5 px-2 py-0.5 font-medium">
                         {item.deadline}
                       </span>
                     </div>
@@ -272,8 +280,8 @@ export default function SummaryDetailPage({ params }: PageProps) {
             </div>
 
             {/* Discussion Tags */}
-            <div className="rounded-2xl p-6 bg-[#1C2A2C] border border-white/5">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-[#9CC5A1] mb-3 flex items-center gap-2">
+            <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#9CC5A1] uppercase">
                 <Tag size={16} />
                 Discussion Tags
               </h3>
@@ -281,9 +289,10 @@ export default function SummaryDetailPage({ params }: PageProps) {
                 {summary?.discussion_tags.map(tag => (
                   <span
                     key={tag}
-                    className="px-2.5 py-1 text-xs rounded-lg bg-[#273338] text-[#D9D3BC] border border-white/5 font-medium transition-all hover:bg-[#324147] hover:text-[#FBF5DD] cursor-default"
+                    className="cursor-default rounded-lg border border-white/5 bg-[#273338] px-2.5 py-1 text-xs font-medium text-[#D9D3BC] transition-all hover:bg-[#324147] hover:text-[#FBF5DD]"
                   >
-                    #{tag}
+                    #
+                    {tag}
                   </span>
                 ))}
               </div>

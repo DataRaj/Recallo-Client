@@ -1,23 +1,23 @@
 import { apiClient } from '@/libs/api-client';
 
-export interface Word {
+export type Word = {
   word: string;
   start: number;
   end: number;
   confidence: number;
   speaker: number;
   speaker_confidence?: number;
-}
+};
 
-export interface Utterance {
+export type Utterance = {
   speaker: number;
   start: number;
   end: number;
   text: string;
   words: Word[];
-}
+};
 
-export interface TranscriptData {
+export type TranscriptData = {
   id: number;
   room_livekit_name: string;
   recording_id: number;
@@ -29,10 +29,12 @@ export interface TranscriptData {
   model: string;
   language: string;
   created_at: string;
-}
+};
 
 export function groupWordsIntoUtterances(words: Word[]): Utterance[] {
-  if (!words.length) return [];
+  if (!words.length) {
+    return [];
+  }
   const firstWord = words[0]!;
   const utterances: Utterance[] = [];
   let current: Utterance = {
@@ -48,7 +50,7 @@ export function groupWordsIntoUtterances(words: Word[]): Utterance[] {
     if (w.speaker === current.speaker) {
       current.words.push(w);
       current.end = w.end;
-      current.text += ' ' + w.word;
+      current.text += ` ${w.word}`;
     } else {
       utterances.push(current);
       current = { speaker: w.speaker, start: w.start, end: w.end, text: w.word, words: [w] };
@@ -60,7 +62,7 @@ export function groupWordsIntoUtterances(words: Word[]): Utterance[] {
 
 export async function getRoomTranscript(roomName: string): Promise<TranscriptData> {
   const response = await apiClient.get<TranscriptData>(
-    `/api/v1/rooms/${encodeURIComponent(roomName)}/transcript`
+    `/api/v1/rooms/${encodeURIComponent(roomName)}/transcript`,
   );
   return response.data;
 }

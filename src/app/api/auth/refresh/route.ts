@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 /**
  * POST /api/auth/refresh
  *
@@ -9,14 +10,15 @@
  *  - Rotates the httpOnly cookie with the new refresh_token.
  */
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 const GO_API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
 
 /** Safely parse a Response as JSON, returning null on any parse error. */
 async function safeJson(res: Response): Promise<unknown> {
   const text = await res.text();
-  if (!text.trim()) return null;
+  if (!text.trim()) {
+    return null;
+  }
   try {
     return JSON.parse(text) as unknown;
   } catch {

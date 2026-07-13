@@ -10,7 +10,7 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-export interface UserPreferences {
+export type UserPreferences = {
   /** Chat sidebar width (px) */
   chatSidebarWidth: number;
   /** Sidebar open/closed on desktop */
@@ -27,14 +27,14 @@ export interface UserPreferences {
   muteMicOnJoin: boolean;
   /** Camera off by default on room join */
   cameraOffOnJoin: boolean;
-  /** Theme override: 'system' | 'light' | 'dark' | 'oled' (OLED cinema dark) */
-  theme: 'system' | 'light' | 'dark' | 'oled';
-}
+  /** Theme override: 'system' | 'light' | 'dark' (OLED cinema dark) */
+  theme: 'system' | 'light' | 'dark';
+};
 
-interface PreferencesActions {
+type PreferencesActions = {
   set: <K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) => void;
   reset: () => void;
-}
+};
 
 const DEFAULTS: UserPreferences = {
   chatSidebarWidth: 320,
@@ -51,7 +51,7 @@ const DEFAULTS: UserPreferences = {
 export const usePreferencesStore = create<UserPreferences & PreferencesActions>()(
   devtools(
     persist(
-      (set) => ({
+      set => ({
         ...DEFAULTS,
         set: (key, value) => set({ [key]: value }),
         reset: () => set(DEFAULTS),

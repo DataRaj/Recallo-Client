@@ -1,21 +1,22 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import type { TrackReferenceOrPlaceholder } from '@livekit/components-react';
 import {
-  VideoTrack,
-  useTracks,
-  useLocalParticipant,
   isTrackReference,
-  type TrackReferenceOrPlaceholder,
+
+  useLocalParticipant,
+  useTracks,
+  VideoTrack,
 } from '@livekit/components-react';
 import { Track } from 'livekit-client';
-import { Mic, MicOff, Video, VideoOff, Maximize2, PhoneOff } from 'lucide-react';
-import { ROUTES } from '@/lib/routes';
+import { Maximize2, Mic, MicOff, PhoneOff, Video, VideoOff } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { colorFor, initialsFor } from '@/components/meeting/avatar';
-import { useMediaToggles } from '@/hooks/use-media-toggles';
-import { useMeetingPreferencesStore } from '@/stores/use-meeting-preferences-store';
 import { useActiveMeeting } from '@/components/providers/active-meeting-provider';
+import { useMediaToggles } from '@/hooks/use-media-toggles';
+import { ROUTES } from '@/lib/routes';
+import { useMeetingPreferencesStore } from '@/stores/use-meeting-preferences-store';
 
 const PIP_WIDTH = 320;
 const PIP_HEIGHT = 180;
@@ -39,7 +40,12 @@ export function FloatingMeetingOverlay() {
   const { session, leave, returnToRoom } = useActiveMeeting();
   const { localParticipant } = useLocalParticipant();
   const {
-    micEnabled, camEnabled, micBusy, camBusy, toggleMic, toggleCam,
+    micEnabled,
+    camEnabled,
+    micBusy,
+    camBusy,
+    toggleMic,
+    toggleCam,
   } = useMediaToggles();
   const mirror = useMeetingPreferencesStore(s => s.mirrorVideo);
 
@@ -53,7 +59,9 @@ export function FloatingMeetingOverlay() {
 
   // Default to the bottom-right corner once we know the viewport size.
   useEffect(() => {
-    if (pos || typeof window === 'undefined') return;
+    if (pos || typeof window === 'undefined') {
+      return;
+    }
     setPos({
       x: window.innerWidth - PIP_WIDTH - MARGIN,
       y: window.innerHeight - PIP_HEIGHT - MARGIN,
@@ -61,13 +69,17 @@ export function FloatingMeetingOverlay() {
   }, [pos]);
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
-    if (!pos) return;
+    if (!pos) {
+      return;
+    }
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
     dragRef.current = { dx: e.clientX - pos.x, dy: e.clientY - pos.y };
   }, [pos]);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
-    if (!dragRef.current || typeof window === 'undefined') return;
+    if (!dragRef.current || typeof window === 'undefined') {
+      return;
+    }
     const x = Math.min(
       Math.max(MARGIN, e.clientX - dragRef.current.dx),
       window.innerWidth - PIP_WIDTH - MARGIN,
@@ -83,14 +95,18 @@ export function FloatingMeetingOverlay() {
     dragRef.current = null;
   }, []);
 
-  if (!session) return null;
+  if (!session) {
+    return null;
+  }
 
   // Hide while the full-screen meeting for this session is on-screen.
   const path = stripLocale(pathname);
   const roomPath = session.mode === 'webinar'
     ? ROUTES.WEBINAR_DETAIL(session.roomId)
     : ROUTES.MEETING_DETAIL(session.roomId);
-  if (path === roomPath) return null;
+  if (path === roomPath) {
+    return null;
+  }
 
   const featured = pickFeatured(tracks, localParticipant.identity);
   const showVideo = featured && isTrackReference(featured) && !featured.publication.isMuted;
@@ -119,7 +135,7 @@ export function FloatingMeetingOverlay() {
         className="absolute inset-x-0 top-0 z-10 flex cursor-grab items-center gap-2 px-3 py-2 active:cursor-grabbing"
         style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.55), transparent)' }}
       >
-        <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: '#9CC5A1' }} />
+        <span className="size-1.5 shrink-0 rounded-full" style={{ background: '#9CC5A1' }} />
         <span className="truncate text-[11px] font-medium" style={{ color: '#FBF5DD' }}>
           {session.roomMeta.title || 'Meeting'}
         </span>
@@ -130,18 +146,18 @@ export function FloatingMeetingOverlay() {
         ? (
             <VideoTrack
               trackRef={featured}
-              className={`h-full w-full object-cover ${isLocalFeatured && mirror ? '-scale-x-100' : ''}`}
+              className={`size-full object-cover ${isLocalFeatured && mirror ? '-scale-x-100' : ''}`}
             />
           )
         : (
-            <div className="flex h-full w-full items-center justify-center">
+            <div className="flex size-full items-center justify-center">
               <div className="relative flex items-center justify-center">
                 <span
-                  className="absolute h-16 w-16 animate-ping rounded-full opacity-30"
+                  className="absolute size-16 animate-ping rounded-full opacity-30"
                   style={{ background: colorFor(name) }}
                 />
                 <div
-                  className="flex h-12 w-12 items-center justify-center rounded-full text-base font-semibold text-white"
+                  className="flex size-12 items-center justify-center rounded-full text-base font-semibold text-white"
                   style={{ background: colorFor(name) }}
                 >
                   {initialsFor(name)}
@@ -172,14 +188,14 @@ export function FloatingMeetingOverlay() {
   );
 }
 
-interface PipButtonProps {
+type PipButtonProps = {
   label: string;
   active?: boolean;
   busy?: boolean;
   danger?: boolean;
   onClick: () => void;
   children: React.ReactNode;
-}
+};
 
 function PipButton({ label, active, busy, danger, onClick, children }: PipButtonProps) {
   return (
@@ -189,7 +205,7 @@ function PipButton({ label, active, busy, danger, onClick, children }: PipButton
       aria-label={label}
       disabled={busy}
       onClick={onClick}
-      className="flex h-8 w-8 items-center justify-center rounded-full transition-all hover:scale-105 disabled:opacity-50"
+      className="flex size-8 items-center justify-center rounded-full transition-all hover:scale-105 disabled:opacity-50"
       style={{
         background: danger
           ? '#BA5A5A'

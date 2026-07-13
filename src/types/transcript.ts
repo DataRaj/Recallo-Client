@@ -2,7 +2,7 @@
  * Transcript and transcript types
  */
 
-export interface Transcript {
+export type Transcript = {
   id: string;
   meetingId: string;
   title: string;
@@ -14,9 +14,9 @@ export interface Transcript {
   duration: number;
   language: string;
   searchableContent?: string;
-}
+};
 
-export interface TranscriptSegment {
+export type TranscriptSegment = {
   id: string;
   transcriptId: string;
   speakerId: number;
@@ -24,9 +24,9 @@ export interface TranscriptSegment {
   content: string;
   timestamp: number;
   confidence?: number;
-}
+};
 
-export interface Summary {
+export type Summary = {
   id: string;
   meetingId: string;
   transcriptId: string;
@@ -39,4 +39,4 @@ export interface Summary {
   createdAt: Date;
   completedAt?: Date;
   aiProvider: string;
-}
+};

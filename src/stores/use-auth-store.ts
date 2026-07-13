@@ -1,3 +1,4 @@
+import type { AuthState, AuthUser } from '@/types/auth';
 /**
  * Auth store — RAM only, intentionally NOT persisted.
  *
@@ -8,36 +9,35 @@
  */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { AuthUser, AuthState } from '@/types/auth';
 
-interface AuthActions {
-    /** Call after a successful login / register / token refresh. */
-    setAuth: (user: AuthUser | null, accessToken: string) => void;
-    setLoading: (loading: boolean) => void;
-    /** Mark that the initial /me hydration attempt has finished (success or fail). */
-    setHydrated: (hydrated: boolean) => void;
-    /** Clear all auth state (logout). */
-    clearAuth: () => void;
-}
+type AuthActions = {
+  /** Call after a successful login / register / token refresh. */
+  setAuth: (user: AuthUser | null, accessToken: string) => void;
+  setLoading: (loading: boolean) => void;
+  /** Mark that the initial /me hydration attempt has finished (success or fail). */
+  setHydrated: (hydrated: boolean) => void;
+  /** Clear all auth state (logout). */
+  clearAuth: () => void;
+};
 
 const initialState: AuthState = {
-    user: null,
-    accessToken: null,
-    isLoading: false,
-    isHydrated: false,
+  user: null,
+  accessToken: null,
+  isLoading: false,
+  isHydrated: false,
 };
 
 export const useAuthStore = create<AuthState & AuthActions>()(
-    devtools(
-        set => ({
-            ...initialState,
-            setAuth: (user, accessToken) => set({ user, accessToken, isHydrated: true }),
-            setLoading: isLoading => set({ isLoading }),
-            setHydrated: isHydrated => set({ isHydrated }),
-            // Keep isHydrated:true so useCurrentUser does NOT fire a new /refresh
-            // network call immediately after logout — the auth guard will redirect instead.
-            clearAuth: () => set({ ...initialState, isHydrated: true }),
-        }),
-        { name: 'AuthStore' },
-    ),
+  devtools(
+    set => ({
+      ...initialState,
+      setAuth: (user, accessToken) => set({ user, accessToken, isHydrated: true }),
+      setLoading: isLoading => set({ isLoading }),
+      setHydrated: isHydrated => set({ isHydrated }),
+      // Keep isHydrated:true so useCurrentUser does NOT fire a new /refresh
+      // network call immediately after logout — the auth guard will redirect instead.
+      clearAuth: () => set({ ...initialState, isHydrated: true }),
+    }),
+    { name: 'AuthStore' },
+  ),
 );

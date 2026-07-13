@@ -7,13 +7,13 @@
  * chat CSS custom properties so it adapts to the active chat palette.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { X } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-interface EmojiPickerProps {
+type EmojiPickerProps = {
   onSelect: (emoji: string) => void;
   onClose: () => void;
-}
+};
 
 const RECENTS_KEY = 'recallo-emoji-recents';
 const MAX_RECENTS = 24;
@@ -59,13 +59,18 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
     try {
       const raw = localStorage.getItem(RECENTS_KEY);
       const parsed = raw ? (JSON.parse(raw) as unknown) : [];
-      if (Array.isArray(parsed)) setRecents(parsed.filter((e): e is string => typeof e === 'string'));
-    }
-    catch { /* ignore */ }
+      if (Array.isArray(parsed)) {
+        setRecents(parsed.filter((e): e is string => typeof e === 'string'));
+      }
+    } catch { /* ignore */ }
   }, []);
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
@@ -75,15 +80,16 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
   const handlePick = useCallback((emoji: string) => {
     onSelect(emoji);
     setRecents((prev) => {
-      const next = [emoji, ...prev.filter((e) => e !== emoji)].slice(0, MAX_RECENTS);
-      try { localStorage.setItem(RECENTS_KEY, JSON.stringify(next)); }
-      catch { /* ignore */ }
+      const next = [emoji, ...prev.filter(e => e !== emoji)].slice(0, MAX_RECENTS);
+      try {
+        localStorage.setItem(RECENTS_KEY, JSON.stringify(next));
+      } catch { /* ignore */ }
       return next;
     });
   }, [onSelect]);
 
   const activeEmojis = useMemo(
-    () => CATEGORIES.find((c) => c.id === active)?.emojis ?? [],
+    () => CATEGORIES.find(c => c.id === active)?.emojis ?? [],
     [active],
   );
 
@@ -115,10 +121,10 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
       </div>
 
       {/* Grid */}
-      <div className="flex-1 overflow-y-auto px-2 py-2">
+      <div className="flex-1 overflow-y-auto p-2">
         {recents.length > 0 && (
           <>
-            <p className="px-1 pb-1 text-[9px] font-semibold uppercase tracking-wide" style={{ color: 'var(--color-chat-text-2)' }}>
+            <p className="px-1 pb-1 text-[9px] font-semibold tracking-wide uppercase" style={{ color: 'var(--color-chat-text-2)' }}>
               Recent
             </p>
             <div className="mb-2 grid grid-cols-8 gap-0.5">
@@ -137,10 +143,10 @@ export function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
 
       {/* Category tabs */}
       <div
-        className="flex shrink-0 items-center justify-around px-1 py-1"
+        className="flex shrink-0 items-center justify-around p-1"
         style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
       >
-        {CATEGORIES.map((cat) => (
+        {CATEGORIES.map(cat => (
           <button
             key={cat.id}
             onClick={() => setActive(cat.id)}
@@ -161,7 +167,7 @@ function EmojiButton({ emoji, onClick }: { emoji: string; onClick: () => void })
     <button
       type="button"
       onClick={onClick}
-      className="flex h-8 w-8 items-center justify-center rounded-[8px] text-lg transition-all hover:scale-110 hover:bg-white/10"
+      className="flex size-8 items-center justify-center rounded-[8px] text-lg transition-all hover:scale-110 hover:bg-white/10"
     >
       {emoji}
     </button>

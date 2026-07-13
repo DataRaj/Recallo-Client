@@ -1,46 +1,51 @@
 'use client';
 
-import { ReactNode, useEffect, useState, useCallback } from 'react';
+import type { ReactNode } from 'react';
+import type { Conversation } from '@/types/chat';
+import { Loader2, Plus, Search, User, Wifi, WifiOff } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { Search, Plus, User, Loader2, Wifi, WifiOff } from 'lucide-react';
-import { ROUTES } from '@/lib/routes';
+import { useCallback, useEffect, useState } from 'react';
 
-import { useWsStore } from '@/stores/use-ws-store';
-import { getConversations } from '@/services/chat-service';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import { NewConversationModal } from '@/components/chat/new-conversation-modal';
 import { ChatThemePicker } from '@/components/chat/chat-theme-picker';
-import type { Conversation } from '@/types/chat';
+import { NewConversationModal } from '@/components/chat/new-conversation-modal';
+import { useCurrentUser } from '@/hooks/use-current-user';
+import { ROUTES } from '@/lib/routes';
+import { getConversations } from '@/services/chat-service';
+import { useWsStore } from '@/stores/use-ws-store';
 
 function formatTime(d: Date | string | undefined): string {
-  if (!d) return '';
+  if (!d) {
+    return '';
+  }
   const date = d instanceof Date ? d : new Date(d);
   return date.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' });
 }
 
 function ConversationName(convo: Conversation, currentUserId: number): string {
-  if (convo.name) return convo.name;
-  const other = convo.participants.find((p) => p.id !== currentUserId);
+  if (convo.name) {
+    return convo.name;
+  }
+  const other = convo.participants.find(p => p.id !== currentUserId);
   return other?.name ?? `Conversation ${convo.id}`;
 }
 
 function ConversationAvatar({ name, online }: { name: string; online: boolean }) {
-  const initials = name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   return (
     <div className="relative shrink-0">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-chat-bubble)] text-sm font-semibold text-[var(--color-chat-text)]">
+      <div className="flex size-10 items-center justify-center rounded-full bg-[var(--color-chat-bubble)] text-sm font-semibold text-[var(--color-chat-text)]">
         {initials || <User size={16} />}
       </div>
       {online && (
-        <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[var(--color-chat-bg)] bg-[var(--color-chat-accent)]" />
+        <div className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-[var(--color-chat-bg)] bg-[var(--color-chat-accent)]" />
       )}
     </div>
   );
 }
 
 function ConnectionBadge() {
-  const state = useWsStore((s) => s.connectionState);
+  const state = useWsStore(s => s.connectionState);
   if (state === 'open') {
     return (
       <div className="flex items-center gap-1" title="Live — connected">
@@ -74,7 +79,7 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
 
-  const onlineUserIds = useWsStore((s) => s.onlineUserIds);
+  const onlineUserIds = useWsStore(s => s.onlineUserIds);
 
   const load = useCallback(async () => {
     try {
@@ -87,10 +92,12 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   // Refresh sidebar list when new messages arrive so last-message preview updates.
-  const messagesByConversation = useWsStore((s) => s.messagesByConversation);
+  const messagesByConversation = useWsStore(s => s.messagesByConversation);
   useEffect(() => {
     void load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,7 +109,7 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
   });
 
   return (
-    <div className="flex h-[calc(100vh-60px)] bg-[var(--color-chat-bg)] text-[var(--color-chat-text)] font-sans lg:h-screen">
+    <div className="flex h-[calc(100vh-60px)] bg-[var(--color-chat-bg)] font-sans text-[var(--color-chat-text)] lg:h-screen">
       {/* Sidebar */}
       <div className="flex w-80 shrink-0 flex-col border-r border-white/10 bg-[var(--color-chat-bg)]">
         {/* Header */}
@@ -127,13 +134,13 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
         {/* Search */}
         <div className="px-4 py-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-chat-text-2)]" />
+            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-[var(--color-chat-text-2)]" />
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={e => setSearch(e.target.value)}
               placeholder="Search…"
-              className="w-full rounded-lg bg-[var(--color-chat-surface)] py-2 pl-9 pr-4 text-sm text-[var(--color-chat-text)] placeholder-[var(--color-chat-text-2)]/60 transition-all focus:outline-none focus:ring-1 focus:ring-[var(--color-chat-accent)]"
+              className="w-full rounded-lg bg-[var(--color-chat-surface)] py-2 pr-4 pl-9 text-sm text-[var(--color-chat-text)] placeholder-[var(--color-chat-text-2)]/60 transition-all focus:ring-1 focus:ring-[var(--color-chat-accent)] focus:outline-none"
             />
           </div>
         </div>
@@ -152,7 +159,7 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
           )}
           {!loadingConvos && filtered.map((conv) => {
             const name = user ? ConversationName(conv, user.id) : `#${conv.id}`;
-            const otherParticipant = conv.participants.find((p) => p.id !== user?.id);
+            const otherParticipant = conv.participants.find(p => p.id !== user?.id);
             const isOnline = otherParticipant ? onlineUserIds.has(otherParticipant.id) : false;
             const lastMsgText = conv.lastMessage?.content ?? 'No messages yet';
             const lastAt = conv.lastMessageAt ? formatTime(conv.lastMessageAt) : '';

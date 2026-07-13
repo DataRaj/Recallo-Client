@@ -1,4 +1,5 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios';
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
 
 /**
  * Reusable API client instance
@@ -25,7 +26,7 @@ apiClient.interceptors.request.use(
     // }
     return config;
   },
-  (error) => {
+  async (error) => {
     return Promise.reject(error);
   },
 );
@@ -38,7 +39,7 @@ apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  (error) => {
+  async (error) => {
     // Handle errors globally
     // if (error.response?.status === 401) {
     //   // Handle unauthorized
@@ -54,19 +55,18 @@ apiClient.interceptors.response.use(
  * Type-safe API client methods
  */
 export const api = {
-  get: <T = unknown>(url: string, config?: AxiosRequestConfig) =>
-    apiClient.get<T>(url, config).then((response) => response.data),
+  get: async <T = unknown>(url: string, config?: AxiosRequestConfig) =>
+    apiClient.get<T>(url, config).then(response => response.data),
 
-  post: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
-    apiClient.post<T>(url, data, config).then((response) => response.data),
+  post: async <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
+    apiClient.post<T>(url, data, config).then(response => response.data),
 
-  put: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
-    apiClient.put<T>(url, data, config).then((response) => response.data),
+  put: async <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
+    apiClient.put<T>(url, data, config).then(response => response.data),
 
-  patch: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
-    apiClient.patch<T>(url, data, config).then((response) => response.data),
+  patch: async <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
+    apiClient.patch<T>(url, data, config).then(response => response.data),
 
-  delete: <T = unknown>(url: string, config?: AxiosRequestConfig) =>
-    apiClient.delete<T>(url, config).then((response) => response.data),
+  delete: async <T = unknown>(url: string, config?: AxiosRequestConfig) =>
+    apiClient.delete<T>(url, config).then(response => response.data),
 };
-

@@ -17,7 +17,7 @@ export type LayoutMode = 'grid' | 'focus' | 'speaker';
 export type BackgroundEffect = 'none' | 'blur' | 'virtual';
 export type DefaultSidebarTab = 'none' | 'chat' | 'people';
 
-export interface MeetingPreferences {
+export type MeetingPreferences = {
   /** Preferred microphone device ID (empty = system default). */
   selectedAudioInputId: string;
   /** Preferred speaker/output device ID (empty = system default). */
@@ -36,12 +36,12 @@ export interface MeetingPreferences {
   backgroundEffect: BackgroundEffect;
   /** Sidebar tab to open automatically on join. */
   defaultSidebarTab: DefaultSidebarTab;
-}
+};
 
-interface MeetingPreferencesActions {
+type MeetingPreferencesActions = {
   set: <K extends keyof MeetingPreferences>(key: K, value: MeetingPreferences[K]) => void;
   reset: () => void;
-}
+};
 
 const DEFAULTS: MeetingPreferences = {
   selectedAudioInputId: '',

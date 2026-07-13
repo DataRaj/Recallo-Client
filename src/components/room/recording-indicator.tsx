@@ -3,13 +3,15 @@
  */
 'use client';
 
-export interface RecordingIndicatorProps {
+export type RecordingIndicatorProps = {
   isRecording: boolean;
   recordingTime?: number;
-}
+};
 
 export function RecordingIndicator({ isRecording, recordingTime = 0 }: RecordingIndicatorProps) {
-  if (!isRecording) return null;
+  if (!isRecording) {
+    return null;
+  }
 
   const formatTime = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600);
@@ -19,10 +21,12 @@ export function RecordingIndicator({ isRecording, recordingTime = 0 }: Recording
   };
 
   return (
-    <div className="fixed top-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-[8px] animate-pulse" style={{ background: '#BA5A5A' }}>
-      <div className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
+    <div className="fixed top-6 right-6 z-50 flex animate-pulse items-center gap-2 rounded-[8px] px-4 py-2.5" style={{ background: '#BA5A5A' }}>
+      <div className="size-2.5 animate-pulse rounded-full bg-white" />
       <span className="text-sm font-semibold text-white">
-        Recording {recordingTime > 0 ? formatTime(recordingTime) : 'started'}
+        Recording
+        {' '}
+        {recordingTime > 0 ? formatTime(recordingTime) : 'started'}
       </span>
     </div>
   );

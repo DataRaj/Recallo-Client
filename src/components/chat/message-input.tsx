@@ -13,32 +13,46 @@
  *  - Typing indicator emit + active-typing pulse glow
  */
 
-import {
-  useState, useRef, useCallback, useEffect, KeyboardEvent, ChangeEvent,
-} from 'react';
-import {
-  Send, Smile, Paperclip, X, Bold, Italic, Code, List, Film, File as FileIcon, UploadCloud,
-} from 'lucide-react';
-import { GifPicker } from '@/components/chat/gif-picker';
-import { EmojiPicker } from '@/components/chat/emoji-picker';
-import { prepareFileUpload } from '@/services/chat-service';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import type { GifResult } from '@/services/chat-service';
+import {
+  Bold,
+  Code,
+  File as FileIcon,
+  Film,
+  Italic,
+  List,
+  Paperclip,
+  Send,
+  Smile,
+  UploadCloud,
+  X,
+} from 'lucide-react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { EmojiPicker } from '@/components/chat/emoji-picker';
+import { GifPicker } from '@/components/chat/gif-picker';
+import { prepareFileUpload } from '@/services/chat-service';
 
-interface PendingFile {
+type PendingFile = {
   name: string;
   size: number;
   mime: string;
   base64: string;
   previewUrl?: string;
-}
+};
 
-interface ChatMessageInputProps {
+type ChatMessageInputProps = {
   disabled?: boolean;
   onSendText: (text: string) => void;
   onSendGif: (gif: GifResult) => void;
   onSendFile: (file: PendingFile) => void;
   onTyping?: (isTyping: boolean) => void;
-}
+};
 
 export type { PendingFile };
 
@@ -84,7 +98,9 @@ export function ChatMessageInput({
     setText(e.target.value);
     autoGrow(e.target);
     emitTyping(true);
-    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
     typingTimeoutRef.current = setTimeout(() => emitTyping(false), 2500);
   }, [emitTyping, autoGrow]);
 
@@ -92,7 +108,9 @@ export function ChatMessageInput({
 
   const addFiles = useCallback(async (files: FileList | File[]) => {
     const list = Array.from(files);
-    if (list.length === 0) return;
+    if (list.length === 0) {
+      return;
+    }
     setFileError(null);
 
     for (const file of list) {
@@ -104,22 +122,25 @@ export function ChatMessageInput({
         const prepared = await prepareFileUpload(file);
         const previewUrl = file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined;
         setPendingFiles(prev => [...prev, { ...prepared, previewUrl }]);
-      }
-      catch {
+      } catch {
         setFileError(`Could not read ${file.name}`);
       }
     }
   }, []);
 
   const handleFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) void addFiles(e.target.files);
+    if (e.target.files) {
+      void addFiles(e.target.files);
+    }
     e.target.value = '';
   }, [addFiles]);
 
   const removeFile = useCallback((index: number) => {
-    setPendingFiles(prev => {
+    setPendingFiles((prev) => {
       const target = prev[index];
-      if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl);
+      if (target?.previewUrl) {
+        URL.revokeObjectURL(target.previewUrl);
+      }
       return prev.filter((_, i) => i !== index);
     });
   }, []);
@@ -131,22 +152,36 @@ export function ChatMessageInput({
     const hasFiles = (e: DragEvent) => Array.from(e.dataTransfer?.types ?? []).includes('Files');
 
     const onDragEnter = (e: DragEvent) => {
-      if (!hasFiles(e)) return;
+      if (!hasFiles(e)) {
+        return;
+      }
       depth += 1;
       setIsDragging(true);
     };
-    const onDragOver = (e: DragEvent) => { if (hasFiles(e)) e.preventDefault(); };
+    const onDragOver = (e: DragEvent) => {
+      if (hasFiles(e)) {
+        e.preventDefault();
+      }
+    };
     const onDragLeave = (e: DragEvent) => {
-      if (!hasFiles(e)) return;
+      if (!hasFiles(e)) {
+        return;
+      }
       depth = Math.max(0, depth - 1);
-      if (depth === 0) setIsDragging(false);
+      if (depth === 0) {
+        setIsDragging(false);
+      }
     };
     const onDrop = (e: DragEvent) => {
-      if (!hasFiles(e)) return;
+      if (!hasFiles(e)) {
+        return;
+      }
       e.preventDefault();
       depth = 0;
       setIsDragging(false);
-      if (e.dataTransfer?.files) void addFiles(e.dataTransfer.files);
+      if (e.dataTransfer?.files) {
+        void addFiles(e.dataTransfer.files);
+      }
     };
 
     window.addEventListener('dragenter', onDragEnter);
@@ -163,8 +198,14 @@ export function ChatMessageInput({
 
   // Revoke any object URLs still around on unmount.
   useEffect(() => () => {
-    pendingFiles.forEach(f => { if (f.previewUrl) URL.revokeObjectURL(f.previewUrl); });
-    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    pendingFiles.forEach((f) => {
+      if (f.previewUrl) {
+        URL.revokeObjectURL(f.previewUrl);
+      }
+    });
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -173,20 +214,32 @@ export function ChatMessageInput({
   const canSend = !disabled && (text.trim().length > 0 || pendingFiles.length > 0);
 
   const handleSend = useCallback(() => {
-    if (disabled) return;
+    if (disabled) {
+      return;
+    }
     const trimmed = text.trim();
-    if (!trimmed && pendingFiles.length === 0) return;
+    if (!trimmed && pendingFiles.length === 0) {
+      return;
+    }
 
-    if (trimmed) onSendText(trimmed);
-    pendingFiles.forEach(file => {
+    if (trimmed) {
+      onSendText(trimmed);
+    }
+    pendingFiles.forEach((file) => {
       onSendFile(file);
-      if (file.previewUrl) URL.revokeObjectURL(file.previewUrl);
+      if (file.previewUrl) {
+        URL.revokeObjectURL(file.previewUrl);
+      }
     });
 
     setText('');
     setPendingFiles([]);
-    if (textareaRef.current) textareaRef.current.style.height = 'auto';
-    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
     emitTyping(false);
   }, [disabled, text, pendingFiles, onSendText, onSendFile, emitTyping]);
 
@@ -201,7 +254,9 @@ export function ChatMessageInput({
 
   const applyWrap = useCallback((token: string) => {
     const el = textareaRef.current;
-    if (!el) return;
+    if (!el) {
+      return;
+    }
     const { selectionStart: s, selectionEnd: e, value } = el;
     const selected = value.slice(s, e) || 'text';
     const next = `${value.slice(0, s)}${token}${selected}${token}${value.slice(e)}`;
@@ -215,7 +270,9 @@ export function ChatMessageInput({
 
   const applyList = useCallback(() => {
     const el = textareaRef.current;
-    if (!el) return;
+    if (!el) {
+      return;
+    }
     const { selectionStart: s, value } = el;
     const lineStart = value.lastIndexOf('\n', s - 1) + 1;
     const next = `${value.slice(0, lineStart)}- ${value.slice(lineStart)}`;
@@ -247,7 +304,9 @@ export function ChatMessageInput({
 
   const handleGifSelect = useCallback((gif: GifResult) => {
     setPopover('none');
-    if (!disabled) onSendGif(gif);
+    if (!disabled) {
+      onSendGif(gif);
+    }
   }, [disabled, onSendGif]);
 
   const handleEmojiSelect = useCallback((emoji: string) => {
@@ -293,10 +352,10 @@ export function ChatMessageInput({
             >
               {file.previewUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={file.previewUrl} alt={file.name} className="h-10 w-10 shrink-0 rounded-lg object-cover" />
+                <img src={file.previewUrl} alt={file.name} className="size-10 shrink-0 rounded-lg object-cover" />
               ) : (
                 <div
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+                  className="flex size-10 shrink-0 items-center justify-center rounded-lg"
                   style={{ background: 'var(--color-chat-surface)', color: 'var(--color-chat-accent)' }}
                 >
                   <FileIcon size={16} />
@@ -304,11 +363,15 @@ export function ChatMessageInput({
               )}
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[11px] font-medium" style={{ color: 'var(--color-chat-text)' }}>{file.name}</p>
-                <p className="text-[9px]" style={{ color: 'var(--color-chat-text-2)' }}>{(file.size / 1024).toFixed(0)} KB</p>
+                <p className="text-[9px]" style={{ color: 'var(--color-chat-text-2)' }}>
+                  {(file.size / 1024).toFixed(0)}
+                  {' '}
+                  KB
+                </p>
               </div>
               <button
                 onClick={() => removeFile(i)}
-                className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full text-white shadow"
+                className="absolute -top-1.5 -right-1.5 flex size-4 items-center justify-center rounded-full text-white shadow"
                 style={{ background: 'var(--color-danger)' }}
                 aria-label={`Remove ${file.name}`}
               >
@@ -325,7 +388,7 @@ export function ChatMessageInput({
 
       {/* Input dock */}
       <div
-        className={`flex flex-col gap-1.5 rounded-[16px] px-2.5 pb-2 pt-1.5 ${isTyping ? 'animate-input-pulse' : ''}`}
+        className={`flex flex-col gap-1.5 rounded-[16px] px-2.5 pt-1.5 pb-2 ${isTyping ? 'animate-input-pulse' : ''}`}
         style={{
           background: 'var(--color-chat-surface)',
           border: '1px solid var(--color-border)',
@@ -386,7 +449,7 @@ export function ChatMessageInput({
             type="button"
             onClick={handleSend}
             disabled={!canSend}
-            className={`mb-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all duration-200 disabled:opacity-40 ${canSend ? 'scale-100 animate-send-glow' : 'scale-90'}`}
+            className={`mb-0.5 flex size-9 shrink-0 items-center justify-center rounded-full transition-all duration-200 disabled:opacity-40 ${canSend ? 'animate-send-glow scale-100' : 'scale-90'}`}
             style={{
               background: canSend ? 'var(--color-chat-accent)' : 'rgba(255,255,255,0.06)',
               color: canSend ? '#12181B' : 'var(--color-chat-text-2)',

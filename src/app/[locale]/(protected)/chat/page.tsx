@@ -4,9 +4,9 @@ import { MessageSquare } from 'lucide-react';
 
 export default function ChatIndexPage() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-3 h-full">
+    <div className="flex h-full flex-1 flex-col items-center justify-center gap-3">
       <div
-        className="flex h-14 w-14 items-center justify-center rounded-2xl"
+        className="flex size-14 items-center justify-center rounded-2xl"
         style={{ background: 'rgba(156,197,161,0.1)' }}
       >
         <MessageSquare size={28} style={{ color: '#9CC5A1' }} />

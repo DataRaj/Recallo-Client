@@ -4,14 +4,14 @@
  */
 'use client';
 
-import { Video, Mic, FileText, Plus, ArrowRight, Zap, MessageSquare } from 'lucide-react';
+import type { RecentRoom } from '@/utils/recent-rooms';
+import { ArrowRight, FileText, MessageSquare, Mic, Plus, Video, Zap } from 'lucide-react';
+import Link from 'next/link';
+import { ProtectedRoute } from '@/components/protected-route';
+import { useModal } from '@/components/providers/modal-provider';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { useRecentRooms } from '@/hooks/use-recent-rooms';
-import { useModal } from '@/components/providers/modal-provider';
-import { ProtectedRoute } from '@/components/protected-route';
 import { ROUTES } from '@/lib/routes';
-import type { RecentRoom } from '@/utils/recent-rooms';
-import Link from 'next/link';
 
 // Transcripts/summaries have no list endpoint yet — kept empty until one exists.
 const RECENT_TRANSCRIPTS: unknown[] = [];
@@ -20,10 +20,16 @@ const AI_SUMMARIES: unknown[] = [];
 function relativeTime(ms: number): string {
   const diff = Date.now() - ms;
   const mins = Math.round(diff / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) {
+    return 'just now';
+  }
+  if (mins < 60) {
+    return `${mins}m ago`;
+  }
   const hours = Math.round(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) {
+    return `${hours}h ago`;
+  }
   const days = Math.round(hours / 24);
   return days === 1 ? 'yesterday' : `${days}d ago`;
 }
@@ -47,12 +53,12 @@ function DashboardSection({
 }) {
   return (
     <div
-      className="rounded-[12px] overflow-hidden"
+      className="overflow-hidden rounded-[12px]"
       style={{ background: '#324147' }}
     >
       {/* Header */}
       <div
-        className="px-6 py-4 flex items-center justify-between border-b"
+        className="flex items-center justify-between border-b px-6 py-4"
         style={{ borderColor: 'rgba(255,255,255,0.06)' }}
       >
         <div className="flex items-center gap-2">
@@ -66,7 +72,7 @@ function DashboardSection({
         {viewAllLink && items.length > 0 && (
           <Link
             href={viewAllLink}
-            className="text-sm font-medium flex items-center gap-1 hover:opacity-80 transition-all"
+            className="flex items-center gap-1 text-sm font-medium transition-all hover:opacity-80"
             style={{ color: '#9CC5A1' }}
           >
             View All
@@ -77,19 +83,21 @@ function DashboardSection({
 
       {/* Content */}
       <div className="divide-y" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-        {isEmpty ? (
-          <div className="px-6 py-12 text-center">
-            <p className="text-sm" style={{ color: 'rgba(251,245,221,0.4)' }}>
-              {emptyMessage}
-            </p>
-          </div>
-        ) : (
-          items.map((item, idx) => (
-            <div key={idx} className="px-6 py-4">
-              {renderItem?.(item) ?? <p style={{ color: '#FBF5DD' }}>Item</p>}
-            </div>
-          ))
-        )}
+        {isEmpty
+          ? (
+              <div className="px-6 py-12 text-center">
+                <p className="text-sm" style={{ color: 'rgba(251,245,221,0.4)' }}>
+                  {emptyMessage}
+                </p>
+              </div>
+            )
+          : (
+              items.map((item, idx) => (
+                <div key={idx} className="px-6 py-4">
+                  {renderItem?.(item) ?? <p style={{ color: '#FBF5DD' }}>Item</p>}
+                </div>
+              ))
+            )}
       </div>
     </div>
   );
@@ -109,7 +117,7 @@ function QuickActionCard({
   return (
     <button
       onClick={onClick}
-      className="p-4 rounded-[12px] text-left transition-all duration-200 border hover:border-opacity-50 active:scale-95"
+      className="hover:border-opacity-50 rounded-[12px] border p-4 text-left transition-all duration-200 active:scale-95"
       style={{
         borderColor: 'rgba(255,255,255,0.06)',
         background: '#3C4C52',
@@ -118,7 +126,7 @@ function QuickActionCard({
       <div style={{ color: '#BA5A5A', marginBottom: '0.5rem' }}>
         <Icon size={24} />
       </div>
-      <h4 className="font-semibold mb-1 text-sm" style={{ color: '#FBF5DD' }}>
+      <h4 className="mb-1 text-sm font-semibold" style={{ color: '#FBF5DD' }}>
         {label}
       </h4>
       <p className="text-xs" style={{ color: 'rgba(251,245,221,0.5)' }}>
@@ -133,18 +141,21 @@ function RecentRoomRow({ room }: { room: RecentRoom }) {
     ? ROUTES.WEBINAR_DETAIL(room.id)
     : ROUTES.MEETING_DETAIL(room.id);
   return (
-    <Link href={href} className="flex items-center justify-between gap-3 group">
+    <Link href={href} className="group flex items-center justify-between gap-3">
       <div className="min-w-0">
-        <p className="text-sm font-medium truncate" style={{ color: '#FBF5DD' }}>
+        <p className="truncate text-sm font-medium" style={{ color: '#FBF5DD' }}>
           {room.title || `Room ${room.id}`}
         </p>
         <p className="text-xs" style={{ color: 'rgba(251,245,221,0.4)' }}>
-          {room.role === 'host' ? 'Hosted' : 'Joined'} · {relativeTime(room.at)}
+          {room.role === 'host' ? 'Hosted' : 'Joined'}
+          {' '}
+          ·
+          {relativeTime(room.at)}
         </p>
       </div>
       <ArrowRight
         size={14}
-        className="shrink-0 opacity-50 transition-all group-hover:opacity-100 group-hover:translate-x-0.5"
+        className="shrink-0 opacity-50 transition-all group-hover:translate-x-0.5 group-hover:opacity-100"
         style={{ color: '#9CC5A1' }}
       />
     </Link>
@@ -167,14 +178,17 @@ export default function HomePage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen p-8" style={{ background: '#E6F2DD' }}>
-        <div className="max-w-7xl mx-auto space-y-8">
+        <div className="mx-auto max-w-7xl space-y-8">
           {/* Header */}
           <div>
             <h1
-              className="text-4xl font-bold mb-2"
+              className="mb-2 text-4xl font-bold"
               style={{ color: '#273338' }}
             >
-              {greeting}, {userName}! 👋
+              {greeting}
+              ,
+              {userName}
+              ! 👋
             </h1>
             <p style={{ color: 'rgba(39,51,56,0.6)' }}>
               Welcome back to Recallo
@@ -184,12 +198,12 @@ export default function HomePage() {
           {/* Quick Actions */}
           <div>
             <h2
-              className="text-lg font-semibold mb-4"
+              className="mb-4 text-lg font-semibold"
               style={{ color: '#273338' }}
             >
               Quick Actions
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <QuickActionCard
                 icon={Video}
                 label="Create Room"
@@ -220,7 +234,7 @@ export default function HomePage() {
           </div>
 
           {/* Content Sections */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Recent Meetings */}
             <DashboardSection
               title="Recent Meetings"
@@ -245,7 +259,7 @@ export default function HomePage() {
           </div>
 
           {/* Additional Sections */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Recent Transcripts */}
             <DashboardSection
               title="Recent Transcripts"

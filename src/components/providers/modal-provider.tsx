@@ -1,58 +1,59 @@
 /**
  * Modal context and provider for managing modals globally
  */
-'use client';
+"use client";
 
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import type { ReactNode } from "react";
+import { createContext, use, useCallback, useState } from "react";
 
-export type ModalType = 'create-room' | 'join-room' | 'none';
+import { CreateRoomModal } from "@/components/modals/create-room-modal";
+import { JoinRoomModal } from "@/components/modals/join-room-modal";
 
-interface ModalContextType {
+export type ModalType = "create-room" | "join-room" | "none";
+
+type ModalContextType = {
   activeModal: ModalType;
   openModal: (type: ModalType) => void;
   closeModal: () => void;
-}
+};
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export function ModalProvider({ children }: { children: ReactNode }) {
-  const [activeModal, setActiveModal] = useState<ModalType>('none');
+  const [activeModal, setActiveModal] = useState<ModalType>("none");
 
   const openModal = useCallback((type: ModalType) => {
     setActiveModal(type);
   }, []);
 
   const closeModal = useCallback(() => {
-    setActiveModal('none');
+    setActiveModal("none");
   }, []);
 
   return (
-    <ModalContext.Provider value={{ activeModal, openModal, closeModal }}>
+    <ModalContext value={{ activeModal, openModal, closeModal }}>
       {children}
-    </ModalContext.Provider>
+    </ModalContext>
   );
 }
 
-import { CreateRoomModal } from '@/components/modals/create-room-modal';
-import { JoinRoomModal } from '@/components/modals/join-room-modal';
-
 export function useModal() {
-  const context = useContext(ModalContext);
+  const context = use(ModalContext);
   if (!context) {
-    throw new Error('useModal must be used within ModalProvider');
+    throw new Error("useModal must be used within ModalProvider");
   }
   return context;
 }
 
 export function GlobalModals() {
   const { activeModal, closeModal } = useModal();
-  
+
   return (
     <>
-      {activeModal === 'create-room' && (
+      {activeModal === "create-room" && (
         <CreateRoomModal isOpen={true} onClose={closeModal} />
       )}
-      {activeModal === 'join-room' && (
+      {activeModal === "join-room" && (
         <JoinRoomModal isOpen={true} onClose={closeModal} />
       )}
     </>

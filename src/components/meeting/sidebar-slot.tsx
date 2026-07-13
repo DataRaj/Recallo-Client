@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useMeetingStore } from '@/stores/use-meeting-store';
 import { ChatSidebar } from '@/components/meeting/chat-sidebar';
 import { PeopleSidebar } from '@/components/meeting/people-sidebar';
+import { useMeetingStore } from '@/stores/use-meeting-store';
 
 /**
  * Right-edge sidebar overlay that slides in/out with the chat/people toggle.
@@ -18,7 +18,9 @@ export function SidebarSlot() {
 
   const [shown, setShown] = useState<'chat' | 'people'>('chat');
   useEffect(() => {
-    if (sidebar !== 'none') setShown(sidebar);
+    if (sidebar !== 'none') {
+      setShown(sidebar);
+    }
   }, [sidebar]);
 
   return (

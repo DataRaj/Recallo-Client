@@ -4,22 +4,22 @@
  */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Bell, FileText, Home, LogOut, Menu, MessageSquare, Mic, Plus, Settings, Video, X, Zap } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Video, Mic, MessageSquare, FileText, Zap, Settings, Plus, LogOut, Menu, X, Bell } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ProtectedRoute } from '@/components/protected-route';
+import { GlobalModals, ModalProvider, useModal } from '@/components/providers/modal-provider';
+import { WsProvider } from '@/components/providers/ws-provider';
 import { useAuth } from '@/hooks/use-auth';
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { ProtectedRoute } from '@/components/protected-route';
-import { ModalProvider, GlobalModals, useModal } from '@/components/providers/modal-provider';
-import { WsProvider } from '@/components/providers/ws-provider';
 import { ROUTES } from '@/lib/routes';
-import Link from 'next/link';
 
-interface NavItem {
+type NavItem = {
   label: string;
   icon: React.ComponentType<{ size: number }>;
   href: string;
-}
+};
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Home', icon: Home, href: ROUTES.HOME },
@@ -36,9 +36,15 @@ type Feature = 'dashboard' | 'meeting' | 'chat' | 'archive';
 /** Map the active pathname (locale-stripped) to a feature theme atmosphere. */
 function featureForPath(pathname: string): Feature {
   const path = pathname.replace(/^\/[a-z]{2}(-[a-z]{2})?(?=\/|$)/i, '') || '/';
-  if (path.startsWith('/chat')) return 'chat';
-  if (path.startsWith('/meetings') || path.startsWith('/webinars')) return 'meeting';
-  if (path.startsWith('/transcripts') || path.startsWith('/summaries')) return 'archive';
+  if (path.startsWith('/chat')) {
+    return 'chat';
+  }
+  if (path.startsWith('/meetings') || path.startsWith('/webinars')) {
+    return 'meeting';
+  }
+  if (path.startsWith('/transcripts') || path.startsWith('/summaries')) {
+    return 'archive';
+  }
   return 'dashboard';
 }
 
@@ -46,7 +52,7 @@ function SidebarNavItem({ label, icon: Icon, href, isActive }: NavItem & { isAct
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 w-full px-3 py-2.5 rounded-[10px] text-[13px] font-medium transition-all duration-150 text-left cursor-pointer"
+      className="flex w-full cursor-pointer items-center gap-3 rounded-[10px] px-3 py-2.5 text-left text-[13px] font-medium transition-all duration-150"
       style={{
         background: isActive ? 'rgba(251,245,221,0.1)' : 'transparent',
         color: isActive ? '#FBF5DD' : 'rgba(251,245,221,0.5)',
@@ -67,7 +73,9 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isSidebarOpen) setIsSidebarOpen(false);
+      if (e.key === 'Escape' && isSidebarOpen) {
+        setIsSidebarOpen(false);
+      }
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
@@ -82,138 +90,138 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-dvh flex" style={{ background: 'var(--color-bg)' }}>
-          {/* Sidebar */}
-          <aside
-            className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-40 w-60 flex flex-col shrink-0 transition-transform duration-300 lg:translate-x-0`}
-            style={{ background: '#273338' }}
+    <div className="flex min-h-dvh" style={{ background: 'var(--color-bg)' }}>
+      {/* Sidebar */}
+      <aside
+        className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-40 flex w-60 shrink-0 flex-col transition-transform duration-300 lg:translate-x-0`}
+        style={{ background: '#273338' }}
+      >
+        {/* Logo */}
+        <div
+          className="flex shrink-0 items-center gap-2.5 px-5 py-[18px]"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          <div
+            className="flex size-7 shrink-0 items-center justify-center rounded-[9px] text-xs font-semibold text-white"
+            style={{ background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)' }}
           >
-            {/* Logo */}
-            <div
-              className="flex items-center gap-2.5 px-5 py-[18px] shrink-0"
-              style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-            >
-              <div
-                className="w-7 h-7 rounded-[9px] flex items-center justify-center text-white text-xs font-semibold shrink-0"
-                style={{ background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)' }}
-              >
-                R
-              </div>
-              <span className="font-semibold text-[15px] tracking-tight" style={{ color: '#FBF5DD' }}>
-                Recallo
-              </span>
-            </div>
+            R
+          </div>
+          <span className="text-[15px] font-semibold tracking-tight" style={{ color: '#FBF5DD' }}>
+            Recallo
+          </span>
+        </div>
 
-            {/* New Meeting Button */}
-            <div className="px-4 py-4 shrink-0">
-              <button
-                onClick={() => openModal('create-room')}
-                className="flex items-center justify-center gap-2 w-full h-9 rounded-[10px] text-[13px] font-medium text-white transition-all duration-200 hover:opacity-90 active:scale-[0.97] cursor-pointer"
-                style={{ background: '#BA5A5A' }}
-              >
-                <Plus size={14} />
-                New Meeting
-              </button>
-            </div>
+        {/* New Meeting Button */}
+        <div className="shrink-0 p-4">
+          <button
+            onClick={() => openModal('create-room')}
+            className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] text-[13px] font-medium text-white transition-all duration-200 hover:opacity-90 active:scale-[0.97]"
+            style={{ background: '#BA5A5A' }}
+          >
+            <Plus size={14} />
+            New Meeting
+          </button>
+        </div>
 
-            {/* Navigation */}
-            <nav className="px-3 flex flex-col gap-0.5 flex-1 overflow-y-auto">
-              <p
-                className="px-3 pt-1 pb-2 text-[10px] font-semibold uppercase tracking-widest"
-                style={{ color: 'rgba(251,245,221,0.3)' }}
-              >
-                Main
-              </p>
-              {NAV_ITEMS.map(item => (
-                <SidebarNavItem
-                  key={item.label}
-                  {...item}
-                  isActive={isNavItemActive(item.href)}
-                />
-              ))}
-            </nav>
-
-            {/* Bottom: User Profile */}
-            <div
-              className="shrink-0"
-              style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
-            >
-              <div className="px-4 py-4 flex items-center gap-2.5">
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold text-white shrink-0"
-                  style={{ background: '#BA5A5A' }}
-                >
-                  {userInitial}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-medium truncate" style={{ color: '#FBF5DD' }}>
-                    {user?.name || 'User'}
-                  </p>
-                  <p className="text-[11px] truncate" style={{ color: 'rgba(251,245,221,0.4)' }}>
-                    Online
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    className="p-1.5 rounded-[8px] transition-all duration-200 hover:bg-white/10 cursor-pointer"
-                    style={{ color: 'rgba(251,245,221,0.4)' }}
-                    title="Notifications"
-                  >
-                    <Bell size={14} />
-                  </button>
-                  <button
-                    onClick={() => void logout()}
-                    className="p-1.5 rounded-[8px] transition-all duration-200 hover:bg-white/10 cursor-pointer"
-                    style={{ color: 'rgba(251,245,221,0.4)' }}
-                    title="Sign out"
-                  >
-                    <LogOut size={14} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <main className="flex-1 lg:ml-60">
-            {/* Top Bar with Mobile Toggle */}
-            <div
-              className="sticky top-0 z-30 px-4 py-3 lg:hidden flex items-center justify-between"
-              style={{ background: '#1C2A2C', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-            >
-              <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-2 rounded-lg transition-all hover:bg-white/10"
-                style={{ color: 'rgba(251,245,221,0.7)' }}
-              >
-                {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-              <span className="font-semibold" style={{ color: '#FBF5DD' }}>
-                Recallo
-              </span>
-              <div className="w-8" />
-            </div>
-
-            {/* Page Content — feature attribute diverts the theme atmosphere */}
-            <div
-              data-feature={feature}
-              className="overflow-y-auto min-h-dvh"
-              style={{ background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}
-            >
-              {children}
-            </div>
-          </main>
-
-          {/* Modals */}
-          <GlobalModals />
-
-          {/* Mobile Sidebar Backdrop */}
-          {isSidebarOpen && (
-            <div
-              className="fixed inset-0 z-30 bg-black/50 lg:hidden"
-              onClick={() => setIsSidebarOpen(false)}
+        {/* Navigation */}
+        <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3">
+          <p
+            className="px-3 pt-1 pb-2 text-[10px] font-semibold tracking-widest uppercase"
+            style={{ color: 'rgba(251,245,221,0.3)' }}
+          >
+            Main
+          </p>
+          {NAV_ITEMS.map(item => (
+            <SidebarNavItem
+              key={item.label}
+              {...item}
+              isActive={isNavItemActive(item.href)}
             />
-          )}
+          ))}
+        </nav>
+
+        {/* Bottom: User Profile */}
+        <div
+          className="shrink-0"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          <div className="flex items-center gap-2.5 p-4">
+            <div
+              className="flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
+              style={{ background: '#BA5A5A' }}
+            >
+              {userInitial}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13px] font-medium" style={{ color: '#FBF5DD' }}>
+                {user?.name || 'User'}
+              </p>
+              <p className="truncate text-[11px]" style={{ color: 'rgba(251,245,221,0.4)' }}>
+                Online
+              </p>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                className="cursor-pointer rounded-[8px] p-1.5 transition-all duration-200 hover:bg-white/10"
+                style={{ color: 'rgba(251,245,221,0.4)' }}
+                title="Notifications"
+              >
+                <Bell size={14} />
+              </button>
+              <button
+                onClick={() => void logout()}
+                className="cursor-pointer rounded-[8px] p-1.5 transition-all duration-200 hover:bg-white/10"
+                style={{ color: 'rgba(251,245,221,0.4)' }}
+                title="Sign out"
+              >
+                <LogOut size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 lg:ml-60">
+        {/* Top Bar with Mobile Toggle */}
+        <div
+          className="sticky top-0 z-30 flex items-center justify-between px-4 py-3 lg:hidden"
+          style={{ background: '#1C2A2C', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="rounded-lg p-2 transition-all hover:bg-white/10"
+            style={{ color: 'rgba(251,245,221,0.7)' }}
+          >
+            {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          <span className="font-semibold" style={{ color: '#FBF5DD' }}>
+            Recallo
+          </span>
+          <div className="w-8" />
+        </div>
+
+        {/* Page Content — feature attribute diverts the theme atmosphere */}
+        <div
+          data-feature={feature}
+          className="min-h-dvh overflow-y-auto"
+          style={{ background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}
+        >
+          {children}
+        </div>
+      </main>
+
+      {/* Modals */}
+      <GlobalModals />
+
+      {/* Mobile Sidebar Backdrop */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }

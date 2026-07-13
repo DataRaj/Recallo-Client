@@ -1,21 +1,21 @@
 'use client';
 
+import type { Room } from '@/types/room';
 import { memo } from 'react';
+import { ConnectionOverlay } from '@/components/meeting/connection-overlay';
+import { ControlsDock } from '@/components/meeting/controls-dock';
 import { MeetingHeader } from '@/components/meeting/meeting-header';
 import { MeetingStage } from '@/components/meeting/meeting-stage';
-import { ControlsDock } from '@/components/meeting/controls-dock';
 import { SidebarSlot } from '@/components/meeting/sidebar-slot';
-import { ConnectionOverlay } from '@/components/meeting/connection-overlay';
-import type { Room } from '@/types/room';
 
-interface LiveRoomProps {
+type LiveRoomProps = {
   room: Room;
   isHost: boolean;
   guestId: string;
   mode?: 'meeting' | 'webinar';
   onLeave: () => void;
   onRoomChanged: () => void;
-}
+};
 
 /**
  * Full-screen meeting presentation.
@@ -27,7 +27,12 @@ interface LiveRoomProps {
  * page) does NOT drop the call; the provider keeps it alive for the PiP.
  */
 function LiveRoomImpl({
-  room, isHost, guestId, mode = 'meeting', onLeave, onRoomChanged,
+  room,
+  isHost,
+  guestId,
+  mode = 'meeting',
+  onLeave,
+  onRoomChanged,
 }: LiveRoomProps) {
   return (
     <div

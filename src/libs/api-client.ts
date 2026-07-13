@@ -43,7 +43,7 @@ function drainQueue(token: string) {
 apiClient.interceptors.response.use(
   res => res,
   async (error) => {
-    const original = error.config as typeof error.config & { _retry?: boolean };
+    const original = error.config;
 
     if (error.response?.status !== 401 || original._retry) {
       return Promise.reject(error);
@@ -81,15 +81,13 @@ apiClient.interceptors.response.use(
 
       original.headers.Authorization = `Bearer ${newToken}`;
       return apiClient(original);
-    }
-    catch {
+    } catch {
       useAuthStore.getState().clearAuth();
       if (typeof window !== 'undefined') {
         window.location.href = '/login';
       }
       return Promise.reject(error);
-    }
-    finally {
+    } finally {
       isRefreshing = false;
     }
   },

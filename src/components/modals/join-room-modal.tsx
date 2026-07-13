@@ -3,15 +3,15 @@
  */
 'use client';
 
-import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { useRoom } from '@/hooks/use-room';
 import { Modal } from './base-modal';
 
-interface JoinRoomModalProps {
+type JoinRoomModalProps = {
   isOpen: boolean;
   onClose: () => void;
-}
+};
 
 export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
   const [joinMethod, setJoinMethod] = useState<'id' | 'link' | null>(null);
@@ -24,7 +24,9 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
   const handleJoin = async () => {
     const id = joinMethod === 'id' ? roomId : extractRoomIdFromLink(inviteLink);
 
-    if (!id) return;
+    if (!id) {
+      return;
+    }
 
     try {
       await joinRoom({
@@ -33,8 +35,7 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
       });
       onClose();
       resetForm();
-    }
-    catch {
+    } catch {
       // Error is handled by useRoom hook
     }
   };
@@ -53,8 +54,7 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
       const path = url.pathname;
       const match = path.match(/\/(?:meeting|webinar)\/([a-zA-Z0-9-]+)/);
       return match?.[1] || '';
-    }
-    catch {
+    } catch {
       return '';
     }
   };
@@ -68,13 +68,13 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
           <div className="space-y-3">
             <button
               onClick={() => setJoinMethod('id')}
-              className="w-full p-4 rounded-[12px] text-left transition-all duration-200 border hover:border-opacity-50"
+              className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
                 background: '#324147',
               }}
             >
-              <h3 className="font-semibold mb-1" style={{ color: '#FBF5DD' }}>
+              <h3 className="mb-1 font-semibold" style={{ color: '#FBF5DD' }}>
                 Room ID
               </h3>
               <p className="text-sm" style={{ color: 'rgba(251,245,221,0.6)' }}>
@@ -84,29 +84,29 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
 
             <button
               onClick={() => setJoinMethod('link')}
-              className="w-full p-4 rounded-[12px] text-left transition-all duration-200 border hover:border-opacity-50"
+              className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
                 background: '#324147',
               }}
             >
-              <h3 className="font-semibold mb-1" style={{ color: '#FBF5DD' }}>
+              <h3 className="mb-1 font-semibold" style={{ color: '#FBF5DD' }}>
                 Invite Link
               </h3>
               <p className="text-sm" style={{ color: 'rgba(251,245,221,0.6)' }}>
                 Paste a meeting invite link
               </p>
             </button>
-            
+
             <button
               onClick={() => setJoinMethod('link')}
-              className="w-full p-4 rounded-[12px] text-left transition-all duration-200 border hover:border-opacity-50"
+              className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
                 background: '#324147',
               }}
             >
-              <h3 className="font-semibold mb-1" style={{ color: '#FBF5DD' }}>
+              <h3 className="mb-1 font-semibold" style={{ color: '#FBF5DD' }}>
                 Webinar Link
               </h3>
               <p className="text-sm" style={{ color: 'rgba(251,245,221,0.6)' }}>
@@ -127,15 +127,19 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
 
             {/* Room ID / Link input */}
             <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: '#FBF5DD' }}>
+              <label className="mb-2 block text-sm font-medium" style={{ color: '#FBF5DD' }}>
                 {joinMethod === 'id' ? 'Room ID' : 'Invite Link'}
               </label>
               <input
                 value={joinMethod === 'id' ? roomId : inviteLink}
                 onChange={e => joinMethod === 'id' ? setRoomId(e.target.value) : setInviteLink(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && canJoin) void handleJoin(); }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && canJoin) {
+                    void handleJoin();
+                  }
+                }}
                 placeholder={joinMethod === 'id' ? 'e.g., abc123xyz' : 'e.g., https://recallo.app/meeting/abc123'}
-                className="w-full px-3 py-2 rounded-[8px] border text-sm focus:outline-none"
+                className="w-full rounded-[8px] border px-3 py-2 text-sm focus:outline-none"
                 style={{
                   borderColor: 'rgba(255,255,255,0.06)',
                   background: '#3C4C52',
@@ -146,15 +150,19 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
 
             {/* Display name */}
             <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: '#FBF5DD' }}>
+              <label className="mb-2 block text-sm font-medium" style={{ color: '#FBF5DD' }}>
                 Display Name (optional)
               </label>
               <input
                 value={displayName}
                 onChange={e => setDisplayName(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && canJoin) void handleJoin(); }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && canJoin) {
+                    void handleJoin();
+                  }
+                }}
                 placeholder="Your name"
-                className="w-full px-3 py-2 rounded-[8px] border text-sm focus:outline-none"
+                className="w-full rounded-[8px] border px-3 py-2 text-sm focus:outline-none"
                 style={{
                   borderColor: 'rgba(255,255,255,0.06)',
                   background: '#3C4C52',
@@ -171,7 +179,7 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
                   resetForm();
                 }}
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 rounded-[8px] font-medium transition-all duration-200 disabled:opacity-50"
+                className="flex-1 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50"
                 style={{
                   background: '#3C4C52',
                   color: '#FBF5DD',
@@ -182,7 +190,7 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
               <button
                 onClick={handleJoin}
                 disabled={isLoading || !canJoin}
-                className="flex-1 px-4 py-2 rounded-[8px] font-medium transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex flex-1 items-center justify-center gap-2 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50"
                 style={{
                   background: '#BA5A5A',
                   color: '#fff',
