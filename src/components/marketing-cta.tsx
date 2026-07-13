@@ -17,14 +17,14 @@ export function MarketingCTA() {
       <div className="flex items-center gap-3">
         <Link
           href={ROUTES.HOME}
-          className="flex items-center gap-2 rounded-[10px] px-3 py-1.5 transition-all duration-200 hover:bg-[#DDEBD5]"
+          className="flex items-center gap-2 rounded-[10px] px-3 py-1.5 transition-all duration-200 hover:bg-[var(--color-surface-hover)]"
         >
-          <span className="text-sm font-medium" style={{ color: '#2C3E2D' }}>
+          <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
             Dashboard
           </span>
           <div
             className="flex size-7 items-center justify-center rounded-full text-xs font-semibold text-white"
-            style={{ background: '#BA5A5A' }}
+            style={{ background: 'var(--color-text-accent)' }}
           >
             {userInitial}
           </div>
@@ -37,8 +37,8 @@ export function MarketingCTA() {
     <div className="flex items-center gap-2">
       <Link
         href="/login"
-        className="hidden rounded-[10px] px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-[#DDEBD5] sm:block"
-        style={{ color: '#2C3E2D' }}
+        className="hidden rounded-[10px] px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-[var(--color-surface-hover)] sm:block"
+        style={{ color: 'var(--color-text-primary)' }}
       >
         Sign In
       </Link>

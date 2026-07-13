@@ -137,9 +137,9 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
               className="flex size-8 items-center justify-center rounded-xl"
               style={{ background: 'rgba(156,197,161,0.15)' }}
             >
-              <MessageSquare size={15} style={{ color: '#9CC5A1' }} />
+              <MessageSquare size={15} style={{ color: 'var(--color-chat-accent)' }} />
             </div>
-            <h2 className="text-[15px] font-semibold" style={{ color: '#FBF5DD' }}>
+            <h2 className="text-[15px] font-semibold" style={{ color: 'var(--color-chat-text)' }}>
               New Private Chat
             </h2>
           </div>
@@ -179,9 +179,9 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
                 placeholder="e.g. Alex Kim or 42"
                 className="w-full rounded-[10px] border py-2.5 pr-3 pl-9 text-[13px] transition-all outline-none focus:ring-1"
                 style={{
-                  background: '#273338',
-                  borderColor: error ? '#BA5A5A' : 'rgba(255,255,255,0.08)',
-                  color: '#FBF5DD',
+                  background: 'var(--color-chat-bg)',
+                  borderColor: error ? 'var(--color-text-accent)' : 'rgba(255,255,255,0.08)',
+                  color: 'var(--color-chat-text)',
                 }}
               />
               {searching && (
@@ -193,7 +193,7 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
           {showDropdown && (
             <div
               className="absolute inset-x-0 top-full z-10 mt-1 overflow-hidden rounded-[12px] shadow-2xl"
-              style={{ background: '#273338', border: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: 'var(--color-chat-bg)', border: '1px solid rgba(255,255,255,0.08)' }}
             >
               {results.map(user => (
                 <button
@@ -204,14 +204,14 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
                 >
                   <div
                     className="flex size-8 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-white"
-                    style={{ background: '#9CC5A1' }}
+                    style={{ background: 'var(--color-chat-accent)' }}
                   >
                     {user.avatar
                       ? <img src={user.avatar} alt={user.name} className="size-8 rounded-full object-cover" />
                       : userInitials(user.name)}
                   </div>
                   <div className="min-w-0">
-                    <p className="truncate text-[13px] font-medium" style={{ color: '#FBF5DD' }}>{user.name}</p>
+                    <p className="truncate text-[13px] font-medium" style={{ color: 'var(--color-chat-text)' }}>{user.name}</p>
                     <p className="truncate text-[11px]" style={{ color: 'rgba(251,245,221,0.45)' }}>{user.email}</p>
                   </div>
                   <span
@@ -240,12 +240,12 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
           >
             <div
               className="flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
-              style={{ background: '#9CC5A1' }}
+              style={{ background: 'var(--color-chat-accent)' }}
             >
               {userInitials(selected.name)}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[12px] font-medium" style={{ color: '#9CC5A1' }}>{selected.name}</p>
+              <p className="truncate text-[12px] font-medium" style={{ color: 'var(--color-chat-accent)' }}>{selected.name}</p>
               <p className="truncate text-[10px]" style={{ color: 'rgba(156,197,161,0.7)' }}>{selected.email}</p>
             </div>
             <button
@@ -262,7 +262,7 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
         )}
 
         {error && (
-          <p className="mt-2 text-[11px]" style={{ color: '#BA5A5A' }}>{error}</p>
+          <p className="mt-2 text-[11px]" style={{ color: 'var(--color-text-accent)' }}>{error}</p>
         )}
 
         <div className="mt-5 flex items-center justify-end gap-2">
@@ -277,7 +277,7 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
             onClick={() => void handleStart()}
             disabled={busy || (!selected && !query.trim())}
             className="flex items-center gap-2 rounded-[10px] px-4 py-2 text-[13px] font-medium transition-all hover:opacity-90 disabled:opacity-50"
-            style={{ background: '#9CC5A1', color: '#1E2E30' }}
+            style={{ background: 'var(--color-chat-accent)', color: '#1E2E30' }}
           >
             {busy ? <Loader2 size={14} className="animate-spin" /> : <MessageSquare size={14} />}
             {busy ? 'Opening…' : 'Start Chat'}

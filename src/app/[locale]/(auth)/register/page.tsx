@@ -49,8 +49,8 @@ export default function RegisterPage() {
       <div
         className="flex flex-col gap-6 rounded-[20px] p-8"
         style={{
-          background: '#F3F8EF',
-          border: '1px solid #D5E3CC',
+          background: 'var(--color-surface)',
+          border: '1px solid var(--color-border)',
           boxShadow: '0px 16px 48px rgba(0,0,0,0.07), 0px 1px 0px rgba(255,255,255,0.7) inset',
         }}
       >
@@ -58,11 +58,11 @@ export default function RegisterPage() {
         <div className="flex flex-col gap-1">
           <h1
             className="text-2xl font-semibold tracking-tight"
-            style={{ color: '#2C3E2D' }}
+            style={{ color: 'var(--color-text-primary)' }}
           >
             Create your account
           </h1>
-          <p className="text-sm" style={{ color: '#8D7A7A' }}>
+          <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             Join Recallo and start connecting instantly
           </p>
         </div>
@@ -71,8 +71,8 @@ export default function RegisterPage() {
         <div className="flex flex-col gap-1.5">
           {PERKS.map(perk => (
             <div key={perk} className="flex items-center gap-2">
-              <CheckCircle2 size={13} style={{ color: '#9CC5A1' }} />
-              <span className="text-xs" style={{ color: '#8D7A7A' }}>{perk}</span>
+              <CheckCircle2 size={13} style={{ color: 'var(--color-chat-accent)' }} />
+              <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>{perk}</span>
             </div>
           ))}
         </div>
@@ -83,7 +83,7 @@ export default function RegisterPage() {
             className="animate-fade-in flex items-start gap-2.5 rounded-[10px] p-3 text-sm"
             style={{
               background: 'rgba(186,90,90,0.08)',
-              color: '#BA5A5A',
+              color: 'var(--color-text-accent)',
               border: '1px solid rgba(186,90,90,0.2)',
             }}
           >
@@ -108,9 +108,9 @@ export default function RegisterPage() {
 
         {/* Divider */}
         <div className="flex items-center gap-3">
-          <div className="h-px flex-1" style={{ background: '#D5E3CC' }} />
-          <span className="text-xs font-medium" style={{ color: '#8D7A7A' }}>or</span>
-          <div className="h-px flex-1" style={{ background: '#D5E3CC' }} />
+          <div className="h-px flex-1" style={{ background: 'var(--color-border)' }} />
+          <span className="text-xs font-medium" style={{ color: 'var(--color-text-secondary)' }}>or</span>
+          <div className="h-px flex-1" style={{ background: 'var(--color-border)' }} />
         </div>
 
         {/* Form */}
@@ -120,7 +120,7 @@ export default function RegisterPage() {
             <label
               htmlFor="register-name"
               className="text-xs font-medium"
-              style={{ color: '#2C3E2D' }}
+              style={{ color: 'var(--color-text-primary)' }}
             >
               Full name
             </label>
@@ -132,7 +132,7 @@ export default function RegisterPage() {
               {...register('name')}
             />
             {errors.name && (
-              <p className="text-xs" style={{ color: '#BA5A5A' }}>
+              <p className="text-xs" style={{ color: 'var(--color-text-accent)' }}>
                 {errors.name.message}
               </p>
             )}
@@ -143,7 +143,7 @@ export default function RegisterPage() {
             <label
               htmlFor="register-email"
               className="text-xs font-medium"
-              style={{ color: '#2C3E2D' }}
+              style={{ color: 'var(--color-text-primary)' }}
             >
               Email address
             </label>
@@ -155,7 +155,7 @@ export default function RegisterPage() {
               {...register('email')}
             />
             {errors.email && (
-              <p className="text-xs" style={{ color: '#BA5A5A' }}>
+              <p className="text-xs" style={{ color: 'var(--color-text-accent)' }}>
                 {errors.email.message}
               </p>
             )}
@@ -166,7 +166,7 @@ export default function RegisterPage() {
             <label
               htmlFor="register-password"
               className="text-xs font-medium"
-              style={{ color: '#2C3E2D' }}
+              style={{ color: 'var(--color-text-primary)' }}
             >
               Password
             </label>
@@ -183,14 +183,14 @@ export default function RegisterPage() {
                 type="button"
                 onClick={() => setShowPassword(v => !v)}
                 className="absolute top-1/2 right-3 -translate-y-1/2 transition-colors duration-200"
-                style={{ color: '#8D7A7A' }}
+                style={{ color: 'var(--color-text-secondary)' }}
                 aria-label="Toggle password visibility"
               >
                 {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
             </div>
             {errors.password && (
-              <p className="text-xs" style={{ color: '#BA5A5A' }}>
+              <p className="text-xs" style={{ color: 'var(--color-text-accent)' }}>
                 {errors.password.message}
               </p>
             )}
@@ -201,7 +201,7 @@ export default function RegisterPage() {
             <label
               htmlFor="register-confirm-password"
               className="text-xs font-medium"
-              style={{ color: '#2C3E2D' }}
+              style={{ color: 'var(--color-text-primary)' }}
             >
               Confirm password
             </label>
@@ -218,14 +218,14 @@ export default function RegisterPage() {
                 type="button"
                 onClick={() => setShowConfirm(v => !v)}
                 className="absolute top-1/2 right-3 -translate-y-1/2 transition-colors duration-200"
-                style={{ color: '#8D7A7A' }}
+                style={{ color: 'var(--color-text-secondary)' }}
                 aria-label="Toggle confirm password visibility"
               >
                 {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-xs" style={{ color: '#BA5A5A' }}>
+              <p className="text-xs" style={{ color: 'var(--color-text-accent)' }}>
                 {errors.confirmPassword.message}
               </p>
             )}
@@ -245,22 +245,22 @@ export default function RegisterPage() {
         </form>
 
         {/* ToS */}
-        <p className="text-center text-[11px]" style={{ color: '#8D7A7A' }}>
+        <p className="text-center text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
           By creating an account, you agree to our
           {' '}
-          <Link href="#" className="hover:underline" style={{ color: '#BA5A5A' }}>Terms</Link>
+          <Link href="#" className="hover:underline" style={{ color: 'var(--color-text-accent)' }}>Terms</Link>
           {' '}
           and
           {' '}
-          <Link href="#" className="hover:underline" style={{ color: '#BA5A5A' }}>Privacy Policy</Link>
+          <Link href="#" className="hover:underline" style={{ color: 'var(--color-text-accent)' }}>Privacy Policy</Link>
           .
         </p>
 
         {/* Footer */}
-        <p className="text-center text-xs" style={{ color: '#8D7A7A' }}>
+        <p className="text-center text-xs" style={{ color: 'var(--color-text-secondary)' }}>
           Already have an account?
           {' '}
-          <Link href="/login" className="font-medium hover:underline" style={{ color: '#BA5A5A' }}>
+          <Link href="/login" className="font-medium hover:underline" style={{ color: 'var(--color-text-accent)' }}>
             Sign in
           </Link>
         </p>

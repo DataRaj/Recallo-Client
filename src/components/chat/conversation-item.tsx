@@ -35,7 +35,7 @@ export function ConversationItem({ conversation, isActive, onClick }: Conversati
       <div className="relative shrink-0">
         <div
           className="flex size-10 items-center justify-center rounded-full text-sm font-semibold text-white"
-          style={{ background: '#BA5A5A' }}
+          style={{ background: 'var(--color-text-accent)' }}
         >
           {displayName.charAt(0).toUpperCase()}
         </div>
@@ -43,8 +43,8 @@ export function ConversationItem({ conversation, isActive, onClick }: Conversati
           <span
             className="absolute -right-0.5 -bottom-0.5 size-2.5 rounded-full border-2"
             style={{
-              background: '#9CC5A1',
-              borderColor: '#273338',
+              background: 'var(--color-chat-accent)',
+              borderColor: 'var(--color-chat-bg)',
             }}
           />
         )}
@@ -53,14 +53,14 @@ export function ConversationItem({ conversation, isActive, onClick }: Conversati
       {/* Content */}
       <div className="min-w-0 flex-1">
         <div className="mb-0.5 flex items-baseline gap-2">
-          <p className="truncate text-[13px] font-medium" style={{ color: '#FBF5DD' }}>
+          <p className="truncate text-[13px] font-medium" style={{ color: 'var(--color-chat-text)' }}>
             {displayName}
           </p>
           {conversation.unreadCount > 0 && (
             <span
               className="flex-shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
               style={{
-                background: '#BA5A5A',
+                background: 'var(--color-text-accent)',
                 color: '#fff',
               }}
             >

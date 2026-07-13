@@ -93,15 +93,15 @@ function avatarInitials(name: string): string {
 }
 
 const AVATAR_COLORS = [
-  '#BA5A5A',
-  '#9CC5A1',
+  'var(--color-text-accent)',
+  'var(--color-chat-accent)',
   '#5A7BA6',
   '#C4A45A',
   '#8A5AC4',
   '#5AC4B8',
 ];
 function avatarColor(id: number): string {
-  return AVATAR_COLORS[id % AVATAR_COLORS.length] ?? '#9CC5A1';
+  return AVATAR_COLORS[id % AVATAR_COLORS.length] ?? 'var(--color-chat-accent)';
 }
 
 // ── Message bubble ────────────────────────────────────────────────────────────
@@ -158,7 +158,7 @@ function MessageBubble({
             {mimeType.split('/')[1]?.toUpperCase().slice(0, 4) ?? 'FILE'}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-[12px] font-medium text-[#FBF5DD]">{filename}</p>
+            <p className="truncate text-[12px] font-medium text-[var(--color-chat-text)]">{filename}</p>
             <p className="text-[10px]" style={{ color: 'rgba(251,245,221,0.4)' }}>
               {(message.attachment.filesize / 1024).toFixed(1)}
               {' '}
@@ -205,7 +205,7 @@ function MessageBubble({
             <span className="ml-0.5 flex">
               {message.readAt
                 ? (
-                    <span className="text-[#9CC5A1]" title="Read">✓✓</span>
+                    <span className="text-[var(--color-chat-accent)]" title="Read">✓✓</span>
                   )
                 : message.updatedAt
                   ? (
@@ -253,7 +253,7 @@ function TypingDots({ names }: { names: string[] }) {
           <div
             key={i}
             className="size-1.5 animate-bounce rounded-full"
-            style={{ background: '#9CC5A1', animationDelay: `${i * 0.15}s` }}
+            style={{ background: 'var(--color-chat-accent)', animationDelay: `${i * 0.15}s` }}
           />
         ))}
       </div>
@@ -554,11 +554,11 @@ export default function ChatConversationPage() {
               {avatarInitials(convoName)}
             </div>
             {isOtherOnline && (
-              <div className="absolute right-0 bottom-0 size-2.5 rounded-full border-2 border-[#324147] bg-[#9CC5A1]" />
+              <div className="absolute right-0 bottom-0 size-2.5 rounded-full border-2 border-[var(--color-chat-surface)] bg-[var(--color-chat-accent)]" />
             )}
           </div>
           <div>
-            <h2 className="text-[14px] font-semibold text-[#FBF5DD]">{convoName}</h2>
+            <h2 className="text-[14px] font-semibold text-[var(--color-chat-text)]">{convoName}</h2>
             <p className="text-[11px]" style={{ color: isOtherOnline ? '#9CC5A1' : 'rgba(251,245,221,0.4)' }}>
               {presenceLabel}
             </p>
@@ -568,7 +568,7 @@ export default function ChatConversationPage() {
           <button
             onClick={() => void handleCallPress('voice')}
             disabled={!!callingType}
-            className="transition-colors hover:text-[#9CC5A1] disabled:opacity-40"
+            className="transition-colors hover:text-[var(--color-chat-accent)] disabled:opacity-40"
             title="Voice call"
           >
             {callingType === 'voice' ? <Loader2 size={18} className="animate-spin" /> : <Phone size={18} />}
@@ -576,15 +576,15 @@ export default function ChatConversationPage() {
           <button
             onClick={() => void handleCallPress('video')}
             disabled={!!callingType}
-            className="transition-colors hover:text-[#9CC5A1] disabled:opacity-40"
+            className="transition-colors hover:text-[var(--color-chat-accent)] disabled:opacity-40"
             title="Video call"
           >
             {callingType === 'video' ? <Loader2 size={18} className="animate-spin" /> : <Video size={18} />}
           </button>
-          <button className="transition-colors hover:text-[#9CC5A1]" title="Info">
+          <button className="transition-colors hover:text-[var(--color-chat-accent)]" title="Info">
             <Info size={18} />
           </button>
-          <button className="transition-colors hover:text-[#9CC5A1]" title="More">
+          <button className="transition-colors hover:text-[var(--color-chat-accent)]" title="More">
             <MoreVertical size={18} />
           </button>
         </div>
@@ -594,7 +594,7 @@ export default function ChatConversationPage() {
       <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-5">
         {loadingHistory && (
           <div className="flex items-center justify-center py-12">
-            <Loader2 size={22} className="animate-spin text-[#9CC5A1]" />
+            <Loader2 size={22} className="animate-spin text-[var(--color-chat-accent)]" />
           </div>
         )}
         {!loadingHistory && wsMessages.length === 0 && (
@@ -603,7 +603,7 @@ export default function ChatConversationPage() {
               className="flex size-14 items-center justify-center rounded-2xl"
               style={{ background: 'rgba(156,197,161,0.1)' }}
             >
-              <MessageSquare size={26} style={{ color: '#9CC5A1' }} />
+              <MessageSquare size={26} style={{ color: 'var(--color-chat-accent)' }} />
             </div>
             <p className="text-[13px]" style={{ color: 'rgba(251,245,221,0.4)' }}>
               No messages yet — say hello!

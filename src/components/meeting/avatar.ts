@@ -1,5 +1,5 @@
-const PALETTE = ['#BA5A5A', '#B0BA99', '#8D7A7A', '#9CC5A1', '#C5A99C', '#7AA5BA'];
-const FALLBACK_COLOR = '#9CC5A1';
+const PALETTE = ['var(--color-text-accent)', 'var(--color-accent)', 'var(--color-text-secondary)', 'var(--color-chat-accent)', '#C5A99C', '#7AA5BA'];
+const FALLBACK_COLOR = 'var(--color-chat-accent)';
 
 export function initialsFor(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);

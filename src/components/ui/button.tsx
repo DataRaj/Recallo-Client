@@ -8,7 +8,7 @@ const buttonVariants = cva(
   [
     'inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium',
     'transition-all duration-200 select-none cursor-pointer',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B0BA99] focus-visible:ring-offset-2',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
     'active:scale-[0.97]',
   ].join(' '),
@@ -16,19 +16,19 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'rounded-[10px] bg-[#2C3E2D] text-white shadow-[0px_1px_3px_rgba(0,0,0,0.1)] hover:bg-[#3a4f3b]',
+          'rounded-[10px] bg-[var(--color-text-primary)] text-white shadow-[0px_1px_3px_rgba(0,0,0,0.1)] hover:bg-[#3a4f3b]',
         primary:
           'rounded-[10px] text-white shadow-[0px_1px_3px_rgba(186,90,90,0.25)] hover:opacity-90',
         outline:
-          'rounded-[10px] border border-[#D5E3CC] bg-[#F3F8EF] text-[#2C3E2D] hover:bg-[#DDEBD5]',
+          'rounded-[10px] border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]',
         ghost:
-          'rounded-[10px] text-[#2C3E2D] hover:bg-[#DDEBD5]',
+          'rounded-[10px] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)]',
         muted:
-          'rounded-[10px] bg-[#B0BA99]/15 text-[#2C3E2D] hover:bg-[#B0BA99]/25',
+          'rounded-[10px] bg-[var(--color-accent)]/15 text-[var(--color-text-primary)] hover:bg-[var(--color-accent)]/25',
         destructive:
           'rounded-[10px] bg-[#BA5A5A] text-white shadow-[0px_1px_3px_rgba(186,90,90,0.25)] hover:bg-[#a34f4f]',
         link:
-          'h-auto rounded-none p-0 text-[#BA5A5A] underline-offset-4 hover:underline',
+          'h-auto rounded-none p-0 text-[var(--color-text-accent)] underline-offset-4 hover:underline',
       },
       size: {
         'default': 'h-10 px-4 py-2',

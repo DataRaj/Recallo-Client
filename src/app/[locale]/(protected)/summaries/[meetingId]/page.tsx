@@ -80,14 +80,14 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-[#FBF5DD]">
+      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-[var(--color-chat-text)]">
         <div className="relative mb-8 flex size-24 items-center justify-center">
-          <div className="absolute inset-0 animate-pulse rounded-full border-4 border-[#9CC5A1]/10" />
-          <div className="absolute inset-2 animate-spin rounded-full border-4 border-[#9CC5A1]/20 border-t-[#9CC5A1]" />
-          <Brain className="size-8 animate-bounce text-[#9CC5A1]" />
+          <div className="absolute inset-0 animate-pulse rounded-full border-4 border-[var(--color-chat-accent)]/10" />
+          <div className="absolute inset-2 animate-spin rounded-full border-4 border-[var(--color-chat-accent)]/20 border-t-[var(--color-chat-accent)]" />
+          <Brain className="size-8 animate-bounce text-[var(--color-chat-accent)]" />
         </div>
         <h2 className="flex items-center gap-2 text-xl font-bold">
-          <Sparkles className="size-5 animate-pulse text-[#9CC5A1]" />
+          <Sparkles className="size-5 animate-pulse text-[var(--color-chat-accent)]" />
           Loading insights...
         </h2>
       </div>
@@ -96,8 +96,8 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
   if (processing) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-center text-[#FBF5DD]">
-        <Loader2 className="mb-6 size-10 animate-spin text-[#9CC5A1]" />
+      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-center text-[var(--color-chat-text)]">
+        <Loader2 className="mb-6 size-10 animate-spin text-[var(--color-chat-accent)]" />
         <h2 className="mb-2 text-xl font-bold">AI is synthesizing meeting insights...</h2>
         <p className="max-w-sm text-sm text-white/50">
           Grok is analyzing the transcript and generating your summary. This usually takes under a minute.
@@ -105,7 +105,7 @@ export default function SummaryDetailPage({ params }: PageProps) {
         </p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-6 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[#D9D3BC] transition-all hover:bg-white/5"
+          className="mt-6 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[var(--color-chat-text-2)] transition-all hover:bg-white/5"
         >
           Refresh
         </button>
@@ -115,12 +115,12 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
   if (error) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-center text-[#FBF5DD]">
-        <AlertCircle className="mb-4 size-10 text-[#BA5A5A]" />
+      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-center text-[var(--color-chat-text)]">
+        <AlertCircle className="mb-4 size-10 text-[var(--color-text-accent)]" />
         <p className="text-sm text-white/60">{error}</p>
         <button
           onClick={() => router.push(ROUTES.HOME)}
-          className="mt-6 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[#D9D3BC] transition-all hover:bg-white/5"
+          className="mt-6 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[var(--color-chat-text-2)] transition-all hover:bg-white/5"
         >
           Go Home
         </button>
@@ -129,24 +129,24 @@ export default function SummaryDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#141E1F] pb-16 font-sans text-[#FBF5DD]">
+    <div className="min-h-screen bg-[#141E1F] pb-16 font-sans text-[var(--color-chat-text)]">
       {/* Navbar */}
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[#1C2A2C] px-6">
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push(ROUTES.HOME)}
-            className="rounded-lg p-2 text-[#D9D3BC] transition-all hover:bg-white/5 hover:text-[#FBF5DD]"
+            className="rounded-lg p-2 text-[var(--color-chat-text-2)] transition-all hover:bg-white/5 hover:text-[var(--color-chat-text)]"
           >
             <ArrowLeft size={18} />
           </button>
           <div className="flex items-center gap-2.5">
-            <Brain className="size-5 text-[#9CC5A1]" />
-            <h1 className="text-md font-semibold text-[#FBF5DD]">AI Meeting Insights</h1>
+            <Brain className="size-5 text-[var(--color-chat-accent)]" />
+            <h1 className="text-md font-semibold text-[var(--color-chat-text)]">AI Meeting Insights</h1>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5">
-          <span className="rounded-full border border-[#9CC5A1]/20 bg-[#9CC5A1]/10 px-2.5 py-1 text-xs font-medium text-[#9CC5A1] capitalize">
+          <span className="rounded-full border border-[var(--color-chat-accent)]/20 bg-[var(--color-chat-accent)]/10 px-2.5 py-1 text-xs font-medium text-[var(--color-chat-accent)] capitalize">
             {summary?.category || 'meeting'}
           </span>
           <span className="text-[10px] text-white/40">
@@ -162,20 +162,20 @@ export default function SummaryDetailPage({ params }: PageProps) {
         {/* Title Section */}
         <div className="flex flex-col justify-between gap-4 rounded-2xl border border-white/5 bg-[#1C2A2C] p-6 md:flex-row md:items-center">
           <div>
-            <h2 className="text-2xl font-bold text-[#FBF5DD]">
+            <h2 className="text-2xl font-bold text-[var(--color-chat-text)]">
               {room?.title || meetingId}
             </h2>
             <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-white/50">
               <span className="flex items-center gap-1.5">
-                <Calendar size={13} className="text-[#9CC5A1]" />
+                <Calendar size={13} className="text-[var(--color-chat-accent)]" />
                 {summary ? new Date(summary.created_at).toLocaleDateString() : '—'}
               </span>
               <span className="flex items-center gap-1.5">
-                <Clock size={13} className="text-[#9CC5A1]" />
+                <Clock size={13} className="text-[var(--color-chat-accent)]" />
                 {room?.session_duration_mins ? `${room.session_duration_mins} mins` : '—'}
               </span>
               <span className="flex items-center gap-1.5">
-                <User size={13} className="text-[#9CC5A1]" />
+                <User size={13} className="text-[var(--color-chat-accent)]" />
                 {room ? `${room.participantCount} attendees` : '—'}
               </span>
             </div>
@@ -183,7 +183,7 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
           <Link
             href={ROUTES.TRANSCRIPT_DETAIL(meetingId)}
-            className="self-start rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[#D9D3BC] transition-all hover:bg-white/5 hover:text-[#FBF5DD] md:self-auto"
+            className="self-start rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[var(--color-chat-text-2)] transition-all hover:bg-white/5 hover:text-[var(--color-chat-text)] md:self-auto"
           >
             View Full Transcript
           </Link>
@@ -195,7 +195,7 @@ export default function SummaryDetailPage({ params }: PageProps) {
           <div className="space-y-6 lg:col-span-2">
             {/* Executive Summary */}
             <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
-              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#9CC5A1] uppercase">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-chat-accent)] uppercase">
                 <Brain size={16} />
                 Executive Summary
               </h3>
@@ -206,14 +206,14 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
             {/* Key Points */}
             <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
-              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#9CC5A1] uppercase">
+              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-chat-accent)] uppercase">
                 <Sparkles size={16} />
                 Key Discussion Points
               </h3>
               <ul className="space-y-3">
                 {summary?.key_points.map((point, index) => (
                   <li key={index} className="flex gap-3 text-sm leading-relaxed text-white/80">
-                    <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#9CC5A1]" />
+                    <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[var(--color-chat-accent)]" />
                     <span>{point}</span>
                   </li>
                 ))}
@@ -222,14 +222,14 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
             {/* Decisions Made */}
             <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
-              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#BA5A5A] uppercase">
+              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-text-accent)] uppercase">
                 <Flag size={16} />
                 Decisions Made
               </h3>
               <ul className="space-y-3">
                 {summary?.decisions_made.map((decision, index) => (
                   <li key={index} className="flex gap-3 text-sm leading-relaxed text-white/80">
-                    <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#BA5A5A]" />
+                    <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[var(--color-text-accent)]" />
                     <span>{decision}</span>
                   </li>
                 ))}
@@ -241,7 +241,7 @@ export default function SummaryDetailPage({ params }: PageProps) {
           <div className="space-y-6">
             {/* Action Items */}
             <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
-              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#9CC5A1] uppercase">
+              <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-chat-accent)] uppercase">
                 <ListTodo size={16} />
                 Action Items
               </h3>
@@ -249,13 +249,13 @@ export default function SummaryDetailPage({ params }: PageProps) {
                 {summary?.action_items.map((item, index) => (
                   <div
                     key={index}
-                    className="space-y-2.5 rounded-xl border border-white/5 bg-[#273338] p-3.5 transition-all hover:border-white/10"
+                    className="space-y-2.5 rounded-xl border border-white/5 bg-[var(--color-chat-bg)] p-3.5 transition-all hover:border-white/10"
                   >
                     <div className="flex gap-2">
                       <input
                         type="checkbox"
                         id={`todo-${index}`}
-                        className="mt-1 cursor-pointer rounded border-white/10 text-[#9CC5A1] focus:ring-0 focus:ring-offset-0"
+                        className="mt-1 cursor-pointer rounded border-white/10 text-[var(--color-chat-accent)] focus:ring-0 focus:ring-offset-0"
                       />
                       <label
                         htmlFor={`todo-${index}`}
@@ -267,7 +267,7 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
                     <div className="flex items-center justify-between pl-6 text-[10px] text-white/40">
                       <span className="flex items-center gap-1">
-                        <User size={10} className="text-[#9CC5A1]" />
+                        <User size={10} className="text-[var(--color-chat-accent)]" />
                         {item.assignee}
                       </span>
                       <span className="rounded border border-white/5 bg-white/5 px-2 py-0.5 font-medium">
@@ -281,7 +281,7 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
             {/* Discussion Tags */}
             <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
-              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-wider text-[#9CC5A1] uppercase">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-chat-accent)] uppercase">
                 <Tag size={16} />
                 Discussion Tags
               </h3>
@@ -289,7 +289,7 @@ export default function SummaryDetailPage({ params }: PageProps) {
                 {summary?.discussion_tags.map(tag => (
                   <span
                     key={tag}
-                    className="cursor-default rounded-lg border border-white/5 bg-[#273338] px-2.5 py-1 text-xs font-medium text-[#D9D3BC] transition-all hover:bg-[#324147] hover:text-[#FBF5DD]"
+                    className="cursor-default rounded-lg border border-white/5 bg-[var(--color-chat-bg)] px-2.5 py-1 text-xs font-medium text-[var(--color-chat-text-2)] transition-all hover:bg-[var(--color-chat-surface)] hover:text-[var(--color-chat-text)]"
                   >
                     #
                     {tag}

@@ -17,7 +17,7 @@ export default async function MarketingLayout(props: {
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: '#E6F2DD' }}>
+    <div data-theme="light" className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
       {/* ── Floating Navbar ── */}
       <div className="sticky top-4 z-50 px-10">
         <header className="mx-auto max-h-full">
@@ -41,7 +41,7 @@ export default async function MarketingLayout(props: {
               </div>
               <span
                 className="text-[15px] font-semibold tracking-tight"
-                style={{ color: '#2C3E2D' }}
+                style={{ color: 'var(--color-text-primary)' }}
               >
                 Recallo
               </span>
@@ -53,7 +53,7 @@ export default async function MarketingLayout(props: {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="rounded-[10px] px-3.5 py-2 text-sm font-medium text-[#8D7A7A] transition-all duration-200 hover:bg-[#DDEBD5] hover:text-[#2C3E2D]"
+                  className="rounded-[10px] px-3.5 py-2 text-sm font-medium text-[var(--color-text-secondary)] transition-all duration-200 hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)]"
                 >
                   {link.label}
                 </Link>
@@ -72,7 +72,7 @@ export default async function MarketingLayout(props: {
       {/* Footer */}
       <footer
         className="mt-24 border-t py-10"
-        style={{ borderColor: '#D5E3CC' }}
+        style={{ borderColor: 'var(--color-border)' }}
       >
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
           <Link href="/" className="group flex items-center gap-2">
@@ -82,12 +82,12 @@ export default async function MarketingLayout(props: {
             >
               R
             </div>
-            <span className="text-sm font-medium" style={{ color: '#2C3E2D' }}>
+            <span className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
               Recallo
             </span>
           </Link>
 
-          <p className="text-sm" style={{ color: '#8D7A7A' }}>
+          <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             ©
             {' '}
             {new Date().getFullYear()}
@@ -100,8 +100,8 @@ export default async function MarketingLayout(props: {
               <Link
                 key={l}
                 href="#"
-                className="text-sm transition-colors duration-200 hover:text-[#2C3E2D]"
-                style={{ color: '#8D7A7A' }}
+                className="text-sm transition-colors duration-200 hover:text-[var(--color-text-primary)]"
+                style={{ color: 'var(--color-text-secondary)' }}
               >
                 {l}
               </Link>

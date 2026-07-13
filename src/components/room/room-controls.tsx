@@ -35,13 +35,13 @@ export function RoomControls({
   canScreenShare = true,
 }: RoomControlsProps) {
   const controlClasses = 'px-4 py-2.5 rounded-lg flex items-center gap-2 transition-all duration-200 hover:opacity-90 active:scale-95 cursor-pointer';
-  const activeStyle = { background: '#BA5A5A', color: '#fff' };
-  const inactiveStyle = { background: '#324147', color: '#FBF5DD' };
+  const activeStyle = { background: 'var(--color-text-accent)', color: '#fff' };
+  const inactiveStyle = { background: 'var(--color-chat-surface)', color: 'var(--color-chat-text)' };
 
   return (
     <div
       className="flex flex-wrap gap-2 rounded-[12px] p-4"
-      style={{ background: '#273338', borderTop: '1px solid rgba(255,255,255,0.06)' }}
+      style={{ background: 'var(--color-chat-bg)', borderTop: '1px solid rgba(255,255,255,0.06)' }}
     >
       {/* Mute */}
       <button
@@ -108,7 +108,7 @@ export function RoomControls({
       <button
         onClick={onLeaveRoom}
         className={controlClasses}
-        style={{ background: '#BA5A5A', color: '#fff' }}
+        style={{ background: 'var(--color-text-accent)', color: '#fff' }}
         title="Leave room"
       >
         <X size={18} />

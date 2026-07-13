@@ -37,14 +37,14 @@ export function ControlButton({
         className="flex size-10 items-center justify-center rounded-[12px] transition-all duration-200 group-enabled:group-hover:scale-105 group-enabled:group-active:scale-95"
         style={{
           background: danger
-            ? '#BA5A5A'
+            ? 'var(--color-text-accent)'
             : active && !comingSoon
               ? 'rgba(255,255,255,0.15)'
               : 'rgba(255,255,255,0.07)',
           color: danger
             ? '#fff'
             : active && !comingSoon
-              ? '#FBF5DD'
+              ? 'var(--color-chat-text)'
               : 'rgba(251,245,221,0.45)',
           opacity: comingSoon ? 0.55 : 1,
         }}

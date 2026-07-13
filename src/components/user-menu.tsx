@@ -34,8 +34,8 @@ export function UserMenu() {
       <div className="flex items-center gap-2">
         <Link
           href="/login"
-          className="hidden rounded-[10px] px-4 py-2 text-sm font-medium hover:bg-[#DDEBD5] sm:block"
-          style={{ color: '#2C3E2D' }}
+          className="hidden rounded-[10px] px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface-hover)] sm:block"
+          style={{ color: 'var(--color-text-primary)' }}
         >
           Sign In
         </Link>
@@ -70,8 +70,8 @@ export function UserMenu() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(o => !o)}
-        className="flex cursor-pointer items-center gap-2 rounded-[12px] px-2.5 py-1.5 transition-all duration-200 hover:bg-[#DDEBD5]"
-        style={{ color: '#2C3E2D' }}
+        className="flex cursor-pointer items-center gap-2 rounded-[12px] px-2.5 py-1.5 transition-all duration-200 hover:bg-[var(--color-surface-hover)]"
+        style={{ color: 'var(--color-text-primary)' }}
         aria-haspopup="true"
         aria-expanded={open}
       >
@@ -92,7 +92,7 @@ export function UserMenu() {
           className="shrink-0 transition-transform duration-200"
           style={{
             transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            color: '#8D7A7A',
+            color: 'var(--color-text-secondary)',
           }}
         />
       </button>
@@ -102,8 +102,8 @@ export function UserMenu() {
         <div
           className="animate-slide-down absolute top-full right-0 z-50 mt-2 w-52 rounded-[14px] py-1.5"
           style={{
-            background: '#F3F8EF',
-            border: '1px solid #D5E3CC',
+            background: 'var(--color-surface)',
+            border: '1px solid var(--color-border)',
             boxShadow:
               '0px 12px 32px rgba(0,0,0,0.08), 0px 1px 0px rgba(255,255,255,0.8) inset',
           }}
@@ -111,17 +111,17 @@ export function UserMenu() {
           {/* User info */}
           <div
             className="mb-1 px-3.5 py-2.5"
-            style={{ borderBottom: '1px solid #D5E3CC' }}
+            style={{ borderBottom: '1px solid var(--color-border)' }}
           >
             <p
               className="truncate text-[13px] font-semibold"
-              style={{ color: '#2C3E2D' }}
+              style={{ color: 'var(--color-text-primary)' }}
             >
               {user.name}
             </p>
             <p
               className="mt-0.5 truncate text-[11px]"
-              style={{ color: '#8D7A7A' }}
+              style={{ color: 'var(--color-text-secondary)' }}
             >
               {user.email}
             </p>
@@ -133,10 +133,10 @@ export function UserMenu() {
               key={item.label}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="mx-1 flex items-center gap-2.5 rounded-[8px] px-3.5 py-2 text-[13px] font-medium transition-all duration-150 hover:bg-[#DDEBD5]"
-              style={{ color: '#2C3E2D' }}
+              className="mx-1 flex items-center gap-2.5 rounded-[8px] px-3.5 py-2 text-[13px] font-medium transition-all duration-150 hover:bg-[var(--color-surface-hover)]"
+              style={{ color: 'var(--color-text-primary)' }}
             >
-              <item.icon size={14} style={{ color: '#8D7A7A' }} />
+              <item.icon size={14} style={{ color: 'var(--color-text-secondary)' }} />
               {item.label}
             </Link>
           ))}
@@ -144,7 +144,7 @@ export function UserMenu() {
           {/* Divider + logout */}
           <div
             className="mx-3 my-1.5"
-            style={{ height: 1, background: '#D5E3CC' }}
+            style={{ height: 1, background: 'var(--color-border)' }}
           />
           <button
             onClick={() => {
@@ -152,7 +152,7 @@ export function UserMenu() {
               logout();
             }}
             className="mx-1 flex w-full cursor-pointer items-center gap-2.5 rounded-[8px] px-3.5 py-2 text-[13px] font-medium transition-all duration-150 hover:bg-red-50"
-            style={{ color: '#BA5A5A', width: 'calc(100% - 8px)' }}
+            style={{ color: 'var(--color-text-accent)', width: 'calc(100% - 8px)' }}
           >
             <LogOut size={14} />
             Sign out

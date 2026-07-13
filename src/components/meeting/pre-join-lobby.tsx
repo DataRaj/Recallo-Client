@@ -188,7 +188,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
     <div data-feature="meeting" className="flex h-dvh w-full flex-col items-center justify-center gap-6 px-4" style={{ background: '#141E1F' }}>
       <div className="flex w-full max-w-md flex-col gap-5">
         <div className="text-center">
-          <h1 className="text-lg font-semibold" style={{ color: '#FBF5DD' }}>{roomTitle}</h1>
+          <h1 className="text-lg font-semibold" style={{ color: 'var(--color-chat-text)' }}>{roomTitle}</h1>
           <p className="mt-1 text-sm" style={{ color: 'rgba(251,245,221,0.5)' }}>
             Ready to join? Check your camera and mic first.
           </p>
@@ -212,7 +212,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
             : (
                 <div
                   className="flex size-16 items-center justify-center rounded-full text-lg font-semibold text-white"
-                  style={{ background: '#9CC5A1' }}
+                  style={{ background: 'var(--color-chat-accent)' }}
                 >
                   {initialsFor(name || 'Guest')}
                 </div>
@@ -228,8 +228,8 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
               title={micEnabled ? 'Mic on' : 'Mic off'}
               className="flex size-10 items-center justify-center rounded-full transition-all hover:scale-105"
               style={{
-                background: micEnabled ? 'rgba(255,255,255,0.15)' : '#BA5A5A',
-                color: '#FBF5DD',
+                background: micEnabled ? 'rgba(255,255,255,0.15)' : 'var(--color-text-accent)',
+                color: 'var(--color-chat-text)',
               }}
             >
               {micEnabled ? <Mic size={16} /> : <MicOff size={16} />}
@@ -242,8 +242,8 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
               title={camEnabled ? 'Camera on' : 'Camera off'}
               className="flex size-10 items-center justify-center rounded-full transition-all hover:scale-105"
               style={{
-                background: camEnabled ? 'rgba(255,255,255,0.15)' : '#BA5A5A',
-                color: '#FBF5DD',
+                background: camEnabled ? 'rgba(255,255,255,0.15)' : 'var(--color-text-accent)',
+                color: 'var(--color-chat-text)',
               }}
             >
               {camEnabled ? <Video size={16} /> : <VideoOff size={16} />}
@@ -306,9 +306,9 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
             }}
             placeholder="e.g. Alex Kim"
             className="rounded-[10px] px-3 py-2.5 text-sm focus:outline-none"
-            style={{ background: '#273338', color: '#FBF5DD', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ background: 'var(--color-chat-bg)', color: 'var(--color-chat-text)', border: '1px solid rgba(255,255,255,0.08)' }}
           />
-          {nameError && <p className="text-xs" style={{ color: '#BA5A5A' }}>{nameError}</p>}
+          {nameError && <p className="text-xs" style={{ color: 'var(--color-text-accent)' }}>{nameError}</p>}
         </div>
 
         <button
@@ -316,7 +316,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
           onClick={handleJoin}
           disabled={joining}
           className="flex h-11 items-center justify-center gap-2 rounded-[12px] text-sm font-semibold transition-all hover:opacity-95 active:scale-[0.98] disabled:opacity-60"
-          style={{ background: '#9CC5A1', color: '#141E1F' }}
+          style={{ background: 'var(--color-chat-accent)', color: '#141E1F' }}
         >
           {joining && <Loader2 size={16} className="animate-spin" />}
           {joining
@@ -347,7 +347,7 @@ function DeviceSelect({ icon, label, value, devices, fallbackLabel, onChange }: 
   return (
     <div
       className="flex items-center gap-2 rounded-[10px] px-3 py-2"
-      style={{ background: '#273338', border: '1px solid rgba(255,255,255,0.08)' }}
+      style={{ background: 'var(--color-chat-bg)', border: '1px solid rgba(255,255,255,0.08)' }}
     >
       <span className="shrink-0" style={{ color: 'rgba(251,245,221,0.6)' }}>{icon}</span>
       <select
@@ -355,7 +355,7 @@ function DeviceSelect({ icon, label, value, devices, fallbackLabel, onChange }: 
         value={value}
         onChange={e => onChange(e.target.value)}
         className="min-w-0 flex-1 bg-transparent text-xs focus:outline-none"
-        style={{ color: '#FBF5DD' }}
+        style={{ color: 'var(--color-chat-text)' }}
       >
         <option value="" style={{ color: '#141E1F' }}>{fallbackLabel}</option>
         {devices.map((d, i) => (

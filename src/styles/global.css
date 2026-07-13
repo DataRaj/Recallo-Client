@@ -267,6 +267,18 @@
 }
 
 /* ─── App-level theme modes (data-theme on <html>) ─── */
+[data-theme='light'] {
+  --color-bg: #e6f2dd;
+  --color-surface: #f3f8ef;
+  --color-surface-hover: #ddebd5;
+  --color-border: #d5e3cc;
+  --color-text-primary: #2c3e2d;
+  --color-text-secondary: #8d7a7a;
+  --color-text-accent: #ba5a5a;
+  --color-accent: #b0ba99;
+  --color-accent-dark: #8a9478;
+}
+
 [data-theme='dark'] {
   --color-bg: #12181b;
   --color-surface: #1a2226;

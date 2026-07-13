@@ -28,8 +28,8 @@ type PageProps = {
 };
 
 const SPEAKER_PALETTE = [
-  '#9CC5A1',
-  '#BA5A5A',
+  'var(--color-chat-accent)',
+  'var(--color-text-accent)',
   '#7EB3C9',
   '#C9A87E',
   '#B07EC9',
@@ -37,7 +37,7 @@ const SPEAKER_PALETTE = [
 ];
 
 function speakerColor(index: number): string {
-  return SPEAKER_PALETTE[index % SPEAKER_PALETTE.length] ?? '#9CC5A1';
+  return SPEAKER_PALETTE[index % SPEAKER_PALETTE.length] ?? 'var(--color-chat-accent)';
 }
 
 export default function TranscriptDetailPage({ params }: PageProps) {
@@ -111,18 +111,18 @@ export default function TranscriptDetailPage({ params }: PageProps) {
     : utterances;
 
   return (
-    <div className="min-h-screen bg-[#141E1F] pb-16 font-sans text-[#FBF5DD]">
+    <div className="min-h-screen bg-[#141E1F] pb-16 font-sans text-[var(--color-chat-text)]">
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[#1C2A2C] px-6">
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push(ROUTES.HOME)}
-            className="rounded-lg p-2 text-[#D9D3BC] transition-all hover:bg-white/5 hover:text-[#FBF5DD]"
+            className="rounded-lg p-2 text-[var(--color-chat-text-2)] transition-all hover:bg-white/5 hover:text-[var(--color-chat-text)]"
           >
             <ArrowLeft size={18} />
           </button>
           <div className="flex items-center gap-2.5">
-            <MessageSquareQuote className="size-5 text-[#9CC5A1]" />
-            <h1 className="text-md font-semibold text-[#FBF5DD]">Audio Transcript</h1>
+            <MessageSquareQuote className="size-5 text-[var(--color-chat-accent)]" />
+            <h1 className="text-md font-semibold text-[var(--color-chat-text)]">Audio Transcript</h1>
           </div>
         </div>
 
@@ -130,7 +130,7 @@ export default function TranscriptDetailPage({ params }: PageProps) {
           <button
             onClick={handleDownload}
             disabled={!transcript}
-            className="flex items-center gap-2 rounded-xl border border-white/10 px-3.5 py-1.5 text-xs font-semibold text-[#D9D3BC] transition-all hover:bg-white/5 hover:text-[#FBF5DD] disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex items-center gap-2 rounded-xl border border-white/10 px-3.5 py-1.5 text-xs font-semibold text-[var(--color-chat-text-2)] transition-all hover:bg-white/5 hover:text-[var(--color-chat-text)] disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Download size={14} />
             Export TXT
@@ -138,7 +138,7 @@ export default function TranscriptDetailPage({ params }: PageProps) {
 
           <Link
             href={ROUTES.SUMMARY_DETAIL(meetingId)}
-            className="hover:bg-opacity-95 flex items-center gap-2 rounded-xl bg-[#9CC5A1] px-3.5 py-1.5 text-xs font-semibold text-[#141E1F] transition-all"
+            className="hover:bg-opacity-95 flex items-center gap-2 rounded-xl bg-[var(--color-chat-accent)] px-3.5 py-1.5 text-xs font-semibold text-[#141E1F] transition-all"
           >
             <Brain size={14} />
             AI Summary
@@ -149,23 +149,23 @@ export default function TranscriptDetailPage({ params }: PageProps) {
       <main className="mx-auto max-w-4xl space-y-6 px-6 pt-8">
         <div className="flex flex-col justify-between gap-4 rounded-2xl border border-white/5 bg-[#1C2A2C] p-6 md:flex-row md:items-center">
           <div>
-            <h2 className="text-xl font-bold text-[#FBF5DD]">
+            <h2 className="text-xl font-bold text-[var(--color-chat-text)]">
               {room?.title ?? meetingId}
             </h2>
             <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-white/50">
               {transcript && (
                 <>
                   <span className="flex items-center gap-1.5">
-                    <Calendar size={13} className="text-[#9CC5A1]" />
+                    <Calendar size={13} className="text-[var(--color-chat-accent)]" />
                     {new Date(transcript.created_at).toLocaleDateString()}
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Clock size={13} className="text-[#9CC5A1]" />
+                    <Clock size={13} className="text-[var(--color-chat-accent)]" />
                     {transcript.duration_sec}
                     s processed
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Sparkles size={13} className="text-[#9CC5A1]" />
+                    <Sparkles size={13} className="text-[var(--color-chat-accent)]" />
                     {(transcript.confidence * 100).toFixed(1)}
                     % word confidence
                   </span>
@@ -175,20 +175,20 @@ export default function TranscriptDetailPage({ params }: PageProps) {
           </div>
 
           <div className="relative w-full md:w-64">
-            <Search className="absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-[#D9D3BC]/60" />
+            <Search className="absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-[var(--color-chat-text-2)]/60" />
             <input
               type="text"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               placeholder="Search transcript..."
-              className="w-full rounded-xl border border-white/5 bg-[#273338] py-2 pr-4 pl-9 text-xs text-[#FBF5DD] placeholder-[#D9D3BC]/40 focus:ring-1 focus:ring-[#9CC5A1] focus:outline-none"
+              className="w-full rounded-xl border border-white/5 bg-[var(--color-chat-bg)] py-2 pr-4 pl-9 text-xs text-[var(--color-chat-text)] placeholder-[var(--color-chat-text-2)]/40 focus:ring-1 focus:ring-[var(--color-chat-accent)] focus:outline-none"
             />
           </div>
         </div>
 
         {hoveredWord && (
-          <div className="fixed right-6 bottom-6 z-40 max-w-xs space-y-2 rounded-xl border border-white/10 bg-[#273338] p-4 text-xs shadow-2xl transition-all duration-300">
-            <p className="flex items-center gap-1 font-semibold text-[#9CC5A1]">
+          <div className="fixed right-6 bottom-6 z-40 max-w-xs space-y-2 rounded-xl border border-white/10 bg-[var(--color-chat-bg)] p-4 text-xs shadow-2xl transition-all duration-300">
+            <p className="flex items-center gap-1 font-semibold text-[var(--color-chat-accent)]">
               <Sparkles size={12} />
               Deepgram Word Details
             </p>
@@ -224,7 +224,7 @@ export default function TranscriptDetailPage({ params }: PageProps) {
 
         {loading && (
           <div className="flex flex-col items-center justify-center gap-4 py-24 text-white/40">
-            <div className="size-10 animate-spin rounded-full border-2 border-[#9CC5A1]/20 border-t-[#9CC5A1]" />
+            <div className="size-10 animate-spin rounded-full border-2 border-[var(--color-chat-accent)]/20 border-t-[var(--color-chat-accent)]" />
             <p className="text-sm">Loading transcript…</p>
           </div>
         )}
@@ -232,17 +232,17 @@ export default function TranscriptDetailPage({ params }: PageProps) {
         {!loading && error === 'processing' && (
           <div className="flex flex-col items-center gap-4 rounded-2xl border border-white/5 bg-[#1C2A2C] p-10 text-center">
             <div className="relative flex size-16 items-center justify-center">
-              <div className="absolute inset-0 animate-pulse rounded-full border-2 border-[#9CC5A1]/10" />
-              <div className="absolute inset-1 animate-spin rounded-full border-2 border-[#9CC5A1]/20 border-t-[#9CC5A1]" />
-              <MessageSquareQuote className="size-6 text-[#9CC5A1]" />
+              <div className="absolute inset-0 animate-pulse rounded-full border-2 border-[var(--color-chat-accent)]/10" />
+              <div className="absolute inset-1 animate-spin rounded-full border-2 border-[var(--color-chat-accent)]/20 border-t-[var(--color-chat-accent)]" />
+              <MessageSquareQuote className="size-6 text-[var(--color-chat-accent)]" />
             </div>
             <div className="space-y-1.5">
-              <p className="text-sm font-semibold text-[#FBF5DD]">Transcript is being generated by AI</p>
+              <p className="text-sm font-semibold text-[var(--color-chat-text)]">Transcript is being generated by AI</p>
               <p className="text-xs text-white/40">Please refresh in a few moments while Deepgram processes the audio.</p>
             </div>
             <button
               onClick={fetchData}
-              className="flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[#D9D3BC] transition-all hover:bg-white/5"
+              className="flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[var(--color-chat-text-2)] transition-all hover:bg-white/5"
             >
               <RefreshCw size={13} />
               Refresh
@@ -285,7 +285,7 @@ export default function TranscriptDetailPage({ params }: PageProps) {
                           key={wIdx}
                           onMouseEnter={() => setHoveredWord(w)}
                           onMouseLeave={() => setHoveredWord(null)}
-                          className="cursor-help decoration-[#9CC5A1]/40 underline-offset-4 transition-colors duration-100 hover:text-[#9CC5A1] hover:underline"
+                          className="cursor-help decoration-[var(--color-chat-accent)]/40 underline-offset-4 transition-colors duration-100 hover:text-[var(--color-chat-accent)] hover:underline"
                           style={{ opacity: w.confidence < 0.90 ? 0.7 : 1 }}
                         >
                           {w.word}

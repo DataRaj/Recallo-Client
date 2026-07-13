@@ -19,7 +19,7 @@ type MeetingGateProps = {
 
 function FullScreen({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-dvh w-full flex-col items-center justify-center gap-4 px-4 text-center" style={{ background: '#141E1F', color: '#FBF5DD' }}>
+    <div className="flex h-dvh w-full flex-col items-center justify-center gap-4 px-4 text-center" style={{ background: '#141E1F', color: 'var(--color-chat-text)' }}>
       {children}
     </div>
   );
@@ -87,7 +87,7 @@ export function MeetingGate({ roomId, mode = 'meeting' }: MeetingGateProps) {
   if (!isHydrated || !user) {
     return (
       <FullScreen>
-        <Loader2 className="size-8 animate-spin" style={{ color: '#9CC5A1' }} />
+        <Loader2 className="size-8 animate-spin" style={{ color: 'var(--color-chat-accent)' }} />
       </FullScreen>
     );
   }
@@ -109,7 +109,7 @@ export function MeetingGate({ roomId, mode = 'meeting' }: MeetingGateProps) {
   if (isLoading) {
     return (
       <FullScreen>
-        <Loader2 className="size-8 animate-spin" style={{ color: '#9CC5A1' }} />
+        <Loader2 className="size-8 animate-spin" style={{ color: 'var(--color-chat-accent)' }} />
         <p className="text-sm font-medium">Loading room…</p>
       </FullScreen>
     );
@@ -128,7 +128,7 @@ export function MeetingGate({ roomId, mode = 'meeting' }: MeetingGateProps) {
         <Link
           href={ROUTES.HOME}
           className="rounded-xl px-5 py-2.5 font-semibold transition-all hover:opacity-95"
-          style={{ background: '#9CC5A1', color: '#141E1F' }}
+          style={{ background: 'var(--color-chat-accent)', color: '#141E1F' }}
         >
           Return to Dashboard
         </Link>

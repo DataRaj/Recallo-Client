@@ -50,7 +50,7 @@ function PeopleSidebarImpl() {
           style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
         >
           <div>
-            <p className="text-[12px] font-medium" style={{ color: '#FBF5DD' }}>Participants</p>
+            <p className="text-[12px] font-medium" style={{ color: 'var(--color-chat-text)' }}>Participants</p>
             <p className="mt-0.5 text-[10px]" style={{ color: 'rgba(251,245,221,0.35)' }}>
               {participants.length}
               {' '}
@@ -87,7 +87,7 @@ function PeopleSidebarImpl() {
                     {initialsFor(name)}
                   </div>
                   <div className="min-w-0">
-                    <p className="truncate text-[13px] font-medium text-[#FBF5DD]">
+                    <p className="truncate text-[13px] font-medium text-[var(--color-chat-text)]">
                       {name}
                       {p.isLocal && ' (You)'}
                     </p>
@@ -106,7 +106,7 @@ function PeopleSidebarImpl() {
                       onClick={async () => openDm(p.identity)}
                       disabled={loadingId === p.identity}
                       className="ml-1 rounded-[6px] p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white/10 disabled:opacity-50"
-                      style={{ color: '#9CC5A1' }}
+                      style={{ color: 'var(--color-chat-accent)' }}
                       title={`Message ${name}`}
                     >
                       {loadingId === p.identity ? <Loader2 size={13} className="animate-spin" /> : <MessageSquare size={13} />}
