@@ -94,7 +94,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside
         className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-40 flex w-60 shrink-0 flex-col transition-transform duration-300 lg:translate-x-0`}
-        style={{ background: '#273338' }}
+        style={{ background: 'var(--color-chat-bg)' }}
       >
         {/* Logo */}
         <div
@@ -107,7 +107,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
           >
             R
           </div>
-          <span className="text-[15px] font-semibold tracking-tight" style={{ color: '#FBF5DD' }}>
+          <span className="text-[15px] font-semibold tracking-tight" style={{ color: 'var(--color-chat-text)' }}>
             Recallo
           </span>
         </div>
@@ -117,7 +117,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
           <button
             onClick={() => openModal('create-room')}
             className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] text-[13px] font-medium text-white transition-all duration-200 hover:opacity-90 active:scale-[0.97]"
-            style={{ background: '#BA5A5A' }}
+            style={{ background: 'var(--color-text-accent)' }}
           >
             <Plus size={14} />
             New Meeting
@@ -149,12 +149,12 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2.5 p-4">
             <div
               className="flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
-              style={{ background: '#BA5A5A' }}
+              style={{ background: 'var(--color-text-accent)' }}
             >
               {userInitial}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-medium" style={{ color: '#FBF5DD' }}>
+              <p className="truncate text-[13px] font-medium" style={{ color: 'var(--color-chat-text)' }}>
                 {user?.name || 'User'}
               </p>
               <p className="truncate text-[11px]" style={{ color: 'rgba(251,245,221,0.4)' }}>
@@ -196,7 +196,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <span className="font-semibold" style={{ color: '#FBF5DD' }}>
+          <span className="font-semibold" style={{ color: 'var(--color-chat-text)' }}>
             Recallo
           </span>
           <div className="w-8" />
@@ -204,6 +204,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
 
         {/* Page Content — feature attribute diverts the theme atmosphere */}
         <div
+          data-theme="light"
           data-feature={feature}
           className="min-h-dvh overflow-y-auto"
           style={{ background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}

@@ -37,7 +37,7 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
       className="relative flex h-full min-h-0 min-w-0 items-center justify-center overflow-hidden rounded-[12px] transition-all duration-200"
       style={{
         background: isSpeaking ? 'rgba(156,197,161,0.1)' : '#1E2C2E',
-        border: isSpeaking ? '2px solid #9CC5A1' : '1px solid rgba(255,255,255,0.06)',
+        border: isSpeaking ? '2px solid var(--color-chat-accent)' : '1px solid rgba(255,255,255,0.06)',
         boxShadow: isSpeaking ? '0 0 0 1px rgba(156,197,161,0.3)' : 'none',
       }}
     >
@@ -73,7 +73,7 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
         {isSpeaking && (
           <div className="flex items-end gap-[2px]">
             {[3, 5, 4].map((h, i) => (
-              <div key={i} className="w-[2px] rounded-full" style={{ height: h, background: '#9CC5A1' }} />
+              <div key={i} className="w-[2px] rounded-full" style={{ height: h, background: 'var(--color-chat-accent)' }} />
             ))}
           </div>
         )}

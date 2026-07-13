@@ -20,7 +20,7 @@ function StageFab({ focused, onToggleView }: { focused: boolean; onToggleView: (
           onClick={toggleScreenShare}
           disabled={screenBusy}
           className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium text-white shadow-lg transition-all hover:opacity-95 disabled:opacity-60"
-          style={{ background: '#BA5A5A' }}
+          style={{ background: 'var(--color-text-accent)' }}
         >
           <MonitorX size={13} />
           Stop sharing
@@ -30,7 +30,7 @@ function StageFab({ focused, onToggleView }: { focused: boolean; onToggleView: (
         type="button"
         onClick={onToggleView}
         className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium shadow-lg transition-all hover:opacity-95"
-        style={{ background: 'rgba(255,255,255,0.12)', color: '#FBF5DD', backdropFilter: 'blur(8px)' }}
+        style={{ background: 'rgba(255,255,255,0.12)', color: 'var(--color-chat-text)', backdropFilter: 'blur(8px)' }}
       >
         {focused ? <Grid3x3 size={13} /> : <Monitor size={13} />}
         {focused ? 'Grid view' : 'Focus screen'}

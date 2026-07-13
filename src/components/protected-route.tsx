@@ -42,7 +42,7 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
     return (
       <div
         className="flex min-h-dvh items-center justify-center"
-        style={{ background: '#E6F2DD' }}
+        style={{ background: 'var(--color-bg)' }}
       >
         <div className="flex flex-col items-center gap-5">
           <div
@@ -55,11 +55,11 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
             <Loader2
               className="animate-spin"
               size={20}
-              style={{ color: '#B0BA99' }}
+              style={{ color: 'var(--color-accent)' }}
             />
             <p
               className="text-sm font-medium"
-              style={{ color: '#8D7A7A' }}
+              style={{ color: 'var(--color-text-secondary)' }}
             >
               Loading...
             </p>

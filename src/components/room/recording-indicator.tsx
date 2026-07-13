@@ -21,7 +21,7 @@ export function RecordingIndicator({ isRecording, recordingTime = 0 }: Recording
   };
 
   return (
-    <div className="fixed top-6 right-6 z-50 flex animate-pulse items-center gap-2 rounded-[8px] px-4 py-2.5" style={{ background: '#BA5A5A' }}>
+    <div className="fixed top-6 right-6 z-50 flex animate-pulse items-center gap-2 rounded-[8px] px-4 py-2.5" style={{ background: 'var(--color-text-accent)' }}>
       <div className="size-2.5 animate-pulse rounded-full bg-white" />
       <span className="text-sm font-semibold text-white">
         Recording

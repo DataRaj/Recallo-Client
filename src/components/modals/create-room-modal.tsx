@@ -90,10 +90,10 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
                 className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
                 style={{
                   borderColor: 'rgba(255,255,255,0.06)',
-                  background: '#324147',
+                  background: 'var(--color-chat-surface)',
                 }}
               >
-                <h3 className="mb-1 font-semibold" style={{ color: '#FBF5DD' }}>
+                <h3 className="mb-1 font-semibold" style={{ color: 'var(--color-chat-text)' }}>
                   {option.label}
                 </h3>
                 <p className="text-sm" style={{ color: 'rgba(251,245,221,0.6)' }}>
@@ -108,14 +108,14 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
             <button
               onClick={() => setSelectedOptionId(null)}
               className="text-sm font-medium"
-              style={{ color: '#9CC5A1' }}
+              style={{ color: 'var(--color-chat-accent)' }}
             >
               ← Back
             </button>
 
             {/* Title input */}
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: '#FBF5DD' }}>
+              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--color-chat-text)' }}>
                 Meeting Title
               </label>
               <input
@@ -130,15 +130,15 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
                 className="w-full rounded-[8px] border px-3 py-2 text-sm focus:outline-none"
                 style={{
                   borderColor: 'rgba(255,255,255,0.06)',
-                  background: '#3C4C52',
-                  color: '#FBF5DD',
+                  background: 'var(--color-chat-bubble)',
+                  color: 'var(--color-chat-text)',
                 }}
               />
             </div>
 
             {/* Description input */}
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: '#FBF5DD' }}>
+              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--color-chat-text)' }}>
                 Description (optional)
               </label>
               <textarea
@@ -149,8 +149,8 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
                 className="w-full resize-none rounded-[8px] border px-3 py-2 text-sm focus:outline-none"
                 style={{
                   borderColor: 'rgba(255,255,255,0.06)',
-                  background: '#3C4C52',
-                  color: '#FBF5DD',
+                  background: 'var(--color-chat-bubble)',
+                  color: 'var(--color-chat-text)',
                 }}
               />
             </div>
@@ -158,7 +158,7 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
             {/* Schedule date (optional) */}
             {(selectedOptionId === 'scheduled' || selectedOptionId === 'webinar') && (
               <div>
-                <label className="mb-2 block text-sm font-medium" style={{ color: '#FBF5DD' }}>
+                <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--color-chat-text)' }}>
                   Schedule For (optional)
                 </label>
                 <input
@@ -168,8 +168,8 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
                   className="w-full rounded-[8px] border px-3 py-2 text-sm focus:outline-none"
                   style={{
                     borderColor: 'rgba(255,255,255,0.06)',
-                    background: '#3C4C52',
-                    color: '#FBF5DD',
+                    background: 'var(--color-chat-bubble)',
+                    color: 'var(--color-chat-text)',
                   }}
                 />
               </div>
@@ -185,8 +185,8 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
                 disabled={isLoading}
                 className="flex-1 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50"
                 style={{
-                  background: '#3C4C52',
-                  color: '#FBF5DD',
+                  background: 'var(--color-chat-bubble)',
+                  color: 'var(--color-chat-text)',
                 }}
               >
                 Cancel
@@ -196,7 +196,7 @@ export function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProps) {
                 disabled={isLoading || !title.trim()}
                 className="flex flex-1 items-center justify-center gap-2 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50"
                 style={{
-                  background: '#BA5A5A',
+                  background: 'var(--color-text-accent)',
                   color: '#fff',
                 }}
               >

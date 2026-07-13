@@ -135,8 +135,8 @@ export function FloatingMeetingOverlay() {
         className="absolute inset-x-0 top-0 z-10 flex cursor-grab items-center gap-2 px-3 py-2 active:cursor-grabbing"
         style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.55), transparent)' }}
       >
-        <span className="size-1.5 shrink-0 rounded-full" style={{ background: '#9CC5A1' }} />
-        <span className="truncate text-[11px] font-medium" style={{ color: '#FBF5DD' }}>
+        <span className="size-1.5 shrink-0 rounded-full" style={{ background: 'var(--color-chat-accent)' }} />
+        <span className="truncate text-[11px] font-medium" style={{ color: 'var(--color-chat-text)' }}>
           {session.roomMeta.title || 'Meeting'}
         </span>
       </div>
@@ -208,11 +208,11 @@ function PipButton({ label, active, busy, danger, onClick, children }: PipButton
       className="flex size-8 items-center justify-center rounded-full transition-all hover:scale-105 disabled:opacity-50"
       style={{
         background: danger
-          ? '#BA5A5A'
+          ? 'var(--color-text-accent)'
           : active
             ? 'rgba(255,255,255,0.16)'
-            : '#BA5A5A',
-        color: '#FBF5DD',
+            : 'var(--color-text-accent)',
+        color: 'var(--color-chat-text)',
       }}
     >
       {children}

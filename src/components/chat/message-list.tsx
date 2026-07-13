@@ -27,7 +27,7 @@ export function MessageList({ messages, currentUserId, isLoading }: MessageListP
     <div className="flex-1 space-y-3 overflow-y-auto p-4">
       {isLoading && (
         <div className="flex justify-center py-8">
-          <div className="size-8 animate-spin rounded-full border-4 border-[#9CC5A1] border-t-transparent" />
+          <div className="size-8 animate-spin rounded-full border-4 border-[var(--color-chat-accent)] border-t-transparent" />
         </div>
       )}
 
@@ -50,8 +50,8 @@ export function MessageList({ messages, currentUserId, isLoading }: MessageListP
               borderRadius: message.senderId === currentUserId
                 ? '14px 14px 4px 14px'
                 : '14px 14px 14px 4px',
-              background: message.senderId === currentUserId ? '#BA5A5A' : '#3C4C52',
-              color: message.senderId === currentUserId ? '#fff' : '#FBF5DD',
+              background: message.senderId === currentUserId ? 'var(--color-text-accent)' : 'var(--color-chat-bubble)',
+              color: message.senderId === currentUserId ? '#fff' : 'var(--color-chat-text)',
             }}
           >
             {message.content}

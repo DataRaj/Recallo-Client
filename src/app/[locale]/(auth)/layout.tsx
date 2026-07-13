@@ -5,8 +5,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <ProtectedRoute requireAuth={false}>
       <div
+        data-theme="light"
         className="flex min-h-dvh flex-col"
-        style={{ background: '#E6F2DD' }}
+        style={{ background: 'var(--color-bg)' }}
       >
         {/* Top bar */}
         <div className="px-6 py-5">
@@ -19,7 +20,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </div>
             <span
               className="text-[15px] font-semibold tracking-tight"
-              style={{ color: '#2C3E2D' }}
+              style={{ color: 'var(--color-text-primary)' }}
             >
               Recallo
             </span>
@@ -33,7 +34,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         {/* Bottom */}
         <div className="px-6 py-5 text-center">
-          <p className="text-xs" style={{ color: '#8D7A7A' }}>
+          <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
             ©
             {' '}
             {new Date().getFullYear()}

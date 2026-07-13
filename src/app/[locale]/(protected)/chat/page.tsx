@@ -9,9 +9,9 @@ export default function ChatIndexPage() {
         className="flex size-14 items-center justify-center rounded-2xl"
         style={{ background: 'rgba(156,197,161,0.1)' }}
       >
-        <MessageSquare size={28} style={{ color: '#9CC5A1' }} />
+        <MessageSquare size={28} style={{ color: 'var(--color-chat-accent)' }} />
       </div>
-      <p className="text-[14px] font-medium" style={{ color: '#FBF5DD' }}>
+      <p className="text-[14px] font-medium" style={{ color: 'var(--color-chat-text)' }}>
         Select a conversation
       </p>
       <p className="text-[12px]" style={{ color: 'rgba(251,245,221,0.4)' }}>

@@ -21,19 +21,19 @@ const QUICK_ACTIONS = [
     title: 'New Meeting',
     desc: 'Start an instant video call right now',
     icon: Video,
-    accent: '#BA5A5A',
+    accent: 'var(--color-text-accent)',
   },
   {
     title: 'Schedule Meeting',
     desc: 'Plan a session for a future time',
     icon: Calendar,
-    accent: '#B0BA99',
+    accent: 'var(--color-accent)',
   },
   {
     title: 'Host Webinar',
     desc: 'Broadcast to your audience at scale',
     icon: Mic,
-    accent: '#8D7A7A',
+    accent: 'var(--color-text-secondary)',
   },
 ];
 
@@ -77,10 +77,10 @@ export default function DashboardPage() {
   }).length;
 
   const STATS = [
-    { label: 'Meetings This Month', value: String(meetingsThisMonth), icon: Video, color: '#BA5A5A' },
-    { label: 'Participants', value: '0', icon: Users, color: '#B0BA99' },
-    { label: 'Hours Connected', value: '0h', icon: Clock, color: '#8D7A7A' },
-    { label: 'Recordings', value: '0', icon: FileText, color: '#9CC5A1' },
+    { label: 'Meetings This Month', value: String(meetingsThisMonth), icon: Video, color: 'var(--color-text-accent)' },
+    { label: 'Participants', value: '0', icon: Users, color: 'var(--color-accent)' },
+    { label: 'Hours Connected', value: '0h', icon: Clock, color: 'var(--color-text-secondary)' },
+    { label: 'Recordings', value: '0', icon: FileText, color: 'var(--color-chat-accent)' },
   ];
 
   return (
@@ -88,16 +88,16 @@ export default function DashboardPage() {
 
       {/* ── Welcome ── */}
       <div className="animate-fade-up">
-        <p className="mb-1 text-sm font-medium" style={{ color: '#B0BA99' }}>
+        <p className="mb-1 text-sm font-medium" style={{ color: 'var(--color-accent)' }}>
           {getGreeting()}
         </p>
         <h1
           className="text-4xl font-semibold tracking-tight"
-          style={{ color: '#2C3E2D' }}
+          style={{ color: 'var(--color-text-primary)' }}
         >
           {user?.name ?? 'Welcome'}
         </h1>
-        <p className="mt-1.5 text-[15px]" style={{ color: '#8D7A7A' }}>
+        <p className="mt-1.5 text-[15px]" style={{ color: 'var(--color-text-secondary)' }}>
           Your Recallo workspace is ready. Start or schedule a meeting.
         </p>
       </div>
@@ -109,8 +109,8 @@ export default function DashboardPage() {
             key={stat.label}
             className="cursor-default rounded-[16px] p-5 transition-all duration-200 hover:-translate-y-0.5"
             style={{
-              background: '#F3F8EF',
-              border: '1px solid #D5E3CC',
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
               boxShadow: '0px 2px 8px rgba(0,0,0,0.04)',
             }}
           >
@@ -122,11 +122,11 @@ export default function DashboardPage() {
             </div>
             <p
               className="mb-1.5 text-[30px] leading-none font-semibold tracking-tight"
-              style={{ color: '#2C3E2D' }}
+              style={{ color: 'var(--color-text-primary)' }}
             >
               {stat.value}
             </p>
-            <p className="text-xs leading-tight" style={{ color: '#8D7A7A' }}>
+            <p className="text-xs leading-tight" style={{ color: 'var(--color-text-secondary)' }}>
               {stat.label}
             </p>
           </div>
@@ -135,7 +135,7 @@ export default function DashboardPage() {
 
       {/* ── Quick Actions ── */}
       <div className="animate-fade-up" style={{ animationDelay: '0.1s' }}>
-        <h2 className="mb-4 text-base font-semibold" style={{ color: '#2C3E2D' }}>
+        <h2 className="mb-4 text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>
           Quick Actions
         </h2>
         <div className="grid gap-4 sm:grid-cols-3">
@@ -144,8 +144,8 @@ export default function DashboardPage() {
               key={action.title}
               className="group flex cursor-pointer flex-col gap-4 rounded-[16px] p-5 text-left transition-all duration-200 hover:-translate-y-0.5"
               style={{
-                background: '#F3F8EF',
-                border: '1px solid #D5E3CC',
+                background: 'var(--color-surface)',
+                border: '1px solid var(--color-border)',
                 boxShadow: '0px 2px 8px rgba(0,0,0,0.04)',
               }}
             >
@@ -156,10 +156,10 @@ export default function DashboardPage() {
                 <action.icon size={20} />
               </div>
               <div>
-                <p className="text-[13px] font-semibold" style={{ color: '#2C3E2D' }}>
+                <p className="text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                   {action.title}
                 </p>
-                <p className="mt-0.5 text-xs leading-relaxed" style={{ color: '#8D7A7A' }}>
+                <p className="mt-0.5 text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                   {action.desc}
                 </p>
               </div>
@@ -176,12 +176,12 @@ export default function DashboardPage() {
       {/* ── Recent Activity ── */}
       <div className="animate-fade-up" style={{ animationDelay: '0.15s' }}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-base font-semibold" style={{ color: '#2C3E2D' }}>
+          <h2 className="text-base font-semibold" style={{ color: 'var(--color-text-primary)' }}>
             Recent Activity
           </h2>
           <button
             className="text-xs font-medium transition-colors hover:underline"
-            style={{ color: '#BA5A5A' }}
+            style={{ color: 'var(--color-text-accent)' }}
           >
             View all
           </button>
@@ -192,20 +192,20 @@ export default function DashboardPage() {
               <div
                 className="flex flex-col items-center justify-center rounded-[16px] py-16 text-center"
                 style={{
-                  background: '#F3F8EF',
-                  border: '1px dashed #D5E3CC',
+                  background: 'var(--color-surface)',
+                  border: '1px dashed var(--color-border)',
                 }}
               >
                 <div
                   className="mb-4 flex size-12 items-center justify-center rounded-[14px]"
-                  style={{ background: 'rgba(176,186,153,0.18)', color: '#B0BA99' }}
+                  style={{ background: 'rgba(176,186,153,0.18)', color: 'var(--color-accent)' }}
                 >
                   <TrendingUp size={22} />
                 </div>
-                <p className="mb-1.5 font-medium" style={{ color: '#2C3E2D' }}>
+                <p className="mb-1.5 font-medium" style={{ color: 'var(--color-text-primary)' }}>
                   No meetings yet
                 </p>
-                <p className="max-w-xs text-sm" style={{ color: '#8D7A7A' }}>
+                <p className="max-w-xs text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                   Start your first meeting to see your activity here.
                 </p>
                 <button
@@ -223,10 +223,10 @@ export default function DashboardPage() {
                   <Link
                     key={item.id}
                     href={item.type === 'webinar' ? ROUTES.WEBINAR_DETAIL(item.id) : ROUTES.MEETING_DETAIL(item.id)}
-                    className="group flex items-center gap-4 rounded-[12px] p-4 transition-all duration-150 hover:bg-[#DDEBD5]"
+                    className="group flex items-center gap-4 rounded-[12px] p-4 transition-all duration-150 hover:bg-[var(--color-surface-hover)]"
                     style={{
-                      background: '#F3F8EF',
-                      border: '1px solid #D5E3CC',
+                      background: 'var(--color-surface)',
+                      border: '1px solid var(--color-border)',
                     }}
                   >
                     <div
@@ -236,17 +236,17 @@ export default function DashboardPage() {
                       {item.type === 'webinar' ? <Mic size={16} /> : <Video size={16} />}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium" style={{ color: '#2C3E2D' }}>
+                      <p className="truncate text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
                         {item.title || `Room ${item.id}`}
                       </p>
-                      <p className="text-xs" style={{ color: '#8D7A7A' }}>
+                      <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                         {item.role === 'host' ? 'Hosted' : 'Joined'}
                         {' '}
                         ·
                         {relativeTime(item.at)}
                       </p>
                     </div>
-                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" style={{ color: '#B0BA99' }} />
+                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" style={{ color: 'var(--color-accent)' }} />
                   </Link>
                 ))}
               </div>

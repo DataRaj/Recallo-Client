@@ -38,14 +38,14 @@ function MeetingHeaderImpl({ room, mode: _mode = 'meeting' }: MeetingHeaderProps
         </Link>
         <div className="h-4 w-px shrink-0" style={{ background: 'rgba(255,255,255,0.12)' }} />
         <div className="min-w-0">
-          <p className="truncate text-[12px] font-medium sm:text-[13px]" style={{ color: '#FBF5DD' }}>
+          <p className="truncate text-[12px] font-medium sm:text-[13px]" style={{ color: 'var(--color-chat-text)' }}>
             {room.title || 'Meeting'}
           </p>
           <div className="flex items-center gap-2">
             {room.status === 'active' && (
               <div className="flex items-center gap-1">
-                <Timer size={9} style={{ color: '#9CC5A1' }} />
-                <span className="font-mono text-[10px] tabular-nums" style={{ color: '#9CC5A1' }}>
+                <Timer size={9} style={{ color: 'var(--color-chat-accent)' }} />
+                <span className="font-mono text-[10px] tabular-nums" style={{ color: 'var(--color-chat-accent)' }}>
                   {elapsed}
                 </span>
               </div>
@@ -53,7 +53,7 @@ function MeetingHeaderImpl({ room, mode: _mode = 'meeting' }: MeetingHeaderProps
             <div className="flex items-center gap-1.5">
               <span
                 className="size-1.5 shrink-0 rounded-full"
-                style={{ background: low ? '#BA5A5A' : '#9CC5A1' }}
+                style={{ background: low ? 'var(--color-text-accent)' : 'var(--color-chat-accent)' }}
               />
               <span className="text-[10px]" style={{ color: low ? '#BA5A5A' : 'rgba(251,245,221,0.4)' }}>
                 {formatCountdown(timeRemaining)}
@@ -70,7 +70,7 @@ function MeetingHeaderImpl({ room, mode: _mode = 'meeting' }: MeetingHeaderProps
             style={{ background: 'rgba(186,90,90,0.15)', color: '#BA5A5A' }}
             title="This meeting is being recorded"
           >
-            <span className="size-1.5 animate-pulse rounded-full" style={{ background: '#BA5A5A' }} />
+            <span className="size-1.5 animate-pulse rounded-full" style={{ background: 'var(--color-text-accent)' }} />
             <span className="text-[10px] font-medium">REC</span>
           </div>
         )}

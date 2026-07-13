@@ -16,15 +16,15 @@ export function ParticipantList({ participants, hostId: _hostId, isExpanded = tr
   return (
     <div
       className="overflow-hidden rounded-[12px]"
-      style={{ background: '#324147' }}
+      style={{ background: 'var(--color-chat-surface)' }}
     >
       {/* Header */}
       <button
         onClick={onToggle}
         className="hover:bg-opacity-80 flex w-full items-center justify-between px-4 py-3 transition-all"
-        style={{ background: '#3C4C52' }}
+        style={{ background: 'var(--color-chat-bubble)' }}
       >
-        <h3 className="text-sm font-semibold" style={{ color: '#FBF5DD' }}>
+        <h3 className="text-sm font-semibold" style={{ color: 'var(--color-chat-text)' }}>
           Participants (
           {participants.length}
           )
@@ -43,7 +43,7 @@ export function ParticipantList({ participants, hostId: _hostId, isExpanded = tr
               <div
                 className="flex size-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold"
                 style={{
-                  background: p.isOnline ? '#9CC5A1' : '#8D7A7A',
+                  background: p.isOnline ? 'var(--color-chat-accent)' : 'var(--color-text-secondary)',
                   color: '#fff',
                 }}
               >
@@ -53,14 +53,14 @@ export function ParticipantList({ participants, hostId: _hostId, isExpanded = tr
               {/* Info */}
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1">
-                  <p className="truncate text-sm" style={{ color: '#FBF5DD' }}>
+                  <p className="truncate text-sm" style={{ color: 'var(--color-chat-text)' }}>
                     {p.name}
                   </p>
                   {p.role === 'host' && (
                     <span
                       className="flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold"
                       style={{
-                        background: '#BA5A5A',
+                        background: 'var(--color-text-accent)',
                         color: '#fff',
                       }}
                     >

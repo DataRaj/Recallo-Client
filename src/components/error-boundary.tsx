@@ -36,20 +36,20 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       return this.props.fallback?.(this.state.error!) ?? (
         <div
           className="flex min-h-screen items-center justify-center p-4"
-          style={{ background: '#E6F2DD' }}
+          style={{ background: 'var(--color-bg)' }}
         >
           <div
             className="w-full max-w-md rounded-[16px] p-6"
-            style={{ background: '#273338' }}
+            style={{ background: 'var(--color-chat-bg)' }}
           >
             <div className="flex gap-3">
               <AlertCircle
                 size={24}
-                style={{ color: '#BA5A5A' }}
+                style={{ color: 'var(--color-text-accent)' }}
                 className="mt-0.5 flex-shrink-0"
               />
               <div>
-                <h2 className="mb-2 font-semibold" style={{ color: '#FBF5DD' }}>
+                <h2 className="mb-2 font-semibold" style={{ color: 'var(--color-chat-text)' }}>
                   Something went wrong
                 </h2>
                 <p className="mb-4 text-sm" style={{ color: 'rgba(251,245,221,0.6)' }}>
@@ -62,7 +62,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
                   }}
                   className="rounded-[8px] px-4 py-2 text-sm font-medium transition-all duration-200"
                   style={{
-                    background: '#BA5A5A',
+                    background: 'var(--color-text-accent)',
                     color: '#fff',
                   }}
                 >

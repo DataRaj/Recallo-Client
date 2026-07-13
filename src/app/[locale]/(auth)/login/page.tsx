@@ -42,8 +42,8 @@ export default function LoginPage() {
       <div
         className="flex flex-col gap-6 rounded-[20px] p-8"
         style={{
-          background: '#F3F8EF',
-          border: '1px solid #D5E3CC',
+          background: 'var(--color-surface)',
+          border: '1px solid var(--color-border)',
           boxShadow: '0px 16px 48px rgba(0,0,0,0.07), 0px 1px 0px rgba(255,255,255,0.7) inset',
         }}
       >
@@ -51,11 +51,11 @@ export default function LoginPage() {
         <div className="flex flex-col gap-1">
           <h1
             className="text-2xl font-semibold tracking-tight"
-            style={{ color: '#2C3E2D' }}
+            style={{ color: 'var(--color-text-primary)' }}
           >
             Welcome back
           </h1>
-          <p className="text-sm" style={{ color: '#8D7A7A' }}>
+          <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
             Sign in to your Recallo account
           </p>
         </div>
@@ -66,7 +66,7 @@ export default function LoginPage() {
             className="animate-fade-in flex items-start gap-2.5 rounded-[10px] p-3 text-sm"
             style={{
               background: 'rgba(186,90,90,0.08)',
-              color: '#BA5A5A',
+              color: 'var(--color-text-accent)',
               border: '1px solid rgba(186,90,90,0.2)',
             }}
           >
@@ -94,9 +94,9 @@ export default function LoginPage() {
 
         {/* Divider */}
         <div className="flex items-center gap-3">
-          <div className="h-px flex-1" style={{ background: '#D5E3CC' }} />
-          <span className="text-xs font-medium" style={{ color: '#8D7A7A' }}>or</span>
-          <div className="h-px flex-1" style={{ background: '#D5E3CC' }} />
+          <div className="h-px flex-1" style={{ background: 'var(--color-border)' }} />
+          <span className="text-xs font-medium" style={{ color: 'var(--color-text-secondary)' }}>or</span>
+          <div className="h-px flex-1" style={{ background: 'var(--color-border)' }} />
         </div>
 
         {/* Form */}
@@ -106,7 +106,7 @@ export default function LoginPage() {
             <label
               htmlFor="login-email"
               className="text-xs font-medium"
-              style={{ color: '#2C3E2D' }}
+              style={{ color: 'var(--color-text-primary)' }}
             >
               Email address
             </label>
@@ -118,7 +118,7 @@ export default function LoginPage() {
               {...register('email')}
             />
             {errors.email && (
-              <p className="text-xs" style={{ color: '#BA5A5A' }}>
+              <p className="text-xs" style={{ color: 'var(--color-text-accent)' }}>
                 {errors.email.message}
               </p>
             )}
@@ -130,14 +130,14 @@ export default function LoginPage() {
               <label
                 htmlFor="login-password"
                 className="text-xs font-medium"
-                style={{ color: '#2C3E2D' }}
+                style={{ color: 'var(--color-text-primary)' }}
               >
                 Password
               </label>
               <Link
                 href="/forgot-password"
                 className="text-xs font-medium hover:underline"
-                style={{ color: '#BA5A5A' }}
+                style={{ color: 'var(--color-text-accent)' }}
               >
                 Forgot password?
               </Link>
@@ -155,14 +155,14 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => setShowPassword(v => !v)}
                 className="absolute top-1/2 right-3 -translate-y-1/2 transition-colors duration-200"
-                style={{ color: '#8D7A7A' }}
+                style={{ color: 'var(--color-text-secondary)' }}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
             </div>
             {errors.password && (
-              <p className="text-xs" style={{ color: '#BA5A5A' }}>
+              <p className="text-xs" style={{ color: 'var(--color-text-accent)' }}>
                 {errors.password.message}
               </p>
             )}
@@ -182,9 +182,9 @@ export default function LoginPage() {
         </form>
 
         {/* Footer */}
-        <p className="text-center text-xs" style={{ color: '#8D7A7A' }}>
+        <p className="text-center text-xs" style={{ color: 'var(--color-text-secondary)' }}>
           {'Don\'t have an account? '}
-          <Link href="/register" className="font-medium hover:underline" style={{ color: '#BA5A5A' }}>
+          <Link href="/register" className="font-medium hover:underline" style={{ color: 'var(--color-text-accent)' }}>
             Create one
           </Link>
         </p>

@@ -42,7 +42,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className="relative h-[22px] w-10 shrink-0 cursor-pointer rounded-full transition-all duration-200"
-      style={{ background: checked ? '#BA5A5A' : '#D5E3CC' }}
+      style={{ background: checked ? 'var(--color-text-accent)' : 'var(--color-border)' }}
     >
       <span
         className="absolute top-[3px] left-[3px] size-4 rounded-full bg-white shadow-sm transition-transform duration-200"
@@ -62,10 +62,10 @@ function Slider({ value, onChange, label }: { value: number; onChange: (v: numbe
         value={value}
         onChange={e => onChange(Number(e.target.value))}
         className="h-1.5 flex-1 cursor-pointer rounded-full"
-        style={{ accentColor: '#BA5A5A' }}
+        style={{ accentColor: 'var(--color-text-accent)' }}
         aria-label={label}
       />
-      <span className="w-9 text-right text-[12px] font-medium tabular-nums" style={{ color: '#8D7A7A' }}>
+      <span className="w-9 text-right text-[12px] font-medium tabular-nums" style={{ color: 'var(--color-text-secondary)' }}>
         {value}
         %
       </span>
@@ -77,9 +77,9 @@ function SectionCard({ title, children }: { title: string; children: React.React
   return (
     <div
       className="flex flex-col gap-5 rounded-[14px] p-5"
-      style={{ background: '#F3F8EF', border: '1px solid #D5E3CC', boxShadow: '0px 2px 8px rgba(0,0,0,0.04)' }}
+      style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', boxShadow: '0px 2px 8px rgba(0,0,0,0.04)' }}
     >
-      <p className="text-[13px] font-semibold tracking-wider uppercase" style={{ color: '#8D7A7A' }}>
+      <p className="text-[13px] font-semibold tracking-wider uppercase" style={{ color: 'var(--color-text-secondary)' }}>
         {title}
       </p>
       {children}
@@ -91,8 +91,8 @@ function Row({ label, description, children }: { label: string; description?: st
   return (
     <div className="flex items-center justify-between gap-4">
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="text-[14px] font-medium" style={{ color: '#2C3E2D' }}>{label}</span>
-        {description && <span className="text-[12px]" style={{ color: '#8D7A7A' }}>{description}</span>}
+        <span className="text-[14px] font-medium" style={{ color: 'var(--color-text-primary)' }}>{label}</span>
+        {description && <span className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>{description}</span>}
       </div>
       {children}
     </div>
@@ -126,11 +126,11 @@ export default function SettingsPage() {
     .toUpperCase() ?? '?';
 
   return (
-    <div className="min-h-dvh" style={{ background: '#E6F2DD' }}>
+    <div className="min-h-dvh" style={{ background: 'var(--color-bg)' }}>
       <div className="mx-auto max-w-5xl px-6 py-10">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight" style={{ color: '#2C3E2D' }}>Settings</h1>
-          <p className="mt-1 text-sm" style={{ color: '#8D7A7A' }}>Manage your account, preferences, and workspace.</p>
+          <h1 className="text-2xl font-semibold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Settings</h1>
+          <p className="mt-1 text-sm" style={{ color: 'var(--color-text-secondary)' }}>Manage your account, preferences, and workspace.</p>
         </div>
 
         <div className="flex gap-6">
@@ -138,7 +138,7 @@ export default function SettingsPage() {
           <aside className="w-48 shrink-0">
             <div
               className="sticky top-6 flex flex-col gap-0.5 rounded-[14px] p-2"
-              style={{ background: '#F3F8EF', border: '1px solid #D5E3CC' }}
+              style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
             >
               {SECTIONS.map(sec => (
                 <button
@@ -146,19 +146,19 @@ export default function SettingsPage() {
                   onClick={() => setActiveSection(sec.id)}
                   className="flex w-full cursor-pointer items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-left text-[13px] font-medium transition-all duration-150"
                   style={{
-                    background: activeSection === sec.id ? '#DDEBD5' : 'transparent',
-                    color: activeSection === sec.id ? '#2C3E2D' : '#8D7A7A',
+                    background: activeSection === sec.id ? 'var(--color-surface-hover)' : 'transparent',
+                    color: activeSection === sec.id ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                   }}
                 >
                   <sec.icon size={15} />
                   {sec.label}
                 </button>
               ))}
-              <div className="mt-2 pt-2" style={{ borderTop: '1px solid #D5E3CC' }}>
+              <div className="mt-2 pt-2" style={{ borderTop: '1px solid var(--color-border)' }}>
                 <button
                   onClick={logout}
                   className="flex w-full cursor-pointer items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-left text-[13px] font-medium transition-all duration-150 hover:bg-red-50"
-                  style={{ color: '#BA5A5A' }}
+                  style={{ color: 'var(--color-text-accent)' }}
                 >
                   <LogOut size={15} />
                   Sign out
@@ -182,33 +182,33 @@ export default function SettingsPage() {
                       </div>
                       <button
                         className="absolute -right-1 -bottom-1 flex size-6 cursor-pointer items-center justify-center rounded-full"
-                        style={{ background: '#2C3E2D', color: '#fff' }}
+                        style={{ background: 'var(--color-text-primary)', color: '#fff' }}
                         title="Change avatar"
                       >
                         <Camera size={11} />
                       </button>
                     </div>
                     <div className="flex-1">
-                      <p className="text-[13px] font-semibold" style={{ color: '#2C3E2D' }}>{user?.name}</p>
-                      <p className="mt-0.5 text-[12px]" style={{ color: '#8D7A7A' }}>{user?.email}</p>
+                      <p className="text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>{user?.name}</p>
+                      <p className="mt-0.5 text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>{user?.email}</p>
                     </div>
                   </div>
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[12px] font-medium" style={{ color: '#2C3E2D' }}>Display Name</label>
+                      <label className="text-[12px] font-medium" style={{ color: 'var(--color-text-primary)' }}>Display Name</label>
                       <input
                         value={displayName}
                         onChange={e => setDisplayName(e.target.value)}
                         className="h-9 w-full rounded-[10px] px-3 text-[13px] focus:outline-none"
-                        style={{ background: '#E6F2DD', border: '1px solid #D5E3CC', color: '#2C3E2D' }}
+                        style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
                         placeholder="Your display name"
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[12px] font-medium" style={{ color: '#2C3E2D' }}>Email</label>
+                      <label className="text-[12px] font-medium" style={{ color: 'var(--color-text-primary)' }}>Email</label>
                       <div
                         className="flex h-9 w-full items-center gap-2 rounded-[10px] px-3 text-[13px]"
-                        style={{ background: '#E6F2DD', border: '1px solid #D5E3CC', color: '#8D7A7A' }}
+                        style={{ background: 'var(--color-bg)', border: '1px solid var(--color-border)', color: 'var(--color-text-secondary)' }}
                       >
                         <Mail size={13} />
                         {user?.email}
@@ -248,11 +248,11 @@ export default function SettingsPage() {
                   <Toggle checked={noiseCancellation} onChange={setNoiseCancellation} />
                 </Row>
                 <div className="flex flex-col gap-2">
-                  <span className="text-[14px] font-medium" style={{ color: '#2C3E2D' }}>Microphone Volume</span>
+                  <span className="text-[14px] font-medium" style={{ color: 'var(--color-text-primary)' }}>Microphone Volume</span>
                   <Slider value={micVolume} onChange={setMicVolume} label="Microphone volume" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <span className="text-[14px] font-medium" style={{ color: '#2C3E2D' }}>Speaker Volume</span>
+                  <span className="text-[14px] font-medium" style={{ color: 'var(--color-text-primary)' }}>Speaker Volume</span>
                   <Slider value={speakerVolume} onChange={setSpeakerVolume} label="Speaker volume" />
                 </div>
               </SectionCard>
@@ -288,11 +288,11 @@ export default function SettingsPage() {
                         className="aspect-square w-full rounded-[12px] transition-all duration-200 group-hover:scale-105"
                         style={{
                           background: t.color,
-                          border: selectedTheme === t.key ? '2px solid #BA5A5A' : '2px solid transparent',
+                          border: selectedTheme === t.key ? '2px solid var(--color-text-accent)' : '2px solid transparent',
                           boxShadow: selectedTheme === t.key ? '0 0 0 2px rgba(186,90,90,0.3)' : 'none',
                         }}
                       />
-                      <span className="text-[11px] font-medium" style={{ color: selectedTheme === t.key ? '#BA5A5A' : '#8D7A7A' }}>
+                      <span className="text-[11px] font-medium" style={{ color: selectedTheme === t.key ? 'var(--color-text-accent)' : 'var(--color-text-secondary)' }}>
                         {t.label}
                       </span>
                     </button>
@@ -307,7 +307,7 @@ export default function SettingsPage() {
                   <Toggle checked={hd} onChange={setHd} />
                 </Row>
                 <div className="flex flex-col gap-2">
-                  <span className="text-[14px] font-medium" style={{ color: '#2C3E2D' }}>Bandwidth Limit</span>
+                  <span className="text-[14px] font-medium" style={{ color: 'var(--color-text-primary)' }}>Bandwidth Limit</span>
                   <Slider value={bandwidth} onChange={setBandwidth} label="Bandwidth" />
                 </div>
               </SectionCard>
@@ -317,8 +317,8 @@ export default function SettingsPage() {
               <SectionCard title="Security">
                 <Row label="Session Management" description="View and revoke active sessions">
                   <button
-                    className="flex cursor-pointer items-center gap-1 rounded-[8px] px-3 py-1.5 text-[12px] font-medium hover:bg-[#DDEBD5]"
-                    style={{ color: '#2C3E2D', border: '1px solid #D5E3CC' }}
+                    className="flex cursor-pointer items-center gap-1 rounded-[8px] px-3 py-1.5 text-[12px] font-medium hover:bg-[var(--color-surface-hover)]"
+                    style={{ color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }}
                     onClick={() => router.push('/settings/security')}
                   >
                     Manage
@@ -326,7 +326,7 @@ export default function SettingsPage() {
                     <ChevronRight size={12} />
                   </button>
                 </Row>
-                <div className="pt-2" style={{ borderTop: '1px solid #D5E3CC' }}>
+                <div className="pt-2" style={{ borderTop: '1px solid var(--color-border)' }}>
                   <button
                     onClick={logout}
                     className="flex cursor-pointer items-center gap-2 rounded-[10px] px-4 py-2 text-[13px] font-medium hover:opacity-80"

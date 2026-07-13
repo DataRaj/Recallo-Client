@@ -52,7 +52,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div
           className={`w-full ${sizeMap[size]} flex max-h-[90vh] flex-col rounded-[16px] shadow-lg`}
-          style={{ background: '#273338' }}
+          style={{ background: 'var(--color-chat-bg)' }}
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
@@ -60,7 +60,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
             className="flex items-center justify-between border-b px-6 py-4"
             style={{ borderColor: 'rgba(255,255,255,0.06)' }}
           >
-            <h2 className="text-lg font-semibold" style={{ color: '#FBF5DD' }}>
+            <h2 className="text-lg font-semibold" style={{ color: 'var(--color-chat-text)' }}>
               {title}
             </h2>
             <button

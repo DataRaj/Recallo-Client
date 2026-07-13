@@ -71,10 +71,10 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
               className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
-                background: '#324147',
+                background: 'var(--color-chat-surface)',
               }}
             >
-              <h3 className="mb-1 font-semibold" style={{ color: '#FBF5DD' }}>
+              <h3 className="mb-1 font-semibold" style={{ color: 'var(--color-chat-text)' }}>
                 Room ID
               </h3>
               <p className="text-sm" style={{ color: 'rgba(251,245,221,0.6)' }}>
@@ -87,10 +87,10 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
               className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
-                background: '#324147',
+                background: 'var(--color-chat-surface)',
               }}
             >
-              <h3 className="mb-1 font-semibold" style={{ color: '#FBF5DD' }}>
+              <h3 className="mb-1 font-semibold" style={{ color: 'var(--color-chat-text)' }}>
                 Invite Link
               </h3>
               <p className="text-sm" style={{ color: 'rgba(251,245,221,0.6)' }}>
@@ -103,10 +103,10 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
               className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
-                background: '#324147',
+                background: 'var(--color-chat-surface)',
               }}
             >
-              <h3 className="mb-1 font-semibold" style={{ color: '#FBF5DD' }}>
+              <h3 className="mb-1 font-semibold" style={{ color: 'var(--color-chat-text)' }}>
                 Webinar Link
               </h3>
               <p className="text-sm" style={{ color: 'rgba(251,245,221,0.6)' }}>
@@ -120,14 +120,14 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
             <button
               onClick={() => setJoinMethod(null)}
               className="text-sm font-medium"
-              style={{ color: '#9CC5A1' }}
+              style={{ color: 'var(--color-chat-accent)' }}
             >
               ← Back
             </button>
 
             {/* Room ID / Link input */}
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: '#FBF5DD' }}>
+              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--color-chat-text)' }}>
                 {joinMethod === 'id' ? 'Room ID' : 'Invite Link'}
               </label>
               <input
@@ -142,15 +142,15 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
                 className="w-full rounded-[8px] border px-3 py-2 text-sm focus:outline-none"
                 style={{
                   borderColor: 'rgba(255,255,255,0.06)',
-                  background: '#3C4C52',
-                  color: '#FBF5DD',
+                  background: 'var(--color-chat-bubble)',
+                  color: 'var(--color-chat-text)',
                 }}
               />
             </div>
 
             {/* Display name */}
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: '#FBF5DD' }}>
+              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--color-chat-text)' }}>
                 Display Name (optional)
               </label>
               <input
@@ -165,8 +165,8 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
                 className="w-full rounded-[8px] border px-3 py-2 text-sm focus:outline-none"
                 style={{
                   borderColor: 'rgba(255,255,255,0.06)',
-                  background: '#3C4C52',
-                  color: '#FBF5DD',
+                  background: 'var(--color-chat-bubble)',
+                  color: 'var(--color-chat-text)',
                 }}
               />
             </div>
@@ -181,8 +181,8 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
                 disabled={isLoading}
                 className="flex-1 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50"
                 style={{
-                  background: '#3C4C52',
-                  color: '#FBF5DD',
+                  background: 'var(--color-chat-bubble)',
+                  color: 'var(--color-chat-text)',
                 }}
               >
                 Cancel
@@ -192,7 +192,7 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
                 disabled={isLoading || !canJoin}
                 className="flex flex-1 items-center justify-center gap-2 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50"
                 style={{
-                  background: '#BA5A5A',
+                  background: 'var(--color-text-accent)',
                   color: '#fff',
                 }}
               >
