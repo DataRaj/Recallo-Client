@@ -51,12 +51,13 @@ export function MeetingGate({ roomId, mode = 'meeting' }: MeetingGateProps) {
   }, [isHydrated, user, router, pathname]);
 
   // If the session ended (host ended / left / disconnected) while we're on the
-  // meeting route, send the user back to the dashboard.
+  // meeting route, transition to the post-meeting insights page where the
+  // transcript + summary pipeline progress is shown.
   useEffect(() => {
     if (joinedRef.current && !isActiveHere) {
-      router.push(ROUTES.HOME);
+      router.push(ROUTES.MEETING_INSIGHTS(room?.livekit_room_name ?? roomId));
     }
-  }, [isActiveHere, router]);
+  }, [isActiveHere, router, room, roomId]);
 
   const handleJoin = useCallback(
     async (config: LobbyConfig) => {
@@ -80,8 +81,8 @@ export function MeetingGate({ roomId, mode = 'meeting' }: MeetingGateProps) {
 
   const handleLeave = useCallback(() => {
     leave();
-    router.push(ROUTES.HOME);
-  }, [leave, router]);
+    router.push(ROUTES.MEETING_INSIGHTS(room?.livekit_room_name ?? roomId));
+  }, [leave, router, room, roomId]);
 
   // Still hydrating auth, or redirecting an unauthenticated user.
   if (!isHydrated || !user) {

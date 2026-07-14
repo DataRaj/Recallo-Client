@@ -56,6 +56,31 @@ export function mapBackendRoom(r: BackendRoom): Room {
   };
 }
 
+/** A past room enriched with pipeline/attendance metadata, for the history hub. */
+export type MeetingHistoryItem = {
+  id: number;
+  livekit_room_name: string;
+  host_guest_id: string;
+  title: string;
+  status: 'draft' | 'live' | 'ended';
+  tier: string;
+  created_at: string;
+  started_at?: string;
+  ended_at?: string;
+  session_duration_mins: number;
+  participant_count: number;
+  has_transcript: boolean;
+  has_summary: boolean;
+};
+
+/** Lists every room created by the given guest host, newest first. */
+export async function listRooms(hostGuestId: string): Promise<MeetingHistoryItem[]> {
+  const response = await apiClient.get<MeetingHistoryItem[]>('/api/v1/rooms', {
+    params: { host_guest_id: hostGuestId },
+  });
+  return response.data ?? [];
+}
+
 export async function createRoom(title: string, hostGuestId: string): Promise<Room> {
   const response = await apiClient.post<BackendRoom>('/api/v1/rooms', {
     title,

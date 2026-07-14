@@ -19,6 +19,7 @@ export const ROUTES = {
   // Protected - Meetings
   MEETINGS: '/meetings',
   MEETING_DETAIL: (roomId: string) => `/meeting/${roomId}`,
+  MEETING_INSIGHTS: (roomId: string) => `/meetings/${roomId}/insights`,
 
   // Protected - Webinars
   WEBINARS: '/webinars',
@@ -51,6 +52,7 @@ export const ROUTES = {
 export const PROTECTED_ROUTES = [
   ROUTES.HOME,
   ROUTES.MEETINGS,
+  ROUTES.MEETING_INSIGHTS('*'),
   ROUTES.WEBINARS,
   ROUTES.CHATS,
   ROUTES.CHAT_CONVERSATION('*'),
