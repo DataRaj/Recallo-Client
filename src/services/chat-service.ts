@@ -131,7 +131,11 @@ export async function getMessages(
     { params: { page, limit } },
   );
   const raw = response.data.data.messages ?? [];
-  return raw.map(normaliseMessage);
+  // Server returns newest-first (DESC); render oldest-first so live WS
+  // messages appended at the end stay in chronological order at the bottom.
+  return raw
+    .map(normaliseMessage)
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 }
 
 // ── File upload ──────────────────────────────────────────────────────────────
