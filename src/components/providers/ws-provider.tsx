@@ -13,6 +13,7 @@ import type { ReactNode } from "react";
 import type { WsSendMessage, WsSendTyping } from "@/types/realtime";
 import { createContext, use, useMemo } from "react";
 import { useChatSocket } from "@/hooks/use-chat-socket";
+import { useTokenRefresh } from "@/hooks/use-token-refresh";
 
 type WsContextValue = {
   sendMessage: (payload: WsSendMessage) => void;
@@ -25,6 +26,7 @@ const WsContext = createContext<WsContextValue | null>(null);
 
 export function WsProvider({ children }: { children: ReactNode }) {
   const { sendMessage, sendTyping, sendDelivered, sendRead } = useChatSocket();
+  useTokenRefresh();
 
   const value = useMemo(
     () => ({ sendMessage, sendTyping, sendDelivered, sendRead }),
