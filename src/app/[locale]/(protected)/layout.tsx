@@ -7,7 +7,7 @@
 import { Bell, FileText, Home, LogOut, Menu, MessageSquare, Mic, Plus, Settings, Video, X, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ProtectedRoute } from '@/components/protected-route';
 import { GlobalModals, ModalProvider, useModal } from '@/components/providers/modal-provider';
 import { WsProvider } from '@/components/providers/ws-provider';
@@ -71,15 +71,25 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { openModal } = useModal();
 
+  const isSidebarOpenRef = useRef(isSidebarOpen);
+  useEffect(() => {
+    isSidebarOpenRef.current = isSidebarOpen;
+  }, [isSidebarOpen]);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isSidebarOpen) {
+      // Never intercept keyboard events when the user is typing in an input.
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.key === 'Escape' && isSidebarOpenRef.current) {
         setIsSidebarOpen(false);
       }
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [isSidebarOpen]);
+  // Run once on mount — the ref keeps the sidebar state fresh.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const userInitial = user?.name.charAt(0).toUpperCase() || 'U';
   const feature = featureForPath(pathname);

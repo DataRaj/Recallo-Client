@@ -49,6 +49,15 @@ export default antfu(
 
   // --- Custom Rule Overrides ---
   {
+    files: ["src/components/marketing/**/*.tsx", "src/app/**/(marketing)/*.tsx"],
+    rules: {
+      // These classes belong to the scoped editorial system in marketing.css.
+      "tailwindcss/no-custom-classname": ["warn", {
+        whitelist: ["^mk-[a-z0-9-]+$", "^recallo-marketing$"],
+      }],
+    },
+  },
+  {
     rules: {
       "antfu/no-top-level-await": "off", // Allow top-level await
       "style/brace-style": ["error", "1tbs"], // Use the default brace style

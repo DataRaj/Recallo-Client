@@ -6,9 +6,9 @@ import { useEffect } from 'react';
 import { Env } from '@/libs/Env';
 import { SuspendedPostHogPageView } from './post-hog-page-view';
 
-export const PostHogProvider = async (props: { children: React.ReactNode }) => {
+export const PostHogProvider = (props: { children: React.ReactNode }) => {
   useEffect(() => {
-    if (Env.NEXT_PUBLIC_POSTHOG_KEY) {
+    if (Env.NEXT_PUBLIC_POSTHOG_KEY != null && Env.NEXT_PUBLIC_POSTHOG_KEY !== '') {
       posthog.init(Env.NEXT_PUBLIC_POSTHOG_KEY, {
         api_host: Env.NEXT_PUBLIC_POSTHOG_HOST,
         capture_pageview: false, // Disable automatic pageview capture, as we capture manually
@@ -17,8 +17,8 @@ export const PostHogProvider = async (props: { children: React.ReactNode }) => {
     }
   }, []);
 
-  if (!Env.NEXT_PUBLIC_POSTHOG_KEY) {
-    return props.children;
+  if (Env.NEXT_PUBLIC_POSTHOG_KEY == null || Env.NEXT_PUBLIC_POSTHOG_KEY === '') {
+    return <>{props.children}</>;
   }
 
   return (

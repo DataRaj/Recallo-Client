@@ -2,10 +2,10 @@
 
 import type { CreateRoomInput, JoinRoomInput, Room } from '@/types/room';
 import { useLocale } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { ROUTES } from '@/lib/routes';
+import { useRouter } from '@/libs/i18n-navigation';
 import { createRoom as apiCreateRoom, endRoom as apiEndRoom, getRoom as apiGetRoom } from '@/services/room-service';
 import { getMeetingIdentity } from '@/utils/identity';
 import { recordRecentRoom } from '@/utils/recent-rooms';
@@ -75,7 +75,7 @@ export function useRoom(): UseRoomResult {
       });
 
       // Store displayName in localStorage to use in the meeting page when fetching token
-      if (input.displayName) {
+      if (input.displayName != null && input.displayName !== '') {
         localStorage.setItem('recallo_display_name', input.displayName);
       }
 

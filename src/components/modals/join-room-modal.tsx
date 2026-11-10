@@ -4,7 +4,7 @@
 'use client';
 
 import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useRoom } from '@/hooks/use-room';
 import { Modal } from './base-modal';
 
@@ -14,31 +14,13 @@ type JoinRoomModalProps = {
 };
 
 export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
+  const fieldId = useId();
   const [joinMethod, setJoinMethod] = useState<'id' | 'link' | null>(null);
   const [roomId, setRoomId] = useState('');
   const [inviteLink, setInviteLink] = useState('');
   const [displayName, setDisplayName] = useState('');
 
-  const { joinRoom, isLoading } = useRoom();
-
-  const handleJoin = async () => {
-    const id = joinMethod === 'id' ? roomId : extractRoomIdFromLink(inviteLink);
-
-    if (!id) {
-      return;
-    }
-
-    try {
-      await joinRoom({
-        roomId: id,
-        displayName: displayName.trim() || undefined,
-      });
-      onClose();
-      resetForm();
-    } catch {
-      // Error is handled by useRoom hook
-    }
-  };
+  const { joinRoom, isLoading, error } = useRoom();
 
   const resetForm = () => {
     setJoinMethod(null);
@@ -53,22 +35,39 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
       const url = new URL(link);
       const path = url.pathname;
       const match = path.match(/\/(?:meeting|webinar)\/([a-zA-Z0-9-]+)/);
-      return match?.[1] || '';
+      return match?.[1] ?? '';
     } catch {
       return '';
     }
   };
 
-  const canJoin = joinMethod === 'id' ? roomId.trim() : extractRoomIdFromLink(inviteLink);
+  const canJoin = (joinMethod === 'id' ? roomId.trim() : extractRoomIdFromLink(inviteLink)).length > 0;
+
+  const handleJoin = async () => {
+    if (isLoading) {
+      return;
+    }
+    const id = joinMethod === 'id' ? roomId.trim() : extractRoomIdFromLink(inviteLink);
+    if (id === '') {
+      return;
+    }
+    try {
+      await joinRoom({ roomId: id, displayName: displayName.trim() || undefined });
+      onClose();
+      resetForm();
+    } catch {
+      // The hook retains the error and entered values for retry.
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Join Room" size="md">
       <div className="space-y-4">
-        {!joinMethod ? (
+        {joinMethod === null && (
           <div className="space-y-3">
             <button
               onClick={() => setJoinMethod('id')}
-              className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
+              className="w-full rounded-[12px] border p-4 text-left transition-all duration-200"
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
                 background: 'var(--color-chat-surface)',
@@ -84,7 +83,7 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
 
             <button
               onClick={() => setJoinMethod('link')}
-              className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
+              className="w-full rounded-[12px] border p-4 text-left transition-all duration-200"
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
                 background: 'var(--color-chat-surface)',
@@ -100,7 +99,7 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
 
             <button
               onClick={() => setJoinMethod('link')}
-              className="hover:border-opacity-50 w-full rounded-[12px] border p-4 text-left transition-all duration-200"
+              className="w-full rounded-[12px] border p-4 text-left transition-all duration-200"
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
                 background: 'var(--color-chat-surface)',
@@ -114,7 +113,8 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
               </p>
             </button>
           </div>
-        ) : (
+        )}
+        {joinMethod !== null && (
           <div className="space-y-4">
             {/* Back button */}
             <button
@@ -127,14 +127,15 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
 
             {/* Room ID / Link input */}
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--color-chat-text)' }}>
+              <label htmlFor={`${fieldId}-room`} className="mb-2 block text-sm font-medium" style={{ color: 'var(--color-chat-text)' }}>
                 {joinMethod === 'id' ? 'Room ID' : 'Invite Link'}
               </label>
               <input
+                id={`${fieldId}-room`}
                 value={joinMethod === 'id' ? roomId : inviteLink}
                 onChange={e => joinMethod === 'id' ? setRoomId(e.target.value) : setInviteLink(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && canJoin) {
+                  if (e.key === 'Enter' && !isLoading && canJoin) {
                     void handleJoin();
                   }
                 }}
@@ -150,14 +151,15 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
 
             {/* Display name */}
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--color-chat-text)' }}>
+              <label htmlFor={`${fieldId}-name`} className="mb-2 block text-sm font-medium" style={{ color: 'var(--color-chat-text)' }}>
                 Display Name (optional)
               </label>
               <input
+                id={`${fieldId}-name`}
                 value={displayName}
                 onChange={e => setDisplayName(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && canJoin) {
+                  if (e.key === 'Enter' && !isLoading && canJoin) {
                     void handleJoin();
                   }
                 }}
@@ -172,8 +174,10 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
             </div>
 
             {/* Buttons */}
+            {error !== null && <p role="alert" className="text-sm" style={{ color: '#f5b8b4' }}>{error}</p>}
             <div className="flex gap-2 pt-4">
               <button
+                type="button"
                 onClick={() => {
                   setJoinMethod(null);
                   resetForm();
@@ -188,7 +192,9 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
                 Cancel
               </button>
               <button
-                onClick={handleJoin}
+                type="button"
+                data-room-submit
+                onClick={() => void handleJoin()}
                 disabled={isLoading || !canJoin}
                 className="flex flex-1 items-center justify-center gap-2 rounded-[8px] px-4 py-2 font-medium transition-all duration-200 disabled:opacity-50"
                 style={{
@@ -197,7 +203,7 @@ export function JoinRoomModal({ isOpen, onClose }: JoinRoomModalProps) {
                 }}
               >
                 {isLoading && <Loader2 size={16} className="animate-spin" />}
-                Join
+                {isLoading ? 'Joining…' : 'Join'}
               </button>
             </div>
           </div>
