@@ -121,7 +121,7 @@ export function FloatingMeetingOverlay() {
         top: pos?.y ?? 0,
         width: PIP_WIDTH,
         height: PIP_HEIGHT,
-        background: '#141E1F',
+        background: 'var(--color-room-bg)',
         border: '1px solid rgba(156,197,161,0.4)',
         boxShadow: '0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(156,197,161,0.15)',
         visibility: pos ? 'visible' : 'hidden',

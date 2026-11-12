@@ -58,7 +58,7 @@ export function GifPicker({ onSelect, onClose }: GifPickerProps) {
       ref={containerRef}
       className="absolute bottom-full left-0 mb-2 flex w-80 flex-col overflow-hidden rounded-2xl shadow-2xl"
       style={{
-        background: '#1C2A2C',
+        background: 'var(--color-room-surface)',
         border: '1px solid rgba(255,255,255,0.08)',
         maxHeight: '360px',
         zIndex: 50,

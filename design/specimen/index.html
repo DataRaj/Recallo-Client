@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recallo — design foundation specimen</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    @font-face{font-family:Manrope;src:url('fonts/manrope-400.ttf') format('truetype');font-weight:400;font-display:swap}
+    @font-face{font-family:Manrope;src:url('fonts/manrope-600.ttf') format('truetype');font-weight:600;font-display:swap}
+    @font-face{font-family:Newsreader;src:url('fonts/newsreader-400.ttf') format('truetype');font-weight:400;font-display:swap}
+    *{box-sizing:border-box}body{margin:0;background:var(--mk-paper);color:var(--mk-ink);font-family:var(--mk-font-body);font-size:16px;line-height:1.7}
+    .shell{max-width:1280px;margin:auto;padding:32px 64px}header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-bottom:24px;border-bottom:1px solid var(--mk-border)}
+    .brand{font-size:22px;font-weight:600;letter-spacing:-.04em}.caption{font-size:12px;color:var(--mk-secondary)}.lead{font-size:19px;max-width:46ch;line-height:1.65}h1,h2,.document h3{font-family:var(--mk-font-display);font-weight:400}h1{font-size:var(--mk-display-xl);line-height:1.03;letter-spacing:-.035em;max-width:13ch;margin:24px 0}h2{font-size:var(--mk-h2);line-height:1.12;letter-spacing:-.02em;margin:0 0 24px}h3{font-size:22px;line-height:1.3;letter-spacing:-.025em;font-weight:600}p{margin:0 0 20px}
+    section{padding:72px 0;border-bottom:1px solid var(--mk-border)}.hero,.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}.label{font-size:12px;font-weight:600;letter-spacing:.04em}.document{padding:32px;background:var(--mk-elevated);border-top:3px solid var(--mk-ink);box-shadow:var(--mk-shadow)}.document h3{font-size:36px;line-height:1.1;margin:8px 0 24px}.doc-row{padding:20px 0;border-top:1px solid var(--mk-border)}.doc-row p:last-child{margin:0}.doc-row strong{font-weight:600}.decision{color:var(--mk-clay-ink)}.metadata{font:12px/1.5 var(--mk-font-data);color:var(--mk-secondary)}
+    .swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}.swatch{height:88px;border:1px solid var(--mk-border);margin-bottom:8px}.swatches p{font-size:12px}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}button,.demo-link{min-height:48px;padding:12px 20px;border:1px solid var(--mk-control-edge);border-radius:var(--mk-radius-button);font:600 14px/1.4 var(--mk-font-body);cursor:pointer;background:var(--mk-paper);color:var(--mk-ink)}button:hover,.demo-link:hover{background:var(--mk-sage)}button[aria-pressed=true],.primary{background:var(--mk-ink);color:var(--mk-paper);border-color:var(--mk-ink)}button[aria-pressed=true]:hover,.primary:hover{background:var(--mk-dark)}button:disabled{background:var(--mk-disabled-bg);color:var(--mk-disabled-text);cursor:not-allowed}button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--mk-ink);outline-offset:4px}.demo-link{display:inline-flex;align-items:center;text-decoration:none}details{border-bottom:1px solid var(--mk-border);padding:20px 0}summary{cursor:pointer;font-weight:600;min-height:44px}details p{max-width:62ch}.dark{background:var(--mk-dark);color:var(--mk-on-dark);padding:32px}.dark p{color:var(--mk-on-dark)}.sans h1,.sans h2,.sans .document h3{font-family:var(--mk-font-body);font-weight:600}.note{max-width:72ch;color:var(--mk-secondary)}.type-list{display:grid;grid-template-columns:140px 1fr;gap:16px}.type-list dt{font-size:12px;color:var(--mk-secondary)}.type-list dd{margin:0}
+    @media(max-width:1000px){.shell{padding:24px 40px}.hero,.split{grid-template-columns:1fr;gap:32px}.swatches{grid-template-columns:repeat(3,1fr)}h1{max-width:15ch}}
+    @media(max-width:600px){.shell{padding:20px 24px}header{align-items:flex-start;flex-direction:column;gap:8px}section{padding:48px 0}.lead{font-size:17px}.document,.dark{padding:20px}.controls{align-items:stretch}.controls button{flex:1}.swatches{grid-template-columns:repeat(2,1fr)}.type-list{grid-template-columns:1fr;gap:8px}.type-list dd{margin-bottom:16px}}
+    @media(max-width:340px){.shell{padding:20px}h1{font-size:42px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body class="recallo-marketing">
+  <main class="shell" id="main">
+    <header><span class="brand">Recallo</span><span class="caption">Phase 2 · Design specimen · Illustrative content</span></header>
+    <div class="controls" role="group" aria-label="Compare typography directions">
+      <button type="button" id="editorial" aria-pressed="true">Newsreader + Manrope</button>
+      <button type="button" id="sans" aria-pressed="false">Manrope only</button>
+    </div>
+    <p class="caption">The selector changes the typography below. This is a design specimen, with no connection to meeting or account services.</p>
+    <section class="hero" aria-labelledby="hero-heading">
+      <div><span class="label">Browser-based meetings</span><h1 id="hero-heading">Have the conversation. Keep the context.</h1><p class="lead">Meet online, stay focused on the people in the room, and return to the important details afterward.</p><p class="caption">Selected direction: editorial headings with precise interface typography. Final line wrapping will be reviewed in the implemented page.</p></div>
+      <article class="document" aria-labelledby="document-title"><span class="metadata">EXAMPLE SUMMARY</span><h3 id="document-title">Launch Planning</h3><p class="caption">Fictional content demonstrating the intended insights format.</p><div class="doc-row"><strong>Discussion</strong><p>Review the updated launch timeline and outstanding dependencies.</p></div><div class="doc-row"><strong class="decision">Decision</strong><p>Move the launch review to Thursday.</p></div><div class="doc-row"><strong>Next step</strong><p>Priya will share the revised draft before the review.</p></div><div class="doc-row"><span class="metadata">04:18 · Speaker 1</span><p>“Let's move the launch review to Thursday.”</p></div></article>
+    </section>
+    <section aria-labelledby="color-title"><h2 id="color-title">Color with a clear role.</h2><div class="swatches">
+      <div><div class="swatch" style="background:#f3f8ef"></div><p>Paper<br>#F3F8EF · reading</p></div>
+      <div><div class="swatch" style="background:#e6f2dd"></div><p>Sage<br>#E6F2DD · sequence</p></div>
+      <div><div class="swatch" style="background:#2c3e2d"></div><p>Forest<br>#2C3E2D · ink/actions</p></div>
+      <div><div class="swatch" style="background:#8a9478"></div><p>Moss<br>#8A9478 · decoration</p></div>
+      <div><div class="swatch" style="background:#9d4544"></div><p>Clay ink<br>#9D4544 · emphasis</p></div>
+      <div><div class="swatch" style="background:#171d1a"></div><p>Charcoal<br>#171D1A · product</p></div>
+    </div><p class="note">Secondary text is #52604F: 6.20:1 on paper and 5.76:1 on sage. Muted decorative colors are not small-text colors.</p></section>
+    <section class="split" aria-labelledby="type-title"><div><h2 id="type-title">A readable record.</h2><p class="lead">The heading carries the editorial voice. The body keeps a steady reading rhythm.</p><p class="note">Accented text specimen: Réunion, décisions, équipe, jeudi. Numerals and punctuation: 04:18 · 2026 — “Thursday.”</p></div><dl class="type-list"><dt>Heading 3</dt><dd style="font-size:24px;font-weight:600;line-height:1.3">Return to the details.</dd><dt>Body</dt><dd>When meeting insights are ready, review the transcript, key discussion points, decisions and action items.</dd><dt>Small body</dt><dd style="font-size:14px">Insights take time to process and may not be available for every meeting.</dd><dt>Metadata</dt><dd class="metadata">04:26 · Speaker 2</dd></dl></section>
+    <section id="states" aria-labelledby="state-title"><h2 id="state-title">Controls and states.</h2><p class="note">These sample controls change their own state. Production creation and joining will use the application's real flows.</p><div class="controls"><button class="primary" id="state-toggle" aria-pressed="false" type="button">Select example</button><button disabled type="button">Unavailable</button><a class="demo-link" href="#questions">Read the example question</a></div><p id="state-status" role="status">Example is not selected.</p><div class="dark"><h3>Live product surfaces</h3><p>Paper text on charcoal has a calculated contrast of 15.88:1.</p></div></section>
+    <section id="questions" aria-labelledby="questions-title"><h2 id="questions-title">Questions stay straightforward.</h2><details><summary>What can I revisit afterward?</summary><p>When insights are available, the meeting's insights page shows processing progress and can display a transcript and structured summary. Results are not guaranteed for every meeting.</p></details></section>
+    <footer><p class="caption">Recallo design foundation · Fonts are locally loaded and OFL licensed. Browser inspection is deferred; this file is a reviewable specimen, not the finished landing page.</p></footer>
+  </main>
+  <script>
+    const editorial = document.getElementById('editorial');
+    const sans = document.getElementById('sans');
+    function setDirection(useSans) {
+      document.body.classList.toggle('sans', useSans);
+      editorial.setAttribute('aria-pressed', String(!useSans));
+      sans.setAttribute('aria-pressed', String(useSans));
+    }
+    editorial.addEventListener('click', () => setDirection(false));
+    sans.addEventListener('click', () => setDirection(true));
+    const toggle = document.getElementById('state-toggle');
+    toggle.addEventListener('click', () => {
+      const selected = toggle.getAttribute('aria-pressed') !== 'true';
+      toggle.setAttribute('aria-pressed', String(selected));
+      toggle.textContent = selected ? 'Example selected' : 'Select example';
+      document.getElementById('state-status').textContent = selected ? 'Example is selected.' : 'Example is not selected.';
+    });
+  </script>
+</body>
+</html>

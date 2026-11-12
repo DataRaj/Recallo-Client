@@ -129,7 +129,7 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
     >
       <div
         className="w-full max-w-md rounded-2xl p-6 shadow-2xl"
-        style={{ background: '#1E2E30', border: '1px solid rgba(255,255,255,0.08)' }}
+        style={{ background: 'var(--color-room-surface)', border: '1px solid rgba(255,255,255,0.08)' }}
       >
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -277,7 +277,7 @@ export function NewConversationModal({ open, prefillUserId, onClose }: NewConver
             onClick={() => void handleStart()}
             disabled={busy || (!selected && !query.trim())}
             className="flex items-center gap-2 rounded-[10px] px-4 py-2 text-[13px] font-medium transition-all hover:opacity-90 disabled:opacity-50"
-            style={{ background: 'var(--color-chat-accent)', color: '#1E2E30' }}
+            style={{ background: 'var(--color-chat-accent)', color: 'var(--color-room-surface)' }}
           >
             {busy ? <Loader2 size={14} className="animate-spin" /> : <MessageSquare size={14} />}
             {busy ? 'Opening…' : 'Start Chat'}

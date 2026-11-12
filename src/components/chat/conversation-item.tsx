@@ -35,7 +35,7 @@ export function ConversationItem({ conversation, isActive, onClick }: Conversati
       <div className="relative shrink-0">
         <div
           className="flex size-10 items-center justify-center rounded-full text-sm font-semibold text-white"
-          style={{ background: 'var(--color-text-accent)' }}
+          style={{ background: 'var(--color-action)' }}
         >
           {displayName.charAt(0).toUpperCase()}
         </div>
@@ -60,7 +60,7 @@ export function ConversationItem({ conversation, isActive, onClick }: Conversati
             <span
               className="flex-shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
               style={{
-                background: 'var(--color-text-accent)',
+                background: 'var(--color-action)',
                 color: '#fff',
               }}
             >

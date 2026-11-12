@@ -5,6 +5,7 @@ import type { Room } from '@/types/room';
 import { AlertCircle, ArrowLeft, Brain } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useRef, useState } from 'react';
+import { StateTransition } from '@/components/animations/state-transition';
 import { PipelineProgress } from '@/components/insights/pipeline-progress';
 import { SummaryView } from '@/components/insights/summary-view';
 import { TranscriptView } from '@/components/insights/transcript-view';
@@ -82,9 +83,9 @@ export default function MeetingInsightsPage({ params }: PageProps) {
 
   if (error != null) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-center text-[var(--color-chat-text)]">
+      <div className="flex h-screen flex-col items-center justify-center bg-[var(--color-room-bg)] px-4 text-center text-[var(--color-chat-text)]">
         <AlertCircle className="mb-4 size-10 text-[var(--color-text-accent)]" />
-        <p className="text-sm text-white/60">{error}</p>
+        <p className="text-sm text-[var(--color-chat-text-2)]">{error}</p>
         <button
           onClick={goHome}
           className="mt-6 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-[var(--color-chat-text-2)] transition-all hover:bg-white/5"
@@ -99,11 +100,12 @@ export default function MeetingInsightsPage({ params }: PageProps) {
   const failed = insights?.status === 'failed';
 
   return (
-    <div className="min-h-screen bg-[#141E1F] pb-16 font-sans text-[var(--color-chat-text)]">
+    <div className="min-h-screen bg-[var(--color-room-bg)] pb-16 font-sans text-[var(--color-chat-text)]">
       {/* Navbar */}
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[#1C2A2C] px-6">
+      <header className="sticky top-0 z-30 flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-[var(--color-room-surface)] px-6 py-3">
         <div className="flex items-center gap-4">
           <button
+            aria-label="Back to meetings"
             onClick={() => router.push(ROUTES.MEETINGS)}
             className="rounded-lg p-2 text-[var(--color-chat-text-2)] transition-all hover:bg-white/5 hover:text-[var(--color-chat-text)]"
           >
@@ -111,7 +113,7 @@ export default function MeetingInsightsPage({ params }: PageProps) {
           </button>
           <div className="flex items-center gap-2.5">
             <Brain className="size-5 text-[var(--color-chat-accent)]" />
-            <h1 className="text-md font-semibold text-[var(--color-chat-text)]">AI Meeting Insights</h1>
+            <h1 className="text-base font-semibold text-[var(--color-chat-text)]">AI Meeting Insights</h1>
           </div>
         </div>
 
@@ -120,7 +122,7 @@ export default function MeetingInsightsPage({ params }: PageProps) {
             <span className="rounded-full border border-[var(--color-chat-accent)]/20 bg-[var(--color-chat-accent)]/10 px-2.5 py-1 text-xs font-medium text-[var(--color-chat-accent)] capitalize">
               {insights.summary.category || 'meeting'}
             </span>
-            <span className="text-[10px] text-white/40">
+            <span className="text-[10px] text-[var(--color-chat-text-2)]">
               Powered by
               {' '}
               {insights.summary.model}
@@ -137,10 +139,10 @@ export default function MeetingInsightsPage({ params }: PageProps) {
         )}
 
         {failed && (
-          <div className="mx-auto max-w-lg rounded-2xl border border-[var(--color-text-accent)]/20 bg-[#1C2A2C] p-8 text-center">
+          <div className="mx-auto max-w-lg rounded-2xl border border-[var(--color-text-accent)]/20 bg-[var(--color-room-surface)] p-8 text-center">
             <AlertCircle className="mx-auto mb-4 size-8 text-[var(--color-text-accent)]" />
             <h2 className="mb-2 text-lg font-bold">We couldn't process this meeting</h2>
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-[var(--color-chat-text-2)]">
               {insights?.message != null && insights.message !== ''
                 ? insights.message
                 : 'Something went wrong while generating insights for this recording.'}
@@ -149,7 +151,7 @@ export default function MeetingInsightsPage({ params }: PageProps) {
         )}
 
         {completed && insights?.summary && (
-          <>
+          <StateTransition stateKey="completed" className="space-y-6">
             <SummaryView
               summary={insights.summary}
               title={room?.title != null && room.title !== '' ? room.title : meetingId}
@@ -157,7 +159,7 @@ export default function MeetingInsightsPage({ params }: PageProps) {
               participantCount={room?.participantCount}
             />
             {insights.transcript && <TranscriptView transcript={insights.transcript} />}
-          </>
+          </StateTransition>
         )}
       </main>
     </div>

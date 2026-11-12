@@ -17,7 +17,7 @@ export function TranscriptView({ transcript }: TranscriptViewProps) {
   const utterances = groupWordsIntoUtterances(transcript.words_json ?? []);
 
   return (
-    <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+    <div className="rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-6">
       <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-chat-accent)] uppercase">
         <FileText size={16} />
         Full Transcript
@@ -40,7 +40,7 @@ export function TranscriptView({ transcript }: TranscriptViewProps) {
                       {' '}
                       {u.speaker + 1}
                     </span>
-                    <span className="text-[10px] text-white/30">{formatTime(u.start)}</span>
+                    <span className="text-[10px] text-[var(--color-chat-text-2)]">{formatTime(u.start)}</span>
                   </div>
                   <p className="flex-1 text-sm leading-relaxed text-white/80">{u.text}</p>
                 </div>

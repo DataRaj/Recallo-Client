@@ -1,0 +1,130 @@
+{
+  "fixtures": "Local auth, room, chat and insights responses; no backend operation tested.",
+  "screens": [
+    {
+      "route": "/home",
+      "width": 1440,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "Hello, Alex."
+    },
+    {
+      "route": "/meetings",
+      "width": 1440,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "My Meetings"
+    },
+    {
+      "route": "/home",
+      "width": 320,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "Hello, Alex."
+    },
+    {
+      "route": "/settings",
+      "width": 320,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "Settings"
+    },
+    {
+      "route": "/chat",
+      "width": 320,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)"
+    },
+    {
+      "route": "/chat/1",
+      "width": 320,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)"
+    },
+    {
+      "route": "/transcripts",
+      "width": 320,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "Transcripts"
+    },
+    {
+      "route": "/summaries",
+      "width": 320,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "Summaries"
+    },
+    {
+      "route": "/transcripts/design-review",
+      "width": 320,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "Audio Transcript"
+    },
+    {
+      "route": "/summaries/design-review",
+      "width": 320,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "AI Meeting Insights"
+    },
+    {
+      "route": "/webinars",
+      "width": 320,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "Webinars"
+    },
+    {
+      "route": "/meeting/design-review",
+      "width": 320,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "Launch planning \u00b7 Design fixture"
+    },
+    {
+      "route": "/login",
+      "width": 1440,
+      "overflow": false,
+      "font": "appSans, \"appSans Fallback\", Arial, sans-serif, Arial, sans-serif",
+      "background": "rgb(248, 244, 234)",
+      "heading": "Welcome back"
+    }
+  ],
+  "interactions": {
+    "localFonts": true,
+    "createDialog": true,
+    "themeSelection": true,
+    "insightsProgressToRecord": true,
+    "mobileMenu": true,
+    "mobileMenuFocusReturn": true,
+    "settingsSwitches": true,
+    "chatBackLink": true,
+    "walkthroughToTranscript": true,
+    "reducedMotionControl": true,
+    "dashboardAlias": true
+  },
+  "runtimeErrors": [],
+  "verification": {
+    "productionBuild": "passed; Next.js webpack build including TypeScript and route generation",
+    "targetedLint": "passed with no errors; shared button module retains an existing React Refresh export warning",
+    "whitespace": "git diff --check passed",
+    "browser": "Installed headless Chromium through CDP; bounded checks, no Playwright suite",
+    "screenMeasurements": 13,
+    "horizontalOverflow": false,
+    "runtimeExceptions": 0
+  }
+}

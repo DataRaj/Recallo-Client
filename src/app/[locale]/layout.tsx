@@ -9,7 +9,9 @@ import { QueryProvider } from '@/components/providers/query-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/providers/toaster';
 import { routing } from '@/libs/i18n-routing';
+import { appDisplay, appSans } from '@/styles/fonts';
 import '@/styles/global.css';
+import '@/styles/app-system.css';
 
 export const metadata: Metadata = {
   icons: [
@@ -53,7 +55,7 @@ export default async function RootLayout(props: {
   setRequestLocale(locale);
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className={`${appDisplay.variable} ${appSans.variable}`}>
       <body>
         <QueryProvider>
           <NuqsProvider>

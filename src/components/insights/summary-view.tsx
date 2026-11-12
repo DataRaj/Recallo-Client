@@ -35,10 +35,10 @@ export function SummaryView({
   return (
     <div className="space-y-6">
       {/* Title Section */}
-      <div className="flex flex-col justify-between gap-4 rounded-2xl border border-white/5 bg-[#1C2A2C] p-6 md:flex-row md:items-center">
+      <div className="flex flex-col justify-between gap-4 rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-6 md:flex-row md:items-center">
         <div>
           <h2 className="text-2xl font-bold text-[var(--color-chat-text)]">{title}</h2>
-          <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-white/50">
+          <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-[var(--color-chat-text-2)]">
             <span className="flex items-center gap-1.5">
               <Calendar size={13} className="text-[var(--color-chat-accent)]" />
               {new Date(summary.created_at).toLocaleDateString()}
@@ -68,7 +68,7 @@ export function SummaryView({
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left Column: Summary & Key Points & Decisions */}
         <div className="space-y-6 lg:col-span-2">
-          <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+          <div className="rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-6">
             <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-chat-accent)] uppercase">
               <Brain size={16} />
               Executive Summary
@@ -78,7 +78,7 @@ export function SummaryView({
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+          <div className="rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-6">
             <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-chat-accent)] uppercase">
               <Sparkles size={16} />
               Key Discussion Points
@@ -93,7 +93,7 @@ export function SummaryView({
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+          <div className="rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-6">
             <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-text-accent)] uppercase">
               <Flag size={16} />
               Decisions Made
@@ -111,7 +111,7 @@ export function SummaryView({
 
         {/* Right Column: Action Items & Tags */}
         <div className="space-y-6">
-          <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+          <div className="rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-6">
             <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-chat-accent)] uppercase">
               <ListTodo size={16} />
               Action Items
@@ -136,7 +136,7 @@ export function SummaryView({
                     </label>
                   </div>
 
-                  <div className="flex items-center justify-between pl-6 text-[10px] text-white/40">
+                  <div className="flex items-center justify-between pl-6 text-[10px] text-[var(--color-chat-text-2)]">
                     <span className="flex items-center gap-1">
                       <User size={10} className="text-[var(--color-chat-accent)]" />
                       {item.assignee}
@@ -150,7 +150,7 @@ export function SummaryView({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/5 bg-[#1C2A2C] p-6">
+          <div className="rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-6">
             <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-wider text-[var(--color-chat-accent)] uppercase">
               <Tag size={16} />
               Discussion Tags

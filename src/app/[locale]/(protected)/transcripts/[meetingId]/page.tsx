@@ -111,8 +111,8 @@ export default function TranscriptDetailPage({ params }: PageProps) {
     : utterances;
 
   return (
-    <div className="min-h-screen bg-[#141E1F] pb-16 font-sans text-[var(--color-chat-text)]">
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[#1C2A2C] px-6">
+    <div className="min-h-screen bg-[var(--color-room-bg)] pb-16 font-sans text-[var(--color-chat-text)]">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[var(--color-room-surface)] px-6">
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push(ROUTES.HOME)}
@@ -138,7 +138,7 @@ export default function TranscriptDetailPage({ params }: PageProps) {
 
           <Link
             href={ROUTES.SUMMARY_DETAIL(meetingId)}
-            className="hover:bg-opacity-95 flex items-center gap-2 rounded-xl bg-[var(--color-chat-accent)] px-3.5 py-1.5 text-xs font-semibold text-[#141E1F] transition-all"
+            className="hover:bg-opacity-95 flex items-center gap-2 rounded-xl bg-[var(--color-chat-accent)] px-3.5 py-1.5 text-xs font-semibold text-[var(--color-room-bg)] transition-all"
           >
             <Brain size={14} />
             AI Summary
@@ -147,7 +147,7 @@ export default function TranscriptDetailPage({ params }: PageProps) {
       </header>
 
       <main className="mx-auto max-w-4xl space-y-6 px-6 pt-8">
-        <div className="flex flex-col justify-between gap-4 rounded-2xl border border-white/5 bg-[#1C2A2C] p-6 md:flex-row md:items-center">
+        <div className="flex flex-col justify-between gap-4 rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-6 md:flex-row md:items-center">
           <div>
             <h2 className="text-xl font-bold text-[var(--color-chat-text)]">
               {room?.title ?? meetingId}
@@ -230,7 +230,7 @@ export default function TranscriptDetailPage({ params }: PageProps) {
         )}
 
         {!loading && error === 'processing' && (
-          <div className="flex flex-col items-center gap-4 rounded-2xl border border-white/5 bg-[#1C2A2C] p-10 text-center">
+          <div className="flex flex-col items-center gap-4 rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-10 text-center">
             <div className="relative flex size-16 items-center justify-center">
               <div className="absolute inset-0 animate-pulse rounded-full border-2 border-[var(--color-chat-accent)]/10" />
               <div className="absolute inset-1 animate-spin rounded-full border-2 border-[var(--color-chat-accent)]/20 border-t-[var(--color-chat-accent)]" />
@@ -257,7 +257,7 @@ export default function TranscriptDetailPage({ params }: PageProps) {
               return (
                 <div
                   key={index}
-                  className="flex gap-4 rounded-2xl border border-white/5 bg-[#1C2A2C] p-4 transition-all hover:bg-[#1E2E30]/60"
+                  className="flex gap-4 rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-4 transition-all hover:bg-[var(--color-room-surface)]/60"
                 >
                   <div
                     className="flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"

@@ -51,7 +51,7 @@ export function ControlButton({
       >
         {busy ? <Loader2 size={16} className="animate-spin" /> : <Icon size={17} />}
       </div>
-      <span className="text-[9px] leading-none" style={{ color: 'rgba(251,245,221,0.45)' }}>
+      <span className="text-[9px] leading-none" style={{ color: 'var(--color-chat-text-2)' }}>
         {label}
       </span>
     </button>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ChatSidebar } from '@/components/meeting/chat-sidebar';
 import { PeopleSidebar } from '@/components/meeting/people-sidebar';
 import { useMeetingStore } from '@/stores/use-meeting-store';
@@ -17,15 +17,14 @@ export function SidebarSlot() {
   const open = sidebar !== 'none';
 
   const [shown, setShown] = useState<'chat' | 'people'>('chat');
-  useEffect(() => {
-    if (sidebar !== 'none') {
-      setShown(sidebar);
-    }
-  }, [sidebar]);
+  if (sidebar !== 'none' && sidebar !== shown) {
+    setShown(sidebar);
+  }
 
   return (
     <div
       aria-hidden={!open}
+      inert={!open}
       className={`absolute inset-y-0 right-0 z-20 flex transition-transform duration-300 ease-out ${
         open ? 'translate-x-0' : 'pointer-events-none translate-x-full'
       }`}

@@ -1,7 +1,9 @@
 'use client';
 
 import type { Variants } from 'framer-motion';
+
 import { motion } from 'framer-motion';
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 type FadeInProps = {
   children: React.ReactNode;
@@ -16,12 +18,13 @@ const fadeInVariants: Variants = {
 };
 
 export const FadeIn = ({ children, delay = 0, duration = 0.5, className }: FadeInProps) => {
+  const reducedMotion = useReducedMotion();
   return (
     <motion.div
-      initial="hidden"
+      initial={reducedMotion ? false : 'hidden'}
       animate="visible"
       variants={fadeInVariants}
-      transition={{ duration, delay }}
+      transition={{ duration: reducedMotion ? 0 : duration, delay: reducedMotion ? 0 : delay }}
       className={className}
     >
       {children}

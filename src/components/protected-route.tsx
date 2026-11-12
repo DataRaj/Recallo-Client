@@ -47,7 +47,7 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
         <div className="flex flex-col items-center gap-5">
           <div
             className="flex size-14 items-center justify-center rounded-[16px] text-xl font-semibold text-white"
-            style={{ background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)' }}
+            style={{ background: 'var(--color-action)' }}
           >
             R
           </div>

@@ -2,9 +2,9 @@
 
 import type { MeetingHistoryItem } from '@/services/room-service';
 import { AlertCircle, Calendar, CheckCircle2, Clock, Loader2, Radio, Users, Video } from 'lucide-react';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { ROUTES } from '@/lib/routes';
+import { Link } from '@/libs/i18n-navigation';
 import { listRooms } from '@/services/room-service';
 import { getMeetingIdentity } from '@/utils/identity';
 
@@ -30,7 +30,7 @@ function meetingState(m: MeetingHistoryItem): { key: BadgeState; label: string; 
   return {
     key: 'processing',
     label: 'Processing',
-    className: 'border-white/10 bg-white/5 text-white/60',
+    className: 'border-white/10 bg-white/5 text-[var(--color-chat-text-2)]',
     Icon: Loader2,
   };
 }
@@ -62,11 +62,11 @@ export default function MeetingsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#141E1F] px-6 py-8 text-[var(--color-chat-text)] md:px-10">
+    <div className="min-h-screen bg-[var(--color-room-bg)] px-6 py-8 text-[var(--color-chat-text)] md:px-10">
       <div className="mx-auto max-w-6xl">
-        <header className="mb-8">
+        <header className="app-page-heading">
           <h1 className="text-2xl font-semibold">My Meetings</h1>
-          <p className="mt-1 text-sm text-white/50">
+          <p className="mt-1 text-sm text-[var(--color-chat-text-2)]">
             Browse past meetings and open their transcripts and AI summaries.
           </p>
         </header>
@@ -80,14 +80,14 @@ export default function MeetingsPage() {
         {!loading && error != null && (
           <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
             <AlertCircle className="size-8 text-[var(--color-text-accent)]" />
-            <p className="text-sm text-white/60">{error}</p>
+            <p className="text-sm text-[var(--color-chat-text-2)]">{error}</p>
           </div>
         )}
 
         {!loading && error == null && meetings.length === 0 && (
-          <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/5 bg-[#1C2A2C] py-24 text-center">
-            <Video className="size-8 text-white/30" />
-            <p className="text-sm text-white/50">You haven't hosted any meetings yet.</p>
+          <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/5 bg-[var(--color-room-surface)] py-24 text-center">
+            <Video className="size-8 text-[var(--color-chat-text-2)]" />
+            <p className="text-sm text-[var(--color-chat-text-2)]">You haven't hosted any meetings yet.</p>
           </div>
         )}
 
@@ -103,7 +103,7 @@ export default function MeetingsPage() {
                 <Link
                   key={m.id}
                   href={href}
-                  className="group flex flex-col gap-4 rounded-2xl border border-white/5 bg-[#1C2A2C] p-5 transition-all hover:border-white/10 hover:bg-[#22312f]"
+                  className="app-meeting-card group flex flex-col gap-4 rounded-2xl border border-white/5 bg-[var(--color-room-surface)] p-5 transition-all hover:border-white/10 hover:bg-[var(--color-room-hover)]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <h2 className="line-clamp-2 text-base font-semibold text-[var(--color-chat-text)]">
@@ -117,7 +117,7 @@ export default function MeetingsPage() {
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-white/45">
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--color-chat-text-2)]">
                     <span className="flex items-center gap-1.5">
                       <Calendar size={12} className="text-[var(--color-chat-accent)]" />
                       {new Date(m.created_at).toLocaleDateString()}
@@ -141,7 +141,7 @@ export default function MeetingsPage() {
                             </span>
                           )
                         : (
-                            <span className="text-white/40">Generating insights…</span>
+                            <span className="text-[var(--color-chat-text-2)]">Generating insights…</span>
                           )}
                     </div>
                   )}

@@ -237,7 +237,7 @@ export default function RegisterPage() {
             type="submit"
             disabled={isSubmitting}
             className="mt-1 flex h-10 w-full items-center justify-center gap-2 rounded-[10px] text-sm font-medium text-white transition-all duration-200 hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)' }}
+            style={{ background: 'var(--color-action)' }}
           >
             {isSubmitting ? <Loader2 className="animate-spin" size={15} /> : null}
             {isSubmitting ? 'Creating account...' : 'Create account'}
