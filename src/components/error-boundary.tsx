@@ -62,7 +62,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
                   }}
                   className="rounded-[8px] px-4 py-2 text-sm font-medium transition-all duration-200"
                   style={{
-                    background: 'var(--color-text-accent)',
+                    background: 'var(--color-action)',
                     color: '#fff',
                   }}
                 >

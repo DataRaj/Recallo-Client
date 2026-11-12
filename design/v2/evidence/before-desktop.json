@@ -1,0 +1,194 @@
+{
+  "title": "Recallo — Have the conversation. Keep the context.",
+  "viewport": 1440,
+  "documentWidth": 1425,
+  "fonts": [
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "status": "unloaded"
+    },
+    {
+      "family": "marketingSans",
+      "status": "loaded"
+    },
+    {
+      "family": "marketingSans",
+      "status": "loaded"
+    },
+    {
+      "family": "marketingSans Fallback",
+      "status": "unloaded"
+    },
+    {
+      "family": "marketingDisplay",
+      "status": "loaded"
+    },
+    {
+      "family": "marketingDisplay Fallback",
+      "status": "unloaded"
+    }
+  ],
+  "headings": [
+    {
+      "text": "Have the conversation. Keep the context.",
+      "font": "marketingDisplay, \"marketingDisplay Fallback\", Georgia, serif, Georgia, serif",
+      "size": "81.6px"
+    },
+    {
+      "text": "Conversations move.Details get lost.",
+      "font": "marketingDisplay, \"marketingDisplay Fallback\", Georgia, serif, Georgia, serif",
+      "size": "52px"
+    },
+    {
+      "text": "One conversation,three connected moments.",
+      "font": "marketingDisplay, \"marketingDisplay Fallback\", Georgia, serif, Georgia, serif",
+      "size": "52px"
+    },
+    {
+      "text": "Made for themeeting itself.",
+      "font": "marketingDisplay, \"marketingDisplay Fallback\", Georgia, serif, Georgia, serif",
+      "size": "52px"
+    },
+    {
+      "text": "When the meeting ends, the useful part can stay.",
+      "font": "marketingDisplay, \"marketingDisplay Fallback\", Georgia, serif, Georgia, serif",
+      "size": "52px"
+    }
+  ]
+}

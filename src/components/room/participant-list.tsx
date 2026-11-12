@@ -60,7 +60,7 @@ export function ParticipantList({ participants, hostId: _hostId, isExpanded = tr
                     <span
                       className="flex-shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold"
                       style={{
-                        background: 'var(--color-text-accent)',
+                        background: 'var(--color-action)',
                         color: '#fff',
                       }}
                     >

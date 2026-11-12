@@ -62,7 +62,7 @@ function VideoGridImpl() {
       {alone && (
         <div
           className="pointer-events-none absolute top-4 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-[11px]"
-          style={{ background: 'rgba(0,0,0,0.4)', color: 'rgba(251,245,221,0.6)' }}
+          style={{ background: 'rgba(0,0,0,0.4)', color: 'var(--color-chat-text-2)' }}
         >
           Waiting for others to join…
         </div>

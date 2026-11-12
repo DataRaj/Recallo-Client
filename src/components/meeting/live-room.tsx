@@ -38,7 +38,7 @@ function LiveRoomImpl({
     <div
       data-feature="meeting"
       className="relative flex h-dvh flex-col overflow-hidden"
-      style={{ background: '#141E1F' }}
+      style={{ background: 'var(--color-room-bg)' }}
     >
       <ConnectionOverlay />
       <MeetingHeader room={room} mode={mode} />

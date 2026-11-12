@@ -31,7 +31,7 @@ function MeetingHeaderImpl({ room, mode: _mode = 'meeting' }: MeetingHeaderProps
         <Link href={ROUTES.HOME} className="flex shrink-0 items-center">
           <div
             className="flex size-6 items-center justify-center rounded-[7px] text-[11px] font-semibold text-white"
-            style={{ background: 'linear-gradient(135deg, #BA5A5A, #8A4040)' }}
+            style={{ background: 'var(--color-action)' }}
           >
             R
           </div>
@@ -55,7 +55,7 @@ function MeetingHeaderImpl({ room, mode: _mode = 'meeting' }: MeetingHeaderProps
                 className="size-1.5 shrink-0 rounded-full"
                 style={{ background: low ? 'var(--color-text-accent)' : 'var(--color-chat-accent)' }}
               />
-              <span className="text-[10px]" style={{ color: low ? '#BA5A5A' : 'rgba(251,245,221,0.4)' }}>
+              <span className="text-[10px]" style={{ color: low ? 'var(--color-action)' : 'rgba(251,245,221,0.4)' }}>
                 {formatCountdown(timeRemaining)}
               </span>
             </div>
@@ -67,10 +67,10 @@ function MeetingHeaderImpl({ room, mode: _mode = 'meeting' }: MeetingHeaderProps
         {isRecording && (
           <div
             className="flex items-center gap-1.5 rounded-[8px] px-2 py-1"
-            style={{ background: 'rgba(186,90,90,0.15)', color: '#BA5A5A' }}
+            style={{ background: 'rgba(186,90,90,0.15)', color: 'var(--color-danger-text, #ffb4a5)' }}
             title="This meeting is being recorded"
           >
-            <span className="size-1.5 animate-pulse rounded-full" style={{ background: 'var(--color-text-accent)' }} />
+            <span className="size-1.5 animate-pulse rounded-full" style={{ background: 'var(--color-action)' }} />
             <span className="text-[10px] font-medium">REC</span>
           </div>
         )}
@@ -83,7 +83,7 @@ function MeetingHeaderImpl({ room, mode: _mode = 'meeting' }: MeetingHeaderProps
         </div>
         <div
           className="flex items-center gap-1.5 rounded-[8px] px-2 py-1"
-          style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(251,245,221,0.6)' }}
+          style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--color-chat-text-2)' }}
         >
           <Users size={12} />
           <span className="text-[10px]">{participants.length}</span>

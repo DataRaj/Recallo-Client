@@ -37,7 +37,7 @@ function ChatSidebarImpl() {
   return (
     <aside
       className="flex min-h-0 w-[290px] shrink-0 flex-col sm:w-[310px]"
-      style={{ background: '#1C2A2C', borderLeft: '1px solid rgba(255,255,255,0.06)' }}
+      style={{ background: 'var(--color-room-surface)', borderLeft: '1px solid rgba(255,255,255,0.06)' }}
     >
       <div
         className="flex shrink-0 items-center justify-between px-3 py-2.5"
@@ -48,7 +48,7 @@ function ChatSidebarImpl() {
           type="button"
           onClick={() => setSidebar('none')}
           className="rounded-[6px] p-1.5 hover:bg-white/10"
-          style={{ color: 'rgba(251,245,221,0.45)' }}
+          style={{ color: 'var(--color-chat-text-2)' }}
           title="Close chat"
         >
           <X size={14} />
@@ -57,7 +57,7 @@ function ChatSidebarImpl() {
 
       <div ref={scrollRef} className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-3">
         {messages.length === 0 && (
-          <p className="mt-4 text-center text-[11px]" style={{ color: 'rgba(251,245,221,0.3)' }}>
+          <p className="mt-4 text-center text-[11px]" style={{ color: 'var(--color-chat-text-2)' }}>
             No messages yet. Say hello 👋
           </p>
         )}
@@ -79,7 +79,7 @@ function ChatSidebarImpl() {
                 <span className="text-[11px] font-semibold" style={{ color: message.color }}>
                   {message.direction === 'outgoing' ? 'You' : message.senderName}
                 </span>
-                <span className="text-[10px]" style={{ color: 'rgba(251,245,221,0.3)' }}>
+                <span className="text-[10px]" style={{ color: 'var(--color-chat-text-2)' }}>
                   {formatTime(message.sentAt)}
                 </span>
               </div>

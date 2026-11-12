@@ -1,0 +1,46 @@
+{
+  "title": "Recallo redesign · Visual preview",
+  "viewport": 1440,
+  "documentWidth": 1425,
+  "fonts": [
+    {
+      "family": "Bricolage",
+      "status": "loaded"
+    },
+    {
+      "family": "DM Sans",
+      "status": "loaded"
+    },
+    {
+      "family": "Newsreader",
+      "status": "unloaded"
+    }
+  ],
+  "headings": [
+    {
+      "text": "Meet now.Keep what matters.",
+      "font": "Bricolage, Arial, sans-serif",
+      "size": "88.56px"
+    },
+    {
+      "text": "Launch review",
+      "font": "Bricolage, Arial, sans-serif",
+      "size": "41.04px"
+    },
+    {
+      "text": "What we decided",
+      "font": "Bricolage, Arial, sans-serif",
+      "size": "36px"
+    },
+    {
+      "text": "What was said",
+      "font": "Bricolage, Arial, sans-serif",
+      "size": "36px"
+    },
+    {
+      "text": "Alongside the call",
+      "font": "Bricolage, Arial, sans-serif",
+      "size": "36px"
+    }
+  ]
+}

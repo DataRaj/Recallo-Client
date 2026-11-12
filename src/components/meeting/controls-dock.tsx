@@ -198,7 +198,7 @@ function ControlsDockImpl({
             {unreadChat > 0 && (
               <span
                 className="absolute top-0 right-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-semibold text-white"
-                style={{ background: 'var(--color-text-accent)' }}
+                style={{ background: 'var(--color-action)' }}
               >
                 {unreadChat > 9 ? '9+' : unreadChat}
               </span>

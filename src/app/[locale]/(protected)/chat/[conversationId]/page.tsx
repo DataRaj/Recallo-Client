@@ -539,7 +539,7 @@ export default function ChatConversationPage() {
   const inputDisabled = connectionState === 'reconnecting' || connectionState === 'connecting';
 
   return (
-    <div className="flex h-full flex-col" style={{ background: 'var(--color-chat-bg)' }}>
+    <div className="flex min-h-0 flex-1 flex-col" style={{ background: 'var(--color-chat-bg)' }}>
       {/* Header */}
       <div
         className="flex h-16 shrink-0 items-center justify-between px-5"

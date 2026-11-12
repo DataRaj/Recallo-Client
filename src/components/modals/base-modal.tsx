@@ -5,7 +5,7 @@
 
 import type { ReactNode } from 'react';
 import { X } from 'lucide-react';
-import { useEffect, useId, useRef } from 'react';
+import { useId, useLayoutEffect, useRef } from 'react';
 
 type ModalProps = {
   isOpen: boolean;
@@ -25,18 +25,21 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const dialog = dialogRef.current;
     if (!isOpen || !dialog) {
       return;
     }
-    // Native modality provides focus containment, background inertness and focus return.
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     dialog.showModal();
     return () => {
       dialog.close();
       document.body.style.overflow = previousOverflow;
+      if (opener?.isConnected) {
+        opener.focus({ preventScroll: true });
+      }
     };
   }, [isOpen]);
 
@@ -50,6 +53,23 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
       aria-labelledby={titleId}
       className={`m-auto ${sizeMap[size]} max-h-[90dvh] overflow-y-auto rounded-[16px] border-0 p-0 shadow-lg backdrop:bg-black/50`}
       style={{ width: 'calc(100% - 2rem)', background: 'var(--color-chat-bg)', color: 'var(--color-chat-text)' }}
+      onKeyDown={(event) => {
+        if (event.key !== 'Tab') {
+          return;
+        }
+        const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
+        )).filter(control => control.getClientRects().length > 0);
+        const first = controls[0];
+        const last = controls.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }}
       onCancel={(event) => {
         event.preventDefault();
         // Preserve the existing behavior: Escape does not dismiss while editing a field.

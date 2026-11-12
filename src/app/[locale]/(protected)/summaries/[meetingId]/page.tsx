@@ -68,7 +68,7 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-[var(--color-chat-text)]">
+      <div className="flex h-screen flex-col items-center justify-center bg-[var(--color-room-bg)] px-4 text-[var(--color-chat-text)]">
         <div className="relative mb-8 flex size-24 items-center justify-center">
           <div className="absolute inset-0 animate-pulse rounded-full border-4 border-[var(--color-chat-accent)]/10" />
           <div className="absolute inset-2 animate-spin rounded-full border-4 border-[var(--color-chat-accent)]/20 border-t-[var(--color-chat-accent)]" />
@@ -84,7 +84,7 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
   if (processing) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-center text-[var(--color-chat-text)]">
+      <div className="flex h-screen flex-col items-center justify-center bg-[var(--color-room-bg)] px-4 text-center text-[var(--color-chat-text)]">
         <Loader2 className="mb-6 size-10 animate-spin text-[var(--color-chat-accent)]" />
         <h2 className="mb-2 text-xl font-bold">AI is synthesizing meeting insights...</h2>
         <p className="max-w-sm text-sm text-white/50">
@@ -103,7 +103,7 @@ export default function SummaryDetailPage({ params }: PageProps) {
 
   if (error) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center bg-[#141E1F] px-4 text-center text-[var(--color-chat-text)]">
+      <div className="flex h-screen flex-col items-center justify-center bg-[var(--color-room-bg)] px-4 text-center text-[var(--color-chat-text)]">
         <AlertCircle className="mb-4 size-10 text-[var(--color-text-accent)]" />
         <p className="text-sm text-white/60">{error}</p>
         <button
@@ -117,9 +117,9 @@ export default function SummaryDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#141E1F] pb-16 font-sans text-[var(--color-chat-text)]">
+    <div className="min-h-screen bg-[var(--color-room-bg)] pb-16 font-sans text-[var(--color-chat-text)]">
       {/* Navbar */}
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[#1C2A2C] px-6">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[var(--color-room-surface)] px-6">
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push(ROUTES.HOME)}

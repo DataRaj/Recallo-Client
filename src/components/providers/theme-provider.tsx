@@ -24,7 +24,7 @@ import { usePreferencesStore } from "@/stores/use-preferences-store";
 
 /* ─── Chat palettes (must match the [data-chat-theme] blocks in global.css) ─── */
 export const CHAT_THEMES = {
-  "recallo-dark": { label: "Recallo Dark", swatch: "#9CC5A1" },
+  "recallo-dark": { label: "Recallo Dark", swatch: "#F19B79" },
   midnight: { label: "Midnight", swatch: "#7C9EB2" },
   forest: { label: "Forest", swatch: "#89A87D" },
   ocean: { label: "Ocean", swatch: "#3AAFA9" },

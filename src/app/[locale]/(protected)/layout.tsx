@@ -4,16 +4,19 @@
  */
 'use client';
 
+import { motion } from 'framer-motion';
+
 import { Bell, FileText, Home, LogOut, Menu, MessageSquare, Mic, Plus, Settings, Video, X, Zap } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { ProtectedRoute } from '@/components/protected-route';
 import { GlobalModals, ModalProvider, useModal } from '@/components/providers/modal-provider';
 import { WsProvider } from '@/components/providers/ws-provider';
 import { useAuth } from '@/hooks/use-auth';
 import { useCurrentUser } from '@/hooks/use-current-user';
+import { useMediaQuery } from '@/hooks/use-media-query';
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { ROUTES } from '@/lib/routes';
+import { Link, usePathname } from '@/libs/i18n-navigation';
 
 type NavItem = {
   label: string;
@@ -35,7 +38,7 @@ type Feature = 'dashboard' | 'meeting' | 'chat' | 'archive';
 
 /** Map the active pathname (locale-stripped) to a feature theme atmosphere. */
 function featureForPath(pathname: string): Feature {
-  const path = pathname.replace(/^\/[a-z]{2}(-[a-z]{2})?(?=\/|$)/i, '') || '/';
+  const path = pathname.replace(/^\/[a-z]{2}(?:-[a-z]{2})?(?=\/|$)/i, '') || '/';
   if (path.startsWith('/chat')) {
     return 'chat';
   }
@@ -48,16 +51,19 @@ function featureForPath(pathname: string): Feature {
   return 'dashboard';
 }
 
-function SidebarNavItem({ label, icon: Icon, href, isActive }: NavItem & { isActive: boolean }) {
+function SidebarNavItem({ label, icon: Icon, href, isActive, onNavigate }: NavItem & { isActive: boolean; onNavigate: () => void }) {
+  const reducedMotion = useReducedMotion();
   return (
     <Link
       href={href}
-      className="flex w-full cursor-pointer items-center gap-3 rounded-[10px] px-3 py-2.5 text-left text-[13px] font-medium transition-all duration-150"
+      onClick={onNavigate}
+      aria-current={isActive ? 'page' : undefined}
+      className="relative isolate flex w-full cursor-pointer items-center gap-3 rounded-[6px] px-3 py-2.5 text-left text-[13px] font-medium transition-all duration-150"
       style={{
-        background: isActive ? 'rgba(251,245,221,0.1)' : 'transparent',
-        color: isActive ? '#FBF5DD' : 'rgba(251,245,221,0.5)',
+        color: isActive ? 'var(--color-brand-ink)' : 'var(--color-chat-text-2)',
       }}
     >
+      {isActive && <motion.span layoutId="app-active-navigation" className="absolute inset-0 -z-10 rounded-[6px] bg-[var(--color-brand)]" transition={{ duration: reducedMotion ? 0 : 0.2, ease: 'easeOut' }} />}
       <Icon size={15} />
       {label}
     </Link>
@@ -68,7 +74,10 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user } = useCurrentUser();
   const { logout } = useAuth();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const sidebarRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLButtonElement>(null);
   const { openModal } = useModal();
 
   const isSidebarOpenRef = useRef(isSidebarOpen);
@@ -77,32 +86,65 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
   }, [isSidebarOpen]);
 
   useEffect(() => {
+    if (!isSidebarOpen || isDesktop) {
+      return;
+    }
+    const panel = sidebarRef.current;
+    const toggle = menuRef.current;
+    const controls = panel?.querySelectorAll<HTMLElement>('a[href], button:not(:disabled)');
+    controls?.[0]?.focus();
+    const containFocus = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab' || controls == null || controls.length === 0) {
+        return;
+      }
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    };
+    panel?.addEventListener('keydown', containFocus);
+    return () => {
+      panel?.removeEventListener('keydown', containFocus);
+      toggle?.focus();
+    };
+  }, [isSidebarOpen, isDesktop]);
+
+  useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       // Never intercept keyboard events when the user is typing in an input.
       const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+        return;
+      }
       if (e.key === 'Escape' && isSidebarOpenRef.current) {
         setIsSidebarOpen(false);
       }
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  // Run once on mount — the ref keeps the sidebar state fresh.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Run once on mount — the ref keeps the sidebar state fresh.
   }, []);
 
-  const userInitial = user?.name.charAt(0).toUpperCase() || 'U';
+  const userInitial = user?.name.charAt(0).toUpperCase() ?? 'U';
   const feature = featureForPath(pathname);
 
   const isNavItemActive = (href: string) => {
-    const path = pathname.split('/').slice(2).join('/'); // Remove locale prefix
-    return path.startsWith(href.replace(/^\//, ''));
+    return pathname === href || pathname.startsWith(`${href}/`);
   };
 
   return (
-    <div className="flex min-h-dvh" style={{ background: 'var(--color-bg)' }}>
+    <div className="app-shell flex min-h-dvh" style={{ background: 'var(--color-bg)' }}>
       {/* Sidebar */}
       <aside
+        ref={sidebarRef}
+        id="application-navigation"
+        aria-label="Application navigation"
+        inert={!isSidebarOpen && !isDesktop}
         className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-40 flex w-60 shrink-0 flex-col transition-transform duration-300 lg:translate-x-0`}
         style={{ background: 'var(--color-chat-bg)' }}
       >
@@ -113,13 +155,14 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
         >
           <div
             className="flex size-7 shrink-0 items-center justify-center rounded-[9px] text-xs font-semibold text-white"
-            style={{ background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)' }}
+            style={{ background: 'var(--color-action)' }}
           >
             R
           </div>
           <span className="text-[15px] font-semibold tracking-tight" style={{ color: 'var(--color-chat-text)' }}>
             Recallo
           </span>
+          <button type="button" aria-label="Close navigation" onClick={() => setIsSidebarOpen(false)} className="ml-auto p-2 text-[var(--color-chat-text)] lg:hidden"><X size={18} /></button>
         </div>
 
         {/* New Meeting Button */}
@@ -127,7 +170,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
           <button
             onClick={() => openModal('create-room')}
             className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-[10px] text-[13px] font-medium text-white transition-all duration-200 hover:opacity-90 active:scale-[0.97]"
-            style={{ background: 'var(--color-text-accent)' }}
+            style={{ background: 'var(--color-action)' }}
           >
             <Plus size={14} />
             New Meeting
@@ -138,7 +181,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
         <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3">
           <p
             className="px-3 pt-1 pb-2 text-[10px] font-semibold tracking-widest uppercase"
-            style={{ color: 'rgba(251,245,221,0.3)' }}
+            style={{ color: 'var(--color-chat-text-2)' }}
           >
             Main
           </p>
@@ -147,6 +190,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
               key={item.label}
               {...item}
               isActive={isNavItemActive(item.href)}
+              onNavigate={() => setIsSidebarOpen(false)}
             />
           ))}
         </nav>
@@ -159,22 +203,22 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2.5 p-4">
             <div
               className="flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
-              style={{ background: 'var(--color-text-accent)' }}
+              style={{ background: 'var(--color-action)' }}
             >
               {userInitial}
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-[13px] font-medium" style={{ color: 'var(--color-chat-text)' }}>
-                {user?.name || 'User'}
+                {user?.name ?? 'User'}
               </p>
-              <p className="truncate text-[11px]" style={{ color: 'rgba(251,245,221,0.4)' }}>
+              <p className="truncate text-[11px]" style={{ color: 'var(--color-chat-text-2)' }}>
                 Online
               </p>
             </div>
             <div className="flex items-center gap-1">
               <button
                 className="cursor-pointer rounded-[8px] p-1.5 transition-all duration-200 hover:bg-white/10"
-                style={{ color: 'rgba(251,245,221,0.4)' }}
+                style={{ color: 'var(--color-chat-text-2)' }}
                 title="Notifications"
               >
                 <Bell size={14} />
@@ -182,7 +226,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
               <button
                 onClick={() => void logout()}
                 className="cursor-pointer rounded-[8px] p-1.5 transition-all duration-200 hover:bg-white/10"
-                style={{ color: 'rgba(251,245,221,0.4)' }}
+                style={{ color: 'var(--color-chat-text-2)' }}
                 title="Sign out"
               >
                 <LogOut size={14} />
@@ -193,16 +237,20 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 lg:ml-60">
+      <main className="min-w-0 flex-1 lg:ml-60" inert={isSidebarOpen && !isDesktop}>
         {/* Top Bar with Mobile Toggle */}
         <div
           className="sticky top-0 z-30 flex items-center justify-between px-4 py-3 lg:hidden"
-          style={{ background: '#1C2A2C', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+          style={{ background: 'var(--color-room-surface)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
         >
           <button
+            ref={menuRef}
+            aria-controls="application-navigation"
+            aria-label={isSidebarOpen ? 'Close navigation' : 'Open navigation'}
+            aria-expanded={isSidebarOpen}
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="rounded-lg p-2 transition-all hover:bg-white/10"
-            style={{ color: 'rgba(251,245,221,0.7)' }}
+            style={{ color: 'var(--color-chat-text-2)' }}
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -214,7 +262,6 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
 
         {/* Page Content — feature attribute diverts the theme atmosphere */}
         <div
-          data-theme="light"
           data-feature={feature}
           className="min-h-dvh overflow-y-auto"
           style={{ background: 'var(--color-bg)', color: 'var(--color-text-primary)' }}
@@ -228,7 +275,9 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
 
       {/* Mobile Sidebar Backdrop */}
       {isSidebarOpen && (
-        <div
+        <button
+          type="button"
+          aria-label="Close navigation"
           className="fixed inset-0 z-30 bg-black/50 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />

@@ -43,7 +43,7 @@ export function UserMenu() {
           href="/register"
           className="rounded-[10px] px-4 py-2 text-sm font-medium text-white hover:opacity-90"
           style={{
-            background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)',
+            background: 'var(--color-action)',
             boxShadow: '0px 2px 8px rgba(186,90,90,0.3)',
           }}
         >
@@ -79,7 +79,7 @@ export function UserMenu() {
         <div
           className="flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white"
           style={{
-            background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)',
+            background: 'var(--color-action)',
           }}
         >
           {initials}

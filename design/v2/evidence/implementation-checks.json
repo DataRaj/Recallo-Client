@@ -1,0 +1,58 @@
+{
+  "desktop": {
+    "productTop": 350,
+    "font": "marketingDisplay, \"marketingDisplay Fallback\", Arial, sans-serif, Arial, sans-serif",
+    "fonts": [
+      "marketingSans",
+      "marketingDisplay"
+    ],
+    "background": "rgb(248, 244, 234)"
+  },
+  "mobile": {
+    "productTop": 428.984375,
+    "width": 375,
+    "scrollWidth": 375
+  },
+  "widths": [
+    {
+      "viewport": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    {
+      "viewport": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "viewport": 768,
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    {
+      "viewport": 1024,
+      "clientWidth": 1009,
+      "scrollWidth": 1009
+    },
+    {
+      "viewport": 1440,
+      "clientWidth": 1425,
+      "scrollWidth": 1425
+    }
+  ],
+  "reducedMotion": true,
+  "menuFocusReturned": true,
+  "modalFocusContained": true,
+  "formLabels": true,
+  "retryRetainsInput": true,
+  "modalFocusReturned": true,
+  "titleOnlyCreate": true,
+  "accountLinks": [
+    "/home",
+    "/settings",
+    "/settings#appearance"
+  ],
+  "mockedRoomLookups": 1,
+  "runtimeErrors": [],
+  "authAndLookupResponsesMocked": true
+}

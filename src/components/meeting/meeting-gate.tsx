@@ -19,7 +19,7 @@ type MeetingGateProps = {
 
 function FullScreen({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-dvh w-full flex-col items-center justify-center gap-4 px-4 text-center" style={{ background: '#141E1F', color: 'var(--color-chat-text)' }}>
+    <div data-feature="meeting" className="flex h-dvh w-full flex-col items-center justify-center gap-4 px-4 text-center" style={{ background: 'var(--color-room-bg)', color: 'var(--color-chat-text)' }}>
       {children}
     </div>
   );
@@ -119,17 +119,17 @@ export function MeetingGate({ roomId, mode = 'meeting' }: MeetingGateProps) {
   if (error || !room) {
     return (
       <FullScreen>
-        <div className="rounded-full p-4" style={{ background: 'rgba(186,90,90,0.1)', color: '#BA5A5A' }}>
+        <div className="rounded-full p-4" style={{ background: 'rgba(186,90,90,0.1)', color: 'var(--color-danger-text, #ffb4a5)' }}>
           <X size={32} />
         </div>
         <div className="space-y-2">
           <h2 className="text-xl font-bold">Failed to Join Room</h2>
-          <p className="max-w-md text-sm text-white/60">{error ?? 'Room not found'}</p>
+          <p className="max-w-md text-sm text-[var(--color-chat-text-2)]">{error ?? 'Room not found'}</p>
         </div>
         <Link
           href={ROUTES.HOME}
           className="rounded-xl px-5 py-2.5 font-semibold transition-all hover:opacity-95"
-          style={{ background: 'var(--color-chat-accent)', color: '#141E1F' }}
+          style={{ background: 'var(--color-chat-accent)', color: 'var(--color-room-bg)' }}
         >
           Return to Dashboard
         </Link>

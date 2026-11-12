@@ -1,5 +1,7 @@
 # Token and typography specification
 
+This file records the first iteration. Active production values are in `src/styles/marketing.css`, with the implementation map in the root `DESIGN.md`.
+
 `specimen/tokens.css` is the concrete value source. Copy its scoped system into the marketing implementation in Phase 3; do not import specimen files into production. All tokens use `--mk-` to avoid accidental application theme changes.
 
 ## Color roles and measured pairs

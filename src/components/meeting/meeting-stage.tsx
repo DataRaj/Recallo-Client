@@ -20,7 +20,7 @@ function StageFab({ focused, onToggleView }: { focused: boolean; onToggleView: (
           onClick={toggleScreenShare}
           disabled={screenBusy}
           className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium text-white shadow-lg transition-all hover:opacity-95 disabled:opacity-60"
-          style={{ background: 'var(--color-text-accent)' }}
+          style={{ background: 'var(--color-action)' }}
         >
           <MonitorX size={13} />
           Stop sharing

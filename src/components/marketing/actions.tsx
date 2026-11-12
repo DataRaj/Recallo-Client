@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowUpRight, ChevronDown, Plus } from 'lucide-react';
+import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import { createContext, use, useCallback, useEffect, useRef, useState } from 'react';
 import { CreateRoomModal } from '@/components/modals/create-room-modal';
 import { JoinRoomModal } from '@/components/modals/join-room-modal';
@@ -46,8 +46,8 @@ export function CreateRoomAction({ compact = false }: { compact?: boolean }) {
   const className = `mk-button mk-button-primary${compact ? ' mk-button-compact' : ''}`;
   const content = (
     <>
-      <Plus size={16} aria-hidden="true" />
       Create a room
+      <ArrowUpRight size={16} aria-hidden="true" />
     </>
   );
   return signedIn
@@ -144,7 +144,7 @@ export function ActionPair({ helper = false }: { helper?: boolean }) {
       </div>
       {helper && (
         <p className="mk-caption mk-action-helper">
-          {signedIn ? 'Start a conversation or join one you’ve been invited to.' : 'Create an account to start. Join with your room ID or link.'}
+          {signedIn ? 'Use your room ID or link to join.' : 'Create an account to start a room.'}
         </p>
       )}
     </div>

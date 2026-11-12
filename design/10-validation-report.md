@@ -1,5 +1,7 @@
 # Validation record
 
+The latest two-phase iteration is complete. The root `DESIGN.md` records the active system and final checks. Rendered application captures and browser results are in `design/v2/evidence/`. This iteration includes actual desktop/mobile inspection and mocked account/room-lookup interaction checks, including the corrected dialog focus behavior.
+
 ## Phase 1 — baseline, 2026-11-11
 
 - Inspected marketing, locale layout, global stylesheet, route definitions, user menu, room creation/joining hooks and services, meeting gate, lobby, meeting controls and stage, transcript/summary views, insights page, analytics provider and public assets.
@@ -72,3 +74,7 @@ The first production preview bound to `127.0.0.1` returned a 307 loop for defaul
 No rendered screenshot inspection at 320/390/768/1024/1440px, browser hydration/console check, keyboard/touch exercise, screen-reader audit, performance benchmark, signed-in browser session or live backend/recording/insights test. Responsive, focus, motion and dialog behavior are implemented and source-reviewed; they are not claimed as browser-verified. This is the owner's requested resource tradeoff.
 
 Outstanding product facts remain in `00-product-truth.md`: insight eligibility, permissions, recording/consent, retention, pricing, capacity and privacy guarantees. None were invented to complete the page. Marketing copy remains English on both locale paths, with English language metadata on its subtree.
+
+## Application-wide follow-up
+
+The active implementation now shares typography, color tokens, controls and motion across the application. See root `DESIGN.md` for the three-phase rollout, component ownership and known product limits. Browser evidence is stored in `design/v2/evidence/application-checks.json` and `app-*.png`. These checks use local fixtures; they do not establish backend or live media readiness.

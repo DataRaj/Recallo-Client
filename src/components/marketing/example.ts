@@ -6,9 +6,9 @@ export const meetingExample = {
   decision: 'Move the launch review to Thursday.',
   action: 'Priya will share the revised draft before the review.',
   participants: [
-    { name: 'Priya', initials: 'P', tone: 'sage' },
-    { name: 'Alex', initials: 'A', tone: 'clay' },
-    { name: 'You', initials: 'Y', tone: 'ink' },
+    { name: 'Priya', initials: 'P', tone: 'peach' },
+    { name: 'Alex', initials: 'A', tone: 'blue' },
+    { name: 'You', initials: 'Y', tone: 'sand' },
   ],
   transcript: [
     { time: '04:18', speaker: 'Speaker 1', text: 'Let’s move the launch review to Thursday.' },

@@ -97,7 +97,7 @@ function OAuthSuccessContent() {
         <div
           className="flex size-14 items-center justify-center rounded-[16px] text-xl font-semibold text-white"
           style={{
-            background: 'linear-gradient(135deg, var(--color-text-accent) 0%, #8A4040 100%)',
+            background: 'linear-gradient(135deg, var(--color-text-accent) 0%, var(--color-action) 100%)',
           }}
         >
           R

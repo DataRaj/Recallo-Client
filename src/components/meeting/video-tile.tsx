@@ -36,7 +36,7 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
     <div
       className="relative flex h-full min-h-0 min-w-0 items-center justify-center overflow-hidden rounded-[12px] transition-all duration-200"
       style={{
-        background: isSpeaking ? 'rgba(156,197,161,0.1)' : '#1E2C2E',
+        background: isSpeaking ? 'rgba(156,197,161,0.1)' : 'var(--color-room-surface)',
         border: isSpeaking ? '2px solid var(--color-chat-accent)' : '1px solid rgba(255,255,255,0.06)',
         boxShadow: isSpeaking ? '0 0 0 1px rgba(156,197,161,0.3)' : 'none',
       }}
@@ -58,7 +58,7 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
               </div>
               <div
                 className="rounded-full px-2 py-0.5 text-[9px]"
-                style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(251,245,221,0.5)' }}
+                style={{ background: 'rgba(255,255,255,0.08)', color: 'var(--color-chat-text-2)' }}
               >
                 Camera off
               </div>
@@ -90,7 +90,7 @@ function VideoTileImpl({ trackRef, isLocal }: VideoTileProps) {
           style={{ background: '#E5B567' }}
           title={`${name} raised their hand`}
         >
-          <Hand size={12} className="text-[#141E1F]" />
+          <Hand size={12} className="text-[var(--color-room-bg)]" />
         </div>
       )}
 

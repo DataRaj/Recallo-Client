@@ -2,20 +2,20 @@
 
 import type { ReactNode } from 'react';
 import type { Conversation } from '@/types/chat';
-import { Loader2, Plus, Search, User, Wifi, WifiOff } from 'lucide-react';
-import Link from 'next/link';
+import { ArrowLeft, Loader2, Plus, Search, User, Wifi, WifiOff } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-
 import { ChatThemePicker } from '@/components/chat/chat-theme-picker';
+
 import { NewConversationModal } from '@/components/chat/new-conversation-modal';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { ROUTES } from '@/lib/routes';
+import { Link } from '@/libs/i18n-navigation';
 import { getConversations } from '@/services/chat-service';
 import { useWsStore } from '@/stores/use-ws-store';
 
 function formatTime(d: Date | string | undefined): string {
-  if (!d) {
+  if (d == null || d === '') {
     return '';
   }
   const date = d instanceof Date ? d : new Date(d);
@@ -23,7 +23,7 @@ function formatTime(d: Date | string | undefined): string {
 }
 
 function ConversationName(convo: Conversation, currentUserId: number): string {
-  if (convo.name) {
+  if (convo.name != null && convo.name !== '') {
     return convo.name;
   }
   const other = convo.participants.find(p => p.id !== currentUserId);
@@ -72,6 +72,7 @@ function ConnectionBadge() {
 function ChatLayoutInner({ children }: { children: ReactNode }) {
   const params = useParams();
   const currentId = params.conversationId as string | undefined;
+  const hasConversation = currentId != null && currentId !== '';
   const { user } = useCurrentUser();
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -93,12 +94,14 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- The async request updates state after its response.
     void load();
   }, [load]);
 
   // Refresh sidebar list when new messages arrive so last-message preview updates.
   const messagesByConversation = useWsStore(s => s.messagesByConversation);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- The async request updates state after its response.
     void load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messagesByConversation.size]);
@@ -109,9 +112,9 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
   });
 
   return (
-    <div className="flex h-[calc(100vh-60px)] bg-[var(--color-chat-bg)] font-sans text-[var(--color-chat-text)] lg:h-screen">
+    <div className="flex h-[calc(100dvh-64px)] min-w-0 bg-[var(--color-chat-bg)] font-sans text-[var(--color-chat-text)] lg:h-dvh">
       {/* Sidebar */}
-      <div className="flex w-80 shrink-0 flex-col border-r border-white/10 bg-[var(--color-chat-bg)]">
+      <div className={`${hasConversation ? 'hidden md:flex' : 'flex'} w-full shrink-0 flex-col border-r border-white/10 bg-[var(--color-chat-bg)] md:w-72 lg:w-80`}>
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
           <div>
@@ -192,7 +195,13 @@ function ChatLayoutInner({ children }: { children: ReactNode }) {
       </div>
 
       {/* Main chat area */}
-      <div className="flex flex-1 flex-col bg-[var(--color-chat-bg)]">
+      <div className={`${hasConversation ? 'flex' : 'hidden md:flex'} min-w-0 flex-1 flex-col bg-[var(--color-chat-bg)]`}>
+        {currentId != null && (
+          <Link href={ROUTES.CHATS} className="flex min-h-11 items-center gap-2 border-b border-white/10 px-4 text-sm md:hidden">
+            <ArrowLeft size={16} />
+            All conversations
+          </Link>
+        )}
         {children}
       </div>
 

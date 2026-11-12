@@ -49,6 +49,14 @@ export default antfu(
 
   // --- Custom Rule Overrides ---
   {
+    files: ["src/**/*.tsx"],
+    rules: {
+      "tailwindcss/no-custom-classname": ["warn", {
+        whitelist: ["^app-[a-z0-9-]+$"],
+      }],
+    },
+  },
+  {
     files: ["src/components/marketing/**/*.tsx", "src/app/**/(marketing)/*.tsx"],
     rules: {
       // These classes belong to the scoped editorial system in marketing.css.

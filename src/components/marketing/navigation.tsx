@@ -37,6 +37,7 @@ export function MarketingNavigation() {
         </nav>
         <div className="mk-desktop-actions">
           <AccountNavigation />
+          <JoinMeetingAction textOnly />
           <CreateRoomAction compact />
         </div>
         <div className="mk-compact-actions">

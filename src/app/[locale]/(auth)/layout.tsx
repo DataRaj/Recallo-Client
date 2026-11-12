@@ -1,12 +1,12 @@
-import Link from 'next/link';
 import { ProtectedRoute } from '@/components/protected-route';
+import { Link } from '@/libs/i18n-navigation';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <ProtectedRoute requireAuth={false}>
       <div
         data-theme="light"
-        className="flex min-h-dvh flex-col"
+        className="app-auth flex min-h-dvh flex-col"
         style={{ background: 'var(--color-bg)' }}
       >
         {/* Top bar */}
@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <Link href="/" className="group inline-flex items-center gap-2">
             <div
               className="flex size-7 items-center justify-center rounded-[9px] text-xs font-semibold text-white"
-              style={{ background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)' }}
+              style={{ background: 'var(--color-action)' }}
             >
               R
             </div>

@@ -43,7 +43,7 @@ function PeopleSidebarImpl() {
     <>
       <aside
         className="flex min-h-0 w-[290px] shrink-0 flex-col sm:w-[310px]"
-        style={{ background: '#1C2A2C', borderLeft: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ background: 'var(--color-room-surface)', borderLeft: '1px solid rgba(255,255,255,0.06)' }}
       >
         <div
           className="flex shrink-0 items-center justify-between px-3 py-2.5"
@@ -51,7 +51,7 @@ function PeopleSidebarImpl() {
         >
           <div>
             <p className="text-[12px] font-medium" style={{ color: 'var(--color-chat-text)' }}>Participants</p>
-            <p className="mt-0.5 text-[10px]" style={{ color: 'rgba(251,245,221,0.35)' }}>
+            <p className="mt-0.5 text-[10px]" style={{ color: 'var(--color-chat-text-2)' }}>
               {participants.length}
               {' '}
               in room
@@ -61,7 +61,7 @@ function PeopleSidebarImpl() {
             type="button"
             onClick={() => setSidebar('none')}
             className="rounded-[6px] p-1.5 hover:bg-white/10"
-            style={{ color: 'rgba(251,245,221,0.45)' }}
+            style={{ color: 'var(--color-chat-text-2)' }}
             title="Close"
           >
             <X size={14} />
@@ -91,15 +91,15 @@ function PeopleSidebarImpl() {
                       {name}
                       {p.isLocal && ' (You)'}
                     </p>
-                    <p className="text-[10px]" style={{ color: 'rgba(251,245,221,0.35)' }}>
+                    <p className="text-[10px]" style={{ color: 'var(--color-chat-text-2)' }}>
                       {p.isLocal ? 'You' : p.isSpeaking ? 'Speaking' : 'Participant'}
                     </p>
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-1.5">
                   {raisedHands[p.identity] && <Hand size={13} style={{ color: '#E5B567' }} />}
-                  {!p.isMicrophoneEnabled && <MicOff size={13} style={{ color: 'rgba(251,245,221,0.4)' }} />}
-                  {!p.isCameraEnabled && <VideoOff size={13} style={{ color: 'rgba(251,245,221,0.4)' }} />}
+                  {!p.isMicrophoneEnabled && <MicOff size={13} style={{ color: 'var(--color-chat-text-2)' }} />}
+                  {!p.isCameraEnabled && <VideoOff size={13} style={{ color: 'var(--color-chat-text-2)' }} />}
                   {canDm && (
                     <button
                       type="button"

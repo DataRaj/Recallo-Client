@@ -24,7 +24,7 @@ export function MarketingCTA() {
           </span>
           <div
             className="flex size-7 items-center justify-center rounded-full text-xs font-semibold text-white"
-            style={{ background: 'var(--color-text-accent)' }}
+            style={{ background: 'var(--color-action)' }}
           >
             {userInitial}
           </div>
@@ -45,7 +45,7 @@ export function MarketingCTA() {
       <Link
         href="/register"
         className="rounded-[10px] px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:opacity-90 active:scale-[0.97]"
-        style={{ background: 'linear-gradient(135deg, #BA5A5A 0%, #8A4040 100%)', boxShadow: '0px 2px 8px rgba(186,90,90,0.3)' }}
+        style={{ background: 'var(--color-action)', boxShadow: '0px 2px 8px rgba(186,90,90,0.3)' }}
       >
         Try Now
       </Link>

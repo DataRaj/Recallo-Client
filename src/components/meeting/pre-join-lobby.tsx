@@ -185,11 +185,11 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
   }, [name, micEnabled, camEnabled, onJoin, stopPreview, mode, isHost, audioInputId, videoInputId, audioOutputId]);
 
   return (
-    <div data-feature="meeting" className="flex h-dvh w-full flex-col items-center justify-center gap-6 px-4" style={{ background: '#141E1F' }}>
+    <div data-feature="meeting" className="flex min-h-dvh w-full flex-col items-center justify-center gap-6 px-4 py-8" style={{ background: 'var(--color-room-bg)' }}>
       <div className="flex w-full max-w-md flex-col gap-5">
         <div className="text-center">
           <h1 className="text-lg font-semibold" style={{ color: 'var(--color-chat-text)' }}>{roomTitle}</h1>
-          <p className="mt-1 text-sm" style={{ color: 'rgba(251,245,221,0.5)' }}>
+          <p className="mt-1 text-sm" style={{ color: 'var(--color-chat-text-2)' }}>
             Ready to join? Check your camera and mic first.
           </p>
         </div>
@@ -197,7 +197,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
         {/* Preview */}
         <div
           className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-[14px]"
-          style={{ background: '#1E2C2E', border: '1px solid rgba(255,255,255,0.06)' }}
+          style={{ background: 'var(--color-room-surface)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           {camEnabled
             ? (
@@ -211,7 +211,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
               )
             : (
                 <div
-                  className="flex size-16 items-center justify-center rounded-full text-lg font-semibold text-white"
+                  className="flex size-16 items-center justify-center rounded-full text-lg font-semibold text-[var(--color-brand-ink)]"
                   style={{ background: 'var(--color-chat-accent)' }}
                 >
                   {initialsFor(name || 'Guest')}
@@ -228,7 +228,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
               title={micEnabled ? 'Mic on' : 'Mic off'}
               className="flex size-10 items-center justify-center rounded-full transition-all hover:scale-105"
               style={{
-                background: micEnabled ? 'rgba(255,255,255,0.15)' : 'var(--color-text-accent)',
+                background: micEnabled ? 'rgba(255,255,255,0.15)' : 'var(--color-action)',
                 color: 'var(--color-chat-text)',
               }}
             >
@@ -242,7 +242,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
               title={camEnabled ? 'Camera on' : 'Camera off'}
               className="flex size-10 items-center justify-center rounded-full transition-all hover:scale-105"
               style={{
-                background: camEnabled ? 'rgba(255,255,255,0.15)' : 'var(--color-text-accent)',
+                background: camEnabled ? 'rgba(255,255,255,0.15)' : 'var(--color-action)',
                 color: 'var(--color-chat-text)',
               }}
             >
@@ -254,7 +254,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
         {permissionDenied && (
           <div
             className="flex items-start gap-2 rounded-[10px] p-3 text-xs"
-            style={{ background: 'rgba(186,90,90,0.1)', color: '#BA5A5A', border: '1px solid rgba(186,90,90,0.2)' }}
+            style={{ background: 'rgba(186,90,90,0.1)', color: 'var(--color-danger-text, #ffb4a5)', border: '1px solid rgba(186,90,90,0.2)' }}
           >
             <AlertCircle size={14} className="mt-0.5 shrink-0" />
             Camera permission was blocked. You can still join with your camera off, or allow access in your browser settings.
@@ -291,7 +291,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
 
         {/* Name */}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="lobby-name" className="text-xs font-medium" style={{ color: 'rgba(251,245,221,0.6)' }}>
+          <label htmlFor="lobby-name" className="text-xs font-medium" style={{ color: 'var(--color-chat-text-2)' }}>
             Your display name
           </label>
           <input
@@ -316,7 +316,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
           onClick={handleJoin}
           disabled={joining}
           className="flex h-11 items-center justify-center gap-2 rounded-[12px] text-sm font-semibold transition-all hover:opacity-95 active:scale-[0.98] disabled:opacity-60"
-          style={{ background: 'var(--color-chat-accent)', color: '#141E1F' }}
+          style={{ background: 'var(--color-chat-accent)', color: 'var(--color-room-bg)' }}
         >
           {joining && <Loader2 size={16} className="animate-spin" />}
           {joining
@@ -326,7 +326,7 @@ export function PreJoinLobby({ roomTitle, defaultName, isHost, mode = 'meeting',
               : isHost ? 'Start meeting' : 'Join meeting'}
         </button>
 
-        <Link href={ROUTES.HOME} className="text-center text-xs hover:underline" style={{ color: 'rgba(251,245,221,0.4)' }}>
+        <Link href={ROUTES.HOME} className="text-center text-xs hover:underline" style={{ color: 'var(--color-chat-text-2)' }}>
           Cancel
         </Link>
       </div>
@@ -349,7 +349,7 @@ function DeviceSelect({ icon, label, value, devices, fallbackLabel, onChange }: 
       className="flex items-center gap-2 rounded-[10px] px-3 py-2"
       style={{ background: 'var(--color-chat-bg)', border: '1px solid rgba(255,255,255,0.08)' }}
     >
-      <span className="shrink-0" style={{ color: 'rgba(251,245,221,0.6)' }}>{icon}</span>
+      <span className="shrink-0" style={{ color: 'var(--color-chat-text-2)' }}>{icon}</span>
       <select
         aria-label={label}
         value={value}
@@ -357,9 +357,9 @@ function DeviceSelect({ icon, label, value, devices, fallbackLabel, onChange }: 
         className="min-w-0 flex-1 bg-transparent text-xs focus:outline-none"
         style={{ color: 'var(--color-chat-text)' }}
       >
-        <option value="" style={{ color: '#141E1F' }}>{fallbackLabel}</option>
+        <option value="" style={{ color: 'var(--color-room-bg)' }}>{fallbackLabel}</option>
         {devices.map((d, i) => (
-          <option key={d.deviceId} value={d.deviceId} style={{ color: '#141E1F' }}>
+          <option key={d.deviceId} value={d.deviceId} style={{ color: 'var(--color-room-bg)' }}>
             {d.label || `${label} ${i + 1}`}
           </option>
         ))}

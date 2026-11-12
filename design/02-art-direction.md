@@ -1,5 +1,7 @@
 # Art direction: The Conversation Journal
 
+This file records the first iteration. The active design and implementation map are in the root `DESIGN.md`.
+
 Phase 2 specification, 2026-11-11. Selected for implementation; rendered refinement remains part of Phases 3–4. The owner requested deferring expensive browser automation. No rendered font comparison or external-site screenshot inspection is claimed.
 
 ## Central idea
