@@ -2,6 +2,7 @@
 
 import { Menu, X } from 'lucide-react';
 import { useEffect, useId, useRef, useState } from 'react';
+import { RecalloWordmark } from '@/components/recallo-wordmark';
 import { Link } from '@/libs/i18n-navigation';
 import { AccountNavigation, CreateRoomAction, JoinMeetingAction } from './actions';
 import { marketingLinks } from './example';
@@ -29,8 +30,7 @@ export function MarketingNavigation() {
     <header className="mk-header mk-container">
       <div className="mk-header-bar">
         <Link href="/" className="mk-brand" aria-label="Recallo home">
-          <span className="mk-brand-mark" aria-hidden="true">R</span>
-          Recallo
+          <RecalloWordmark aria-hidden="true" />
         </Link>
         <nav className="mk-desktop-nav" aria-label="Main navigation">
           {marketingLinks.map(link => <a key={link.href} href={link.href}>{link.label}</a>)}

@@ -20,4 +20,5 @@ export const marketingLinks = [
   { href: '#how-it-works', label: 'How it works' },
   { href: '#the-meeting', label: 'The meeting' },
   { href: '#the-record', label: 'The record' },
+  { href: '#exploring', label: 'Exploring' },
 ] as const;

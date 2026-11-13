@@ -277,3 +277,43 @@ button:disabled {
     transform: none;
   }
 }
+
+/* The sidebar uses dark chat surfaces independently of the page theme. */
+.app-brand-wordmark {
+  width: 142px;
+  height: auto;
+  flex-shrink: 0;
+  color: var(--color-chat-text);
+  --recallo-logo-accent: #f29374;
+}
+
+/* Match the landing-page meeting palette within the live stage and dock. */
+.app-meeting-colors {
+  --color-room-bg: #232722;
+  --color-room-surface: #343b36;
+  --color-chat-text: #f8f4ea;
+  --color-chat-text-2: #c4c9bf;
+  --color-chat-accent: #f19b79;
+  background: #232722;
+}
+.app-meeting-controls { --color-text-accent: #a83120; }
+.app-meeting-dock { position: relative; flex-shrink: 0; }
+.app-meeting-dock-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding-top: 14px;
+  border-top: 1px solid #485047;
+  background: transparent;
+}
+.app-meeting-control { min-width: 44px; min-height: 52px; }
+.app-meeting-control > div { width: 44px; height: 40px; border-radius: 4px; }
+.app-meeting-control > span { font-size: 11px; line-height: 1.3; }
+.app-meeting-more { position: static; }
+.app-meeting-more > div { left: auto; right: 0; transform: none; max-height: min(55dvh, 380px); overflow-y: auto; }
+@media (max-width: 640px) {
+  .app-meeting-dock-controls { gap: 8px; padding-top: 10px; }
+  .app-meeting-control > span { font-size: 10px; }
+}

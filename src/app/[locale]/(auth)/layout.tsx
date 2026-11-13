@@ -1,4 +1,5 @@
 import { ProtectedRoute } from '@/components/protected-route';
+import { RecalloWordmark } from '@/components/recallo-wordmark';
 import { Link } from '@/libs/i18n-navigation';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -11,19 +12,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       >
         {/* Top bar */}
         <div className="px-6 py-5">
-          <Link href="/" className="group inline-flex items-center gap-2">
-            <div
-              className="flex size-7 items-center justify-center rounded-[9px] text-xs font-semibold text-white"
-              style={{ background: 'var(--color-action)' }}
-            >
-              R
-            </div>
-            <span
-              className="text-[15px] font-semibold tracking-tight"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              Recallo
-            </span>
+          <Link href="/" aria-label="Recallo home" className="inline-flex text-[var(--color-text-primary)]">
+            <RecalloWordmark aria-hidden="true" />
           </Link>
         </div>
 

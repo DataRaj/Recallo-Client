@@ -1,0 +1,747 @@
+{
+  "method": "SVG XML and outline audit; exact PNG dimensions; raster alpha bounds; measured sRGB contrast. Recognition and similarity remain visual judgments.",
+  "concepts": [
+    {
+      "id": "concept-01",
+      "outlineOnly": true,
+      "renders": [
+        {
+          "file": "symbol-16.png",
+          "dimensions": [
+            16,
+            16
+          ],
+          "alphaBounds": [
+            2,
+            2,
+            13,
+            14
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-16.png",
+          "dimensions": [
+            16,
+            16
+          ],
+          "alphaBounds": [
+            2,
+            2,
+            13,
+            14
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-24.png",
+          "dimensions": [
+            24,
+            24
+          ],
+          "alphaBounds": [
+            3,
+            3,
+            20,
+            21
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-24.png",
+          "dimensions": [
+            24,
+            24
+          ],
+          "alphaBounds": [
+            3,
+            3,
+            20,
+            21
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-32.png",
+          "dimensions": [
+            32,
+            32
+          ],
+          "alphaBounds": [
+            4,
+            4,
+            27,
+            29
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-32.png",
+          "dimensions": [
+            32,
+            32
+          ],
+          "alphaBounds": [
+            4,
+            3,
+            28,
+            29
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-64.png",
+          "dimensions": [
+            64,
+            64
+          ],
+          "alphaBounds": [
+            9,
+            7,
+            56,
+            58
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-64.png",
+          "dimensions": [
+            64,
+            64
+          ],
+          "alphaBounds": [
+            9,
+            7,
+            56,
+            58
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-512.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "alphaBounds": [
+            72,
+            56,
+            455,
+            471
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-512.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "alphaBounds": [
+            72,
+            56,
+            455,
+            471
+          ],
+          "unclipped": true
+        }
+      ]
+    },
+    {
+      "id": "concept-02",
+      "outlineOnly": true,
+      "renders": [
+        {
+          "file": "symbol-16.png",
+          "dimensions": [
+            16,
+            16
+          ],
+          "alphaBounds": [
+            2,
+            2,
+            13,
+            13
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-16.png",
+          "dimensions": [
+            16,
+            16
+          ],
+          "alphaBounds": [
+            2,
+            2,
+            13,
+            13
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-24.png",
+          "dimensions": [
+            24,
+            24
+          ],
+          "alphaBounds": [
+            3,
+            3,
+            20,
+            20
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-24.png",
+          "dimensions": [
+            24,
+            24
+          ],
+          "alphaBounds": [
+            3,
+            3,
+            20,
+            20
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-32.png",
+          "dimensions": [
+            32,
+            32
+          ],
+          "alphaBounds": [
+            4,
+            4,
+            27,
+            27
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-32.png",
+          "dimensions": [
+            32,
+            32
+          ],
+          "alphaBounds": [
+            4,
+            4,
+            27,
+            28
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-64.png",
+          "dimensions": [
+            64,
+            64
+          ],
+          "alphaBounds": [
+            9,
+            9,
+            54,
+            56
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-64.png",
+          "dimensions": [
+            64,
+            64
+          ],
+          "alphaBounds": [
+            9,
+            9,
+            54,
+            56
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-512.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "alphaBounds": [
+            72,
+            72,
+            439,
+            455
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-512.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "alphaBounds": [
+            72,
+            72,
+            439,
+            455
+          ],
+          "unclipped": true
+        }
+      ]
+    },
+    {
+      "id": "concept-03",
+      "outlineOnly": true,
+      "renders": [
+        {
+          "file": "symbol-16.png",
+          "dimensions": [
+            16,
+            16
+          ],
+          "alphaBounds": [
+            2,
+            2,
+            13,
+            13
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-16.png",
+          "dimensions": [
+            16,
+            16
+          ],
+          "alphaBounds": [
+            2,
+            2,
+            13,
+            13
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-24.png",
+          "dimensions": [
+            24,
+            24
+          ],
+          "alphaBounds": [
+            3,
+            3,
+            20,
+            20
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-24.png",
+          "dimensions": [
+            24,
+            24
+          ],
+          "alphaBounds": [
+            3,
+            3,
+            20,
+            20
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-32.png",
+          "dimensions": [
+            32,
+            32
+          ],
+          "alphaBounds": [
+            4,
+            4,
+            27,
+            27
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-32.png",
+          "dimensions": [
+            32,
+            32
+          ],
+          "alphaBounds": [
+            4,
+            4,
+            27,
+            28
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-64.png",
+          "dimensions": [
+            64,
+            64
+          ],
+          "alphaBounds": [
+            9,
+            8,
+            54,
+            56
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-64.png",
+          "dimensions": [
+            64,
+            64
+          ],
+          "alphaBounds": [
+            9,
+            8,
+            54,
+            56
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-512.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "alphaBounds": [
+            72,
+            64,
+            439,
+            455
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-512.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "alphaBounds": [
+            72,
+            64,
+            439,
+            455
+          ],
+          "unclipped": true
+        }
+      ]
+    },
+    {
+      "id": "concept-04",
+      "outlineOnly": true,
+      "renders": [
+        {
+          "file": "symbol-16.png",
+          "dimensions": [
+            16,
+            16
+          ],
+          "alphaBounds": [
+            2,
+            2,
+            13,
+            13
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-16.png",
+          "dimensions": [
+            16,
+            16
+          ],
+          "alphaBounds": [
+            2,
+            2,
+            13,
+            13
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-24.png",
+          "dimensions": [
+            24,
+            24
+          ],
+          "alphaBounds": [
+            3,
+            3,
+            20,
+            20
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-24.png",
+          "dimensions": [
+            24,
+            24
+          ],
+          "alphaBounds": [
+            3,
+            3,
+            20,
+            20
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-32.png",
+          "dimensions": [
+            32,
+            32
+          ],
+          "alphaBounds": [
+            4,
+            4,
+            27,
+            27
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-32.png",
+          "dimensions": [
+            32,
+            32
+          ],
+          "alphaBounds": [
+            4,
+            3,
+            27,
+            28
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-64.png",
+          "dimensions": [
+            64,
+            64
+          ],
+          "alphaBounds": [
+            9,
+            7,
+            55,
+            56
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-64.png",
+          "dimensions": [
+            64,
+            64
+          ],
+          "alphaBounds": [
+            9,
+            7,
+            55,
+            56
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-512.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "alphaBounds": [
+            72,
+            56,
+            447,
+            455
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-512.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "alphaBounds": [
+            72,
+            56,
+            447,
+            455
+          ],
+          "unclipped": true
+        }
+      ]
+    },
+    {
+      "id": "concept-05",
+      "outlineOnly": true,
+      "renders": [
+        {
+          "file": "symbol-16.png",
+          "dimensions": [
+            16,
+            16
+          ],
+          "alphaBounds": [
+            2,
+            2,
+            13,
+            13
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-16.png",
+          "dimensions": [
+            16,
+            16
+          ],
+          "alphaBounds": [
+            2,
+            2,
+            13,
+            13
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-24.png",
+          "dimensions": [
+            24,
+            24
+          ],
+          "alphaBounds": [
+            4,
+            3,
+            19,
+            20
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-24.png",
+          "dimensions": [
+            24,
+            24
+          ],
+          "alphaBounds": [
+            4,
+            3,
+            19,
+            20
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-32.png",
+          "dimensions": [
+            32,
+            32
+          ],
+          "alphaBounds": [
+            5,
+            4,
+            26,
+            27
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-32.png",
+          "dimensions": [
+            32,
+            32
+          ],
+          "alphaBounds": [
+            5,
+            4,
+            26,
+            28
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-64.png",
+          "dimensions": [
+            64,
+            64
+          ],
+          "alphaBounds": [
+            10,
+            8,
+            53,
+            56
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-64.png",
+          "dimensions": [
+            64,
+            64
+          ],
+          "alphaBounds": [
+            10,
+            8,
+            53,
+            56
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-512.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "alphaBounds": [
+            80,
+            64,
+            431,
+            455
+          ],
+          "unclipped": true
+        },
+        {
+          "file": "symbol-dark-512.png",
+          "dimensions": [
+            512,
+            512
+          ],
+          "alphaBounds": [
+            80,
+            64,
+            431,
+            455
+          ],
+          "unclipped": true
+        }
+      ]
+    }
+  ],
+  "contrast": {
+    "forest_on_paper": 10.62,
+    "paper_on_charcoal": 15.88,
+    "clay_on_paper": 4.15,
+    "moss_on_paper": 2.96
+  },
+  "existingIconsUnchanged": {
+    "favicon.ico": true,
+    "favicon-16x16.png": true,
+    "favicon-32x32.png": true,
+    "apple-touch-icon.png": true
+  }
+}

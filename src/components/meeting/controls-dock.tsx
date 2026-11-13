@@ -103,8 +103,18 @@ function ControlsDockImpl({
         setMoreOpen(false);
       }
     };
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMoreOpen(false);
+        moreRef.current?.querySelector('button')?.focus();
+      }
+    };
     document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener('keydown', onEscape);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('keydown', onEscape);
+    };
   }, [moreOpen]);
 
   const handleExtend = useCallback(async () => {
@@ -128,6 +138,7 @@ function ControlsDockImpl({
       return;
     }
     if (
+      // eslint-disable-next-line no-alert -- Confirm before ending the meeting for everyone.
       !window.confirm('Are you sure you want to end this meeting for everyone?')
     ) {
       return;
@@ -150,7 +161,7 @@ function ControlsDockImpl({
           label="End"
           danger
           busy={ending}
-          onClick={handleEnd}
+          onClick={() => void handleEnd()}
         />
       )
     : (
@@ -158,211 +169,150 @@ function ControlsDockImpl({
       );
 
   return (
-    <section className="flex shrink-0 justify-center">
-      <div
-        className="max-w-full overflow-x-auto"
-        style={{ scrollbarWidth: 'none' }}
-      >
-        <div
-          className="flex min-w-max items-center gap-2 rounded-[16px] px-3 py-2"
-          style={{
-            background: 'rgba(255,255,255,0.06)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            boxShadow: '0px 8px 32px rgba(0,0,0,0.3)',
-          }}
-        >
-          {/* Always-visible primary controls */}
+    <section className="app-meeting-dock">
+      <div className="app-meeting-dock-controls">
+        {/* Always-visible primary controls */}
+        <ControlButton
+          icon={micEnabled ? Mic : MicOff}
+          label={micEnabled ? 'Mute' : 'Unmute'}
+          active={micEnabled}
+          busy={micBusy}
+          onClick={() => void toggleMic()}
+        />
+        <ControlButton
+          icon={camEnabled ? Video : VideoOff}
+          label={camEnabled ? 'Stop Video' : 'Start Video'}
+          active={camEnabled}
+          busy={camBusy}
+          onClick={() => void toggleCam()}
+        />
+
+        <div className="relative">
           <ControlButton
-            icon={micEnabled ? Mic : MicOff}
-            label={micEnabled ? 'Mute' : 'Unmute'}
-            active={micEnabled}
-            busy={micBusy}
-            onClick={toggleMic}
+            icon={MessageSquare}
+            label="Chat"
+            active={sidebar === 'chat'}
+            onClick={() => toggleSidebar('chat')}
           />
+          {unreadChat > 0 && (
+            <span
+              className="absolute top-0 right-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-semibold text-white"
+              style={{ background: 'var(--color-action)' }}
+            >
+              {unreadChat > 9 ? '9+' : unreadChat}
+            </span>
+          )}
+        </div>
+
+        <ControlButton
+          icon={Hand}
+          label={handRaised ? 'Lower' : 'Raise'}
+          active={handRaised}
+          onClick={() => void toggleHand()}
+        />
+
+        {/* Secondary controls: visible on sm+ inline, hidden on mobile */}
+        <Divider className="hidden sm:block" />
+
+        <div className="hidden sm:block">
           <ControlButton
-            icon={camEnabled ? Video : VideoOff}
-            label={camEnabled ? 'Stop Video' : 'Start Video'}
-            active={camEnabled}
-            busy={camBusy}
-            onClick={toggleCam}
+            icon={MonitorUp}
+            label={screenShareEnabled ? 'Stop Share' : 'Share'}
+            active={screenShareEnabled}
+            busy={screenBusy}
+            onClick={() => void toggleScreenShare()}
           />
+        </div>
 
-          <div className="relative">
-            <ControlButton
-              icon={MessageSquare}
-              label="Chat"
-              active={sidebar === 'chat'}
-              onClick={() => toggleSidebar('chat')}
-            />
-            {unreadChat > 0 && (
-              <span
-                className="absolute top-0 right-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-semibold text-white"
-                style={{ background: 'var(--color-action)' }}
-              >
-                {unreadChat > 9 ? '9+' : unreadChat}
-              </span>
-            )}
-          </div>
-
+        {/* Secondary actions remain available at every width. */}
+        <div ref={moreRef} className="app-meeting-more relative">
           <ControlButton
-            icon={Hand}
-            label={handRaised ? 'Lower' : 'Raise'}
-            active={handRaised}
-            onClick={toggleHand}
+            icon={MoreHorizontal}
+            label="More"
+            expanded={moreOpen}
+            active={moreOpen}
+            onClick={() => setMoreOpen(!moreOpen)}
           />
-
-          {/* Secondary controls: visible on sm+ inline, hidden on mobile */}
-          <Divider className="hidden sm:block" />
-
-          <div className="hidden sm:block">
-            <ControlButton
-              icon={MonitorUp}
-              label={screenShareEnabled ? 'Stop Share' : 'Share'}
-              active={screenShareEnabled}
-              busy={screenBusy}
-              onClick={toggleScreenShare}
-            />
-          </div>
-
-          {isHost && !room.extend_used && (
-            <div className="hidden sm:block">
-              <ControlButton
+          {moreOpen && (
+            <div
+              className="absolute bottom-full left-1/2 z-50 mb-3 w-48 -translate-x-1/2 overflow-hidden rounded-[14px] shadow-2xl"
+              style={{
+                background: 'rgba(30,42,44,0.97)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255,255,255,0.10)',
+              }}
+            >
+              <MobileMenuItem
+                icon={MonitorUp}
+                label={screenShareEnabled ? 'Stop Share' : 'Share Screen'}
+                active={screenShareEnabled}
+                onClick={() => {
+                  void toggleScreenShare();
+                  setMoreOpen(false);
+                }}
+              />
+              {isHost && !room.extend_used && (
+                <MobileMenuItem
+                  icon={Zap}
+                  label={extending ? 'Extending…' : 'Extend Session'}
+                  onClick={() => {
+                    void handleExtend();
+                    setMoreOpen(false);
+                  }}
+                />
+              )}
+              <MobileMenuItem
+                icon={Disc3}
+                label="Recording Info"
+                onClick={() => {
+                  toast.info(
+                    'Recording starts automatically when the meeting ends via LiveKit Egress.',
+                  );
+                  setMoreOpen(false);
+                }}
+              />
+              <MobileMenuItem
+                icon={FileText}
+                label="View Transcript"
+                onClick={() => {
+                  router.push(
+                    ROUTES.TRANSCRIPT_DETAIL(room.livekit_room_name),
+                  );
+                  setMoreOpen(false);
+                }}
+              />
+              <MobileMenuItem
                 icon={Zap}
-                label={extending ? 'Extending…' : 'Extend'}
-                busy={extending}
-                onClick={handleExtend}
+                label="AI Summary"
+                onClick={() => {
+                  router.push(ROUTES.SUMMARY_DETAIL(room.livekit_room_name));
+                  setMoreOpen(false);
+                }}
+              />
+              <MobileMenuItem
+                icon={Users}
+                label="Participants"
+                active={sidebar === 'people'}
+                onClick={() => {
+                  toggleSidebar('people');
+                  setMoreOpen(false);
+                }}
+              />
+              <MobileMenuItem
+                icon={Settings}
+                label="Settings"
+                onClick={() => {
+                  toast.info('Settings coming soon.');
+                  setMoreOpen(false);
+                }}
               />
             </div>
           )}
-
-          <div className="hidden sm:block">
-            <ControlButton
-              icon={Disc3}
-              label="Record"
-              onClick={() =>
-                toast.info(
-                  'Recording starts automatically when the meeting ends via LiveKit Egress.',
-                )}
-            />
-          </div>
-          <div className="hidden sm:block">
-            <ControlButton
-              icon={FileText}
-              label="Transcript"
-              onClick={() =>
-                router.push(ROUTES.TRANSCRIPT_DETAIL(room.livekit_room_name))}
-            />
-          </div>
-          <div className="hidden sm:block">
-            <ControlButton
-              icon={Zap}
-              label="Summary"
-              onClick={() =>
-                router.push(ROUTES.SUMMARY_DETAIL(room.livekit_room_name))}
-            />
-          </div>
-          <div className="hidden sm:block">
-            <ControlButton
-              icon={Users}
-              label="People"
-              active={sidebar === 'people'}
-              onClick={() => toggleSidebar('people')}
-            />
-          </div>
-          <div className="hidden md:block">
-            <ControlButton icon={Settings} label="Settings" comingSoon />
-          </div>
-
-          {/* 3-dots More menu: mobile only */}
-          <div ref={moreRef} className="relative sm:hidden">
-            <ControlButton
-              icon={MoreHorizontal}
-              label="More"
-              active={moreOpen}
-              onClick={() => setMoreOpen(!moreOpen)}
-            />
-            {moreOpen && (
-              <div
-                className="absolute bottom-full left-1/2 z-50 mb-3 w-48 -translate-x-1/2 overflow-hidden rounded-[14px] shadow-2xl"
-                style={{
-                  background: 'rgba(30,42,44,0.97)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255,255,255,0.10)',
-                }}
-              >
-                <MobileMenuItem
-                  icon={MonitorUp}
-                  label={screenShareEnabled ? 'Stop Share' : 'Share Screen'}
-                  active={screenShareEnabled}
-                  onClick={() => {
-                    void toggleScreenShare();
-                    setMoreOpen(false);
-                  }}
-                />
-                {isHost && !room.extend_used && (
-                  <MobileMenuItem
-                    icon={Zap}
-                    label={extending ? 'Extending…' : 'Extend Session'}
-                    onClick={() => {
-                      void handleExtend();
-                      setMoreOpen(false);
-                    }}
-                  />
-                )}
-                <MobileMenuItem
-                  icon={Disc3}
-                  label="Recording Info"
-                  onClick={() => {
-                    toast.info(
-                      'Recording starts automatically when the meeting ends via LiveKit Egress.',
-                    );
-                    setMoreOpen(false);
-                  }}
-                />
-                <MobileMenuItem
-                  icon={FileText}
-                  label="View Transcript"
-                  onClick={() => {
-                    router.push(
-                      ROUTES.TRANSCRIPT_DETAIL(room.livekit_room_name),
-                    );
-                    setMoreOpen(false);
-                  }}
-                />
-                <MobileMenuItem
-                  icon={Zap}
-                  label="AI Summary"
-                  onClick={() => {
-                    router.push(ROUTES.SUMMARY_DETAIL(room.livekit_room_name));
-                    setMoreOpen(false);
-                  }}
-                />
-                <MobileMenuItem
-                  icon={Users}
-                  label="Participants"
-                  active={sidebar === 'people'}
-                  onClick={() => {
-                    toggleSidebar('people');
-                    setMoreOpen(false);
-                  }}
-                />
-                <MobileMenuItem
-                  icon={Settings}
-                  label="Settings"
-                  onClick={() => {
-                    toast.info('Settings coming soon.');
-                    setMoreOpen(false);
-                  }}
-                />
-              </div>
-            )}
-          </div>
-
-          <Divider />
-
-          {leaveButton}
         </div>
+
+        <Divider />
+
+        {leaveButton}
       </div>
     </section>
   );

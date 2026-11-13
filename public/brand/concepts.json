@@ -1,0 +1,92 @@
+[
+  {
+    "id": "01",
+    "name": "Return R",
+    "category": "Custom monogram",
+    "idea": "A returning foot gives the R a second destination.",
+    "type": "Compact grotesk; open e, single-storey a, returning R foot.",
+    "geometry": "21-unit stem; 19-unit shoulder; open 31-unit counter. The leg returns to a horizontal terminal, rather than ending in a generic diagonal.",
+    "limit": "The R category is crowded. The returning foot is less apparent at 16px; the master is deliberately simplified there.",
+    "small": "The 16px cut thickens the counter floor and widens its opening. The returning foot becomes a square hook; no rounded subpixel tip.",
+    "scores": [
+      27,
+      18,
+      18,
+      12,
+      14
+    ],
+    "total": 89
+  },
+  {
+    "id": "02",
+    "name": "Held quotation",
+    "category": "Conversation \u2192 memory",
+    "idea": "Two spoken fragments settle onto a single retained line.",
+    "type": "Soft humanist lettering; wider apertures and a short-footed R.",
+    "geometry": "Two offset quotation forms and a retained baseline. The second tail ends above the baseline, leaving an intentional open interval.",
+    "limit": "Quotation marks are familiar editorial material. Recognition depends on the retained baseline, not on quotation marks alone.",
+    "small": "The 16px cut removes the second tail curve and opens the gap above the baseline to 2px. Both quote heads remain 4px wide.",
+    "scores": [
+      23,
+      16,
+      14,
+      12,
+      13
+    ],
+    "total": 78
+  },
+  {
+    "id": "03",
+    "name": "Retrace",
+    "category": "Continuity & recall",
+    "idea": "One path moves forward, turns back and continues.",
+    "type": "Square-shouldered grotesk; clipped e aperture and firm horizontal rhythm.",
+    "geometry": "A single filled contour with two opposing right-angle returns. A 20-unit channel separates the passes; no arrowhead, loop or implied playback button.",
+    "limit": "Can be read as a numeral 2, an abstract S or a route. Its angularity is more technical than conversational and needs the warmer wordmark beside it.",
+    "small": "The 16px cut uses a 3px band and a minimum 1px channel, aligned to a 16px grid. At 32px it uses the fuller master proportions.",
+    "scores": [
+      24,
+      17,
+      15,
+      14,
+      13
+    ],
+    "total": 83
+  },
+  {
+    "id": "04",
+    "name": "Margin ligature",
+    "category": "Typographic identity",
+    "idea": "Recallo\u2019s double l becomes a shared editorial margin.",
+    "type": "Original low-contrast serif lettering, linked l feet and a crisp R leg.",
+    "geometry": "Two ascenders share a stepped foot. Small head serifs distinguish the stems; the lower rail continues the wordmark\u2019s reading baseline.",
+    "limit": "The wordmark carries this route. In isolation the symbol may read as II or a small architectural monogram; weaker in a crowded app grid.",
+    "small": "Serifs widen to full pixels at 16px; the shared foot is 2\u20133px deep. Use the serif master from 32px upward, not a scaled full wordmark.",
+    "scores": [
+      24,
+      16,
+      14,
+      9,
+      12
+    ],
+    "total": 75
+  },
+  {
+    "id": "05",
+    "name": "Binding fold",
+    "category": "Wildcard / a physical record",
+    "idea": "A loose strip folds into a bound, retained edge.",
+    "type": "Expanded lettering with an upright R and broad, quiet rounded counters.",
+    "geometry": "A vertical spine supports a rising flap and a separated lower fold. The diagonal seam is structural and remains open in one color.",
+    "limit": "A folded-strip reading needs introduction; some viewers may see a flag or K. Avoid adding more folds or trying to hide another letter.",
+    "small": "The 16px cut makes the fold seam at least 1px, widens the spine to 4px and squares the lower flap. No decorative crease line is used.",
+    "scores": [
+      24,
+      17,
+      15,
+      11,
+      13
+    ],
+    "total": 80
+  }
+]

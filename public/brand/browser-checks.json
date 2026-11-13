@@ -1,0 +1,157 @@
+{
+  "desktopOverflow": false,
+  "identityCount": 5,
+  "darkToggle": true,
+  "images": [
+    {
+      "source": "comparison-board.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-01/primary.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-01/dark.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-01/symbol-16.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-01/symbol-24.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-01/symbol-32.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-01/symbol-64.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-01/symbol-512.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-01/mockups.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-02/primary.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-02/dark.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-02/symbol-16.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-02/symbol-24.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-02/symbol-32.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-02/symbol-64.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-02/symbol-512.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-03/primary.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-03/dark.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-03/symbol-16.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-03/symbol-24.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-03/symbol-32.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-03/symbol-64.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-03/symbol-512.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-04/primary.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-04/dark.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-04/symbol-16.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-04/symbol-24.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-04/symbol-32.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-04/symbol-64.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-04/symbol-512.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-05/primary.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-05/dark.svg",
+      "loaded": true
+    },
+    {
+      "source": "concept-05/symbol-16.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-05/symbol-24.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-05/symbol-32.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-05/symbol-64.png",
+      "loaded": true
+    },
+    {
+      "source": "concept-05/symbol-512.png",
+      "loaded": true
+    }
+  ],
+  "mobileOverflow": false,
+  "runtimeErrors": []
+}
