@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ChevronDown } from 'lucide-react';
 import { setRequestLocale } from 'next-intl/server';
 import { ActionPair } from '@/components/marketing/actions';
+import { DirectionStories } from '@/components/marketing/direction-stories';
 import { meetingExample as example } from '@/components/marketing/example';
 import { MeetingShowcase } from '@/components/marketing/meeting-showcase';
 import { RecordIllustration } from '@/components/marketing/product-illustrations';
@@ -29,6 +30,14 @@ const questions = [
   { question: 'Can I check my devices first?', answer: 'The pre-join screen lets you check your camera, microphone and available devices before connecting. Your browser may ask for permission to use them.' },
   { question: 'What can I revisit afterward?', answer: 'When insights are available, the meeting’s insights page shows processing progress and can display a transcript and structured summary. Results are not guaranteed for every meeting.' },
   { question: 'Can I share my screen or send a message?', answer: 'The meeting interface includes screen sharing and in-meeting chat. Available sharing options depend on your browser and device.' },
+  { question: 'Are webinars, broadcasting or calendar integrations available?', answer: 'These are directions being explored. The current experience centers on meeting rooms; availability and details for these additional capabilities have not been confirmed.' },
+];
+
+const meetingTools = [
+  { number: '01', title: 'Find your way into the room', text: 'Use a room ID or invitation link, then choose your camera and microphone before joining.' },
+  { number: '02', title: 'Bring the work into view', text: 'Share your screen when a document, design or question is easier to discuss together.' },
+  { number: '03', title: 'Make space for everyone', text: 'Use in-meeting chat and hand raising alongside video and audio.' },
+  { number: '04', title: 'Return with a starting point', text: 'When insights are ready, review the transcript and summary before following up.' },
 ];
 
 export default async function Index({ params }: { params: Promise<{ locale: string }> }) {
@@ -88,6 +97,27 @@ export default async function Index({ params }: { params: Promise<{ locale: stri
         <RecordIllustration />
       </section>
 
+      <section className="mk-tools" aria-labelledby="tools-title">
+        <div className="mk-container">
+          <div className="mk-tools-heading">
+            <div>
+              <span className="mk-editorial-label">THE DETAILS / 01</span>
+              <h2 id="tools-title">A little less to keep in your head.</h2>
+            </div>
+            <p>From the moment you join to the moment you follow up, the small details make a difference.</p>
+          </div>
+          <div className="mk-tool-list">
+            {meetingTools.map(item => (
+              <article key={item.number} className="mk-tool-row">
+                <span className="mk-editorial-label">{item.number}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="mk-uses" aria-labelledby="uses-title">
         <div className="mk-container mk-uses-layout">
           <h2 id="uses-title">For the conversations you’ll come back to.</h2>
@@ -99,6 +129,17 @@ export default async function Index({ params }: { params: Promise<{ locale: stri
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section id="exploring" className="mk-future" aria-labelledby="future-title">
+        <div className="mk-container">
+          <div className="mk-future-intro">
+            <span className="mk-editorial-label">BEYOND THE MEETING / 02</span>
+            <h2 id="future-title">More ways to bring people together.</h2>
+            <p>Some conversations need a little more room. We’re exploring how Recallo could support the moments around them, too.</p>
+          </div>
+          <DirectionStories />
         </div>
       </section>
 

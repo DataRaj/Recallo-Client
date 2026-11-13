@@ -6,6 +6,7 @@ type ControlButtonProps = {
   icon: React.ComponentType<{ size?: number }>;
   label: string;
   active?: boolean;
+  expanded?: boolean;
   danger?: boolean;
   disabled?: boolean;
   busy?: boolean;
@@ -17,6 +18,7 @@ export function ControlButton({
   icon: Icon,
   label,
   active = true,
+  expanded,
   danger = false,
   disabled = false,
   busy = false,
@@ -29,7 +31,9 @@ export function ControlButton({
     <button
       onClick={isDisabled ? undefined : onClick}
       disabled={isDisabled}
-      className="group flex shrink-0 flex-col items-center gap-1 disabled:cursor-not-allowed"
+      aria-expanded={expanded}
+      aria-busy={busy || undefined}
+      className="app-meeting-control group flex shrink-0 flex-col items-center gap-1 disabled:cursor-not-allowed"
       title={comingSoon ? `${label} — coming soon` : label}
       type="button"
     >
@@ -39,13 +43,13 @@ export function ControlButton({
           background: danger
             ? 'var(--color-text-accent)'
             : active && !comingSoon
-              ? 'rgba(255,255,255,0.15)'
-              : 'rgba(255,255,255,0.07)',
+              ? 'var(--meeting-control-active, rgba(255,255,255,0.15))'
+              : 'var(--meeting-control-inactive, rgba(255,255,255,0.07))',
           color: danger
             ? '#fff'
             : active && !comingSoon
               ? 'var(--color-chat-text)'
-              : 'rgba(251,245,221,0.45)',
+              : 'var(--meeting-control-muted, rgba(251,245,221,0.45))',
           opacity: comingSoon ? 0.55 : 1,
         }}
       >

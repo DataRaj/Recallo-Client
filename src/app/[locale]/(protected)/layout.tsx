@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ProtectedRoute } from '@/components/protected-route';
 import { GlobalModals, ModalProvider, useModal } from '@/components/providers/modal-provider';
 import { WsProvider } from '@/components/providers/ws-provider';
+import { RecalloWordmark } from '@/components/recallo-wordmark';
 import { useAuth } from '@/hooks/use-auth';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -153,15 +154,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
           className="flex shrink-0 items-center gap-2.5 px-5 py-[18px]"
           style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
         >
-          <div
-            className="flex size-7 shrink-0 items-center justify-center rounded-[9px] text-xs font-semibold text-white"
-            style={{ background: 'var(--color-action)' }}
-          >
-            R
-          </div>
-          <span className="text-[15px] font-semibold tracking-tight" style={{ color: 'var(--color-chat-text)' }}>
-            Recallo
-          </span>
+          <RecalloWordmark className="app-brand-wordmark" />
           <button type="button" aria-label="Close navigation" onClick={() => setIsSidebarOpen(false)} className="ml-auto p-2 text-[var(--color-chat-text)] lg:hidden"><X size={18} /></button>
         </div>
 
@@ -254,9 +247,7 @@ function ProtectedLayoutContent({ children }: { children: React.ReactNode }) {
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <span className="font-semibold" style={{ color: 'var(--color-chat-text)' }}>
-            Recallo
-          </span>
+          <RecalloWordmark className="app-brand-wordmark" />
           <div className="w-8" />
         </div>
 

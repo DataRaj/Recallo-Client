@@ -1,0 +1,20 @@
+{
+  "viewports": [
+    {
+      "width": 320,
+      "overflow": false,
+      "brokenImages": []
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "brokenImages": []
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "brokenImages": []
+    }
+  ],
+  "runtimeErrors": []
+}

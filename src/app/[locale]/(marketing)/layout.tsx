@@ -2,6 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { AccountLink, MarketingActionsProvider } from '@/components/marketing/actions';
 import { marketingDisplay, marketingSans } from '@/components/marketing/fonts';
 import { MarketingNavigation } from '@/components/marketing/navigation';
+import { RecalloWordmark } from '@/components/recallo-wordmark';
 import { Link } from '@/libs/i18n-navigation';
 import '@/styles/marketing.css';
 
@@ -20,9 +21,8 @@ export default async function MarketingLayout({ children, params }: {
         <main id="marketing-main" tabIndex={-1}>{children}</main>
         <footer className="mk-footer mk-container">
           <div>
-            <Link href="/" className="mk-brand">
-              <span className="mk-brand-mark" aria-hidden="true">R</span>
-              Recallo
+            <Link href="/" className="mk-brand" aria-label="Recallo home">
+              <RecalloWordmark aria-hidden="true" />
             </Link>
             <p>Meetings, with context to return to.</p>
           </div>

@@ -58,7 +58,7 @@ export function MeetingShowcase() {
                 setView(label);
               }}
             >
-              {view === label && <motion.span className="mk-view-indicator" layoutId={`${panelId}-selection`} transition={{ duration: reducedMotion ? 0 : 0.24, ease: 'easeOut' }} />}
+              {view === label && <motion.span className="mk-view-indicator" layoutId={`${panelId}-selection`} transition={reducedMotion ? { duration: 0 } : { type: 'spring', stiffness: 65, damping: 26, mass: 1.1 }} />}
               <span>{label}</span>
             </button>
           ))}
@@ -84,7 +84,7 @@ export function MeetingShowcase() {
         <MeetingIllustration />
         <div id={panelId} className="mk-example-panel" role="region" aria-label={`Example ${view.toLowerCase()}`}>
           <AnimatePresence mode="wait" initial={false}>
-            <motion.div key={view} className="mk-preview-state" initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reducedMotion ? 0 : -4 }} transition={{ duration: reducedMotion ? 0 : 0.2, ease: 'easeOut' }}><Excerpt /></motion.div>
+            <motion.div key={view} className="mk-preview-state" initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reducedMotion ? 0 : -4 }} transition={{ duration: reducedMotion ? 0 : 0.55, ease: [0.22, 1, 0.36, 1] }}><Excerpt /></motion.div>
           </AnimatePresence>
         </div>
       </div>
